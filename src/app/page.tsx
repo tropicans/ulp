@@ -1,65 +1,87 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { ArrowRight, GraduationCap } from "lucide-react"
+import { PulseFitHero } from "@/components/ui/pulse-fit-hero"
+import { useRouter } from "next/navigation"
+
+export default function HomePage() {
+  const router = useRouter()
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen">
+      <PulseFitHero
+        logo={
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-blue-600">
+              <GraduationCap className="w-5 h-5 text-white" />
+            </div>
+            <span className="font-bold tracking-tight">LXP ASN</span>
+          </div>
+        }
+        navigation={[
+          { label: "Katalog", onClick: () => router.push("/courses") },
+          { label: "Tentang", onClick: () => console.log("About") },
+          { label: "Bantuan", onClick: () => console.log("Help") },
+        ]}
+        ctaButton={{
+          label: "Masuk ke Platform",
+          onClick: () => router.push("/login"),
+        }}
+        title="Sistem Pembelajaran Mandiri untuk ASN Unggul."
+        subtitle="Tingkatkan kompetensi Anda dengan platform pembelajaran digital yang fleksibel, interaktif, dan terintegrasi dalam satu ekosistem."
+        primaryAction={{
+          label: "Mulai Belajar",
+          onClick: () => router.push("/login"),
+        }}
+        secondaryAction={{
+          label: "Lihat Katalog",
+          onClick: () => router.push("/courses"),
+        }}
+        disclaimer="*Akses khusus untuk Pegawai Negeri Sipil & PPPK"
+        socialProof={{
+          avatars: [
+            "https://i.pravatar.cc/150?img=11",
+            "https://i.pravatar.cc/150?img=12",
+            "https://i.pravatar.cc/150?img=13",
+            "https://i.pravatar.cc/150?img=14",
+          ],
+          text: "Bergabung bersama 5.000+ ASN lainnya",
+        }}
+        programs={[
+          {
+            image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=500&fit=crop",
+            category: "DIGITAL LITERACY",
+            title: "Transformasi Digital Sektor Publik",
+            onClick: () => router.push("/courses"),
+          },
+          {
+            image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=500&fit=crop",
+            category: "LEADERSHIP",
+            title: "Manajemen Perubahan & Kepemimpinan",
+            onClick: () => router.push("/courses"),
+          },
+          {
+            image: "https://images.unsplash.com/photo-1454165833767-02a9e406f0a5?w=400&h=500&fit=crop",
+            category: "PUBLIC SERVICE",
+            title: "Etika & Standar Pelayanan Publik",
+            onClick: () => router.push("/courses"),
+          },
+          {
+            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=500&fit=crop",
+            category: "GOVERNANCE",
+            title: "Akuntabilitas & Tata Kelola Pemerintahan",
+            onClick: () => router.push("/courses"),
+          },
+        ]}
+      />
+
+      {/* Sticky Mini Footer */}
+      <footer className="absolute bottom-8 left-0 right-0 z-20 pointer-events-none">
+        <div className="container mx-auto px-8 text-center bg-transparent">
+          <p className="text-slate-400 text-xs">
+            © 2026 LXP ASN. Kementerian Sekretariat Negara.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
-  );
+  )
 }
