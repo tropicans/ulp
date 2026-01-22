@@ -96,7 +96,7 @@ export default function SettingsPage() {
                                     <Label className="text-slate-900 dark:text-white font-bold">Nama Platform</Label>
                                     <div className="flex gap-2">
                                         <Input
-                                            defaultValue={getSettingValue("site_name", "LXP ASN")}
+                                            defaultValue={getSettingValue("site_name", "TITIAN")}
                                             className="bg-slate-100 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
                                             id="site_name"
                                         />

@@ -143,12 +143,12 @@ export default async function SessionDetailPage({
                                                     {record.User.image ? (
                                                         <img
                                                             src={record.User.image}
-                                                            alt={record.User.name}
+                                                            alt={record.User.name || undefined}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
                                                         <span className="text-slate-900 dark:text-white font-bold">
-                                                            {record.User.name.charAt(0)}
+                                                            {(record.User.name || "?").charAt(0)}
                                                         </span>
                                                     )}
                                                 </div>

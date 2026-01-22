@@ -1,87 +1,96 @@
-"use client";
-
-import { ArrowRight, GraduationCap } from "lucide-react"
+import { GraduationCap } from "lucide-react"
 import { PulseFitHero } from "@/components/ui/pulse-fit-hero"
-import { useRouter } from "next/navigation"
+import { prisma } from "@/lib/db"
 
-export default function HomePage() {
-  const router = useRouter()
+// Force dynamic rendering so Prisma can fetch data at request time
+export const dynamic = 'force-dynamic'
+
+// Map category to display name
+const categoryLabels: Record<string, string> = {
+  "leadership": "LEADERSHIP",
+  "digital": "DIGITAL LITERACY",
+  "governance": "GOVERNANCE",
+  "public-service": "PUBLIC SERVICE",
+  "management": "MANAGEMENT",
+  "communication": "COMMUNICATION",
+}
+
+export default async function HomePage() {
+  // Get featured/published courses for the carousel
+  const courses = await prisma.course.findMany({
+    where: { isPublished: true },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      thumbnail: true,
+      category: true,
+      ytPlaylistId: true,
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 6,
+  })
+
+  // Get YouTube thumbnails for courses without custom thumbnails
+  const coursesWithThumbnails = await Promise.all(
+    courses.map(async (course) => {
+      let thumbnail = course.thumbnail
+      if (!thumbnail && course.ytPlaylistId) {
+        const firstVideo = await prisma.ytPlaylistItem.findFirst({
+          where: { playlistId: course.ytPlaylistId },
+          orderBy: { videoNo: 'asc' },
+          select: { videoId: true }
+        })
+        if (firstVideo) {
+          thumbnail = `https://i.ytimg.com/vi/${firstVideo.videoId}/maxresdefault.jpg`
+        }
+      }
+      return { ...course, thumbnail }
+    })
+  )
+
+  // Build programs array for the hero carousel
+  const programs = coursesWithThumbnails.map((course) => ({
+    image: course.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=500&fit=crop",
+    category: categoryLabels[course.category?.toLowerCase() || ""] || course.category?.toUpperCase() || "LEARNING",
+    title: course.title,
+    href: `/courses/${course.slug}`,
+  }))
+
+  // Fallback to default programs if no courses
+  const defaultPrograms = [
+    {
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=500&fit=crop",
+      category: "DIGITAL LITERACY",
+      title: "Transformasi Digital Sektor Publik",
+      href: "/courses",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=500&fit=crop",
+      category: "LEADERSHIP",
+      title: "Manajemen Perubahan & Kepemimpinan",
+      href: "/courses",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1454165833767-02a9e406f0a5?w=400&h=500&fit=crop",
+      category: "PUBLIC SERVICE",
+      title: "Etika & Standar Pelayanan Publik",
+      href: "/courses",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=500&fit=crop",
+      category: "GOVERNANCE",
+      title: "Akuntabilitas & Tata Kelola Pemerintahan",
+      href: "/courses",
+    },
+  ]
+
   return (
     <div className="min-h-screen">
-      <PulseFitHero
-        logo={
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-blue-600">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold tracking-tight">LXP ASN</span>
-          </div>
-        }
-        navigation={[
-          { label: "Katalog", onClick: () => router.push("/courses") },
-          { label: "Tentang", onClick: () => console.log("About") },
-          { label: "Bantuan", onClick: () => console.log("Help") },
-        ]}
-        ctaButton={{
-          label: "Masuk ke Platform",
-          onClick: () => router.push("/login"),
-        }}
-        title="Sistem Pembelajaran Mandiri untuk ASN Unggul."
-        subtitle="Tingkatkan kompetensi Anda dengan platform pembelajaran digital yang fleksibel, interaktif, dan terintegrasi dalam satu ekosistem."
-        primaryAction={{
-          label: "Mulai Belajar",
-          onClick: () => router.push("/login"),
-        }}
-        secondaryAction={{
-          label: "Lihat Katalog",
-          onClick: () => router.push("/courses"),
-        }}
-        disclaimer="*Akses khusus untuk Pegawai Negeri Sipil & PPPK"
-        socialProof={{
-          avatars: [
-            "https://i.pravatar.cc/150?img=11",
-            "https://i.pravatar.cc/150?img=12",
-            "https://i.pravatar.cc/150?img=13",
-            "https://i.pravatar.cc/150?img=14",
-          ],
-          text: "Bergabung bersama 5.000+ ASN lainnya",
-        }}
-        programs={[
-          {
-            image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=500&fit=crop",
-            category: "DIGITAL LITERACY",
-            title: "Transformasi Digital Sektor Publik",
-            onClick: () => router.push("/courses"),
-          },
-          {
-            image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=500&fit=crop",
-            category: "LEADERSHIP",
-            title: "Manajemen Perubahan & Kepemimpinan",
-            onClick: () => router.push("/courses"),
-          },
-          {
-            image: "https://images.unsplash.com/photo-1454165833767-02a9e406f0a5?w=400&h=500&fit=crop",
-            category: "PUBLIC SERVICE",
-            title: "Etika & Standar Pelayanan Publik",
-            onClick: () => router.push("/courses"),
-          },
-          {
-            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=500&fit=crop",
-            category: "GOVERNANCE",
-            title: "Akuntabilitas & Tata Kelola Pemerintahan",
-            onClick: () => router.push("/courses"),
-          },
-        ]}
-      />
-
-      {/* Sticky Mini Footer */}
-      <footer className="absolute bottom-8 left-0 right-0 z-20 pointer-events-none">
-        <div className="container mx-auto px-8 text-center bg-transparent">
-          <p className="text-slate-400 text-xs">
-            © 2026 LXP ASN. Kementerian Sekretariat Negara.
-          </p>
-        </div>
-      </footer>
+      <HomePageClient programs={programs.length > 0 ? programs : defaultPrograms} />
     </div>
   )
 }
+
+// Client component for interactivity
+import { HomePageClient } from "@/components/home/home-page-client"

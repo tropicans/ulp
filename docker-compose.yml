@@ -11,9 +11,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -27,9 +27,9 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "6379:6379"
+      - "6380:6379"
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,10 +46,10 @@ services:
     volumes:
       - minio_data:/data
     ports:
-      - "9000:9000"   # API
-      - "9001:9001"   # Console
+      - "9000:9000" # API
+      - "9001:9001" # Console
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: [ "CMD", "mc", "ready", "local" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -81,8 +81,25 @@ services:
       ZOOM_CLIENT_ID: ${ZOOM_CLIENT_ID:-}
       ZOOM_CLIENT_SECRET: ${ZOOM_CLIENT_SECRET:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+      WEBHOOK_URL: ${WEBHOOK_URL:-}
+      WEBHOOK_HMAC_SECRET: ${WEBHOOK_HMAC_SECRET:-}
+      STT_ENDPOINT: ${STT_ENDPOINT:-}
+      STT_LANGUAGE: ${STT_LANGUAGE:-id}
+      AUDIO_CONCURRENCY: ${AUDIO_CONCURRENCY:-2}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+      # xAPI LRS (Yet Analytics)
+      LRS_ENDPOINT: ${LRS_ENDPOINT:-http://lrsql:8080/xapi/statements}
+      LRS_API_KEY: ${LRS_API_KEY:-}
+      LRS_SECRET_KEY: ${LRS_SECRET_KEY:-}
+    volumes:
+      - audio_data:/app/shared
     ports:
-      - "3000:3000"
+      - "3001:3000"
+    networks:
+      - default
+      - localai_default
     depends_on:
       postgres:
         condition: service_healthy
@@ -95,3 +112,8 @@ volumes:
   postgres_data:
   redis_data:
   minio_data:
+  audio_data:
+
+networks:
+  localai_default:
+    external: true

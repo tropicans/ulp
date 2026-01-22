@@ -87,10 +87,10 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
 
     if (!currentQuestion) {
         return (
-            <Card className="bg-slate-900 border-slate-800">
+            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                 <CardContent className="py-20 text-center">
                     <Loader2 className="w-10 h-10 animate-spin text-purple-500 mx-auto mb-4" />
-                    <p className="text-slate-400">Menyiapkan kuis...</p>
+                    <p className="text-slate-600 dark:text-slate-400">Menyiapkan kuis...</p>
                 </CardContent>
             </Card>
         )
@@ -101,23 +101,23 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
     return (
         <div className="max-w-3xl mx-auto space-y-6 pb-20">
             {/* Header Info */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-16 bg-slate-950/80 backdrop-blur-md z-10 py-4 border-b border-slate-800">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-16 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md z-10 py-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="space-y-1">
-                    <h2 className="text-xl font-bold text-white truncate max-w-md">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white truncate max-w-md">
                         {quiz.title}
                     </h2>
                     <div className="flex items-center gap-3">
-                        <span className="text-xs text-slate-500 font-medium">
+                        <span className="text-xs text-slate-500 dark:text-slate-500 font-medium">
                             PERTANYAAN {currentQuestionIndex + 1} DARI {questions.length}
                         </span>
-                        <Badge variant="outline" className="text-[10px] border-slate-700 text-slate-400">
+                        <Badge variant="outline" className="text-[10px] border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400">
                             {currentQuestion.points} POIN
                         </Badge>
                     </div>
                 </div>
 
                 {timeLeft !== null && (
-                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${timeLeft < 60 ? "bg-red-500/10 border-red-500 text-red-500 animate-pulse" : "bg-slate-900 border-slate-800 text-slate-300"
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${timeLeft < 60 ? "bg-red-50 dark:bg-red-500/10 border-red-500 text-red-600 dark:text-red-500 animate-pulse" : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
                         }`}>
                         <Timer className="w-4 h-4" />
                         <span className="font-mono font-bold text-lg">{formatTime(timeLeft)}</span>
@@ -125,31 +125,31 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                 )}
             </div>
 
-            <Progress value={progress} className="h-2 bg-slate-900" />
+            <Progress value={progress} className="h-2 bg-slate-200 dark:bg-slate-900" />
 
             {/* Question Card */}
-            <Card className="bg-slate-900 border-slate-800 shadow-xl overflow-hidden">
+            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
                 <CardContent className="p-8">
                     <div className="space-y-8">
-                        <h3 className="text-xl text-white font-medium leading-relaxed">
+                        <h3 className="text-xl text-slate-900 dark:text-white font-medium leading-relaxed">
                             {currentQuestion.text}
                         </h3>
 
                         {/* Multiple Choice / True False */}
                         {(currentQuestion.type === "MULTIPLE_CHOICE" || currentQuestion.type === "TRUE_FALSE") && (
                             <div className="space-y-3">
-                                {currentQuestion.options?.choices?.map((choice: string, idx: number) => {
+                                {currentQuestion.options?.map((choice: string, idx: number) => {
                                     const isSelected = answers[currentQuestion.id] === idx
                                     return (
                                         <button
                                             key={idx}
                                             onClick={() => handleAnswerChange(currentQuestion.id, idx)}
                                             className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${isSelected
-                                                    ? "bg-purple-600/10 border-purple-500 text-white"
-                                                    : "bg-slate-800/50 border-slate-700/50 text-slate-400 hover:border-slate-600 hover:bg-slate-800"
+                                                ? "bg-purple-50 dark:bg-purple-600/10 border-purple-500 text-slate-900 dark:text-white"
+                                                : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
                                                 }`}
                                         >
-                                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm transition-colors ${isSelected ? "bg-purple-600 text-white" : "bg-slate-900 text-slate-500 group-hover:text-slate-300"
+                                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm transition-colors ${isSelected ? "bg-purple-600 text-white" : "bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
                                                 }`}>
                                                 {String.fromCharCode(65 + idx)}
                                             </div>
@@ -165,12 +165,12 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                         {currentQuestion.type === "ESSAY" && (
                             <div className="space-y-2">
                                 <textarea
-                                    className="w-full h-64 bg-slate-800/50 border border-slate-700 rounded-2xl p-6 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all resize-none"
+                                    className="w-full h-64 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all resize-none"
                                     placeholder="Tuliskan jawaban Anda di sini..."
                                     value={answers[currentQuestion.id] || ""}
                                     onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
                                 />
-                                <p className="text-xs text-slate-500">Jawaban Anda akan disimpan otomatis saat berpindah soal.</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-500">Jawaban Anda akan disimpan otomatis saat berpindah soal.</p>
                             </div>
                         )}
                     </div>
@@ -183,7 +183,7 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                     variant="outline"
                     onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
                     disabled={currentQuestionIndex === 0}
-                    className="border-slate-700 text-slate-300"
+                    className="border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                 >
                     <ChevronLeft className="w-4 h-4 mr-2" />
                     Sebelumnya
@@ -212,7 +212,7 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
             </div>
 
             {/* Summary Status */}
-            <div className="pt-8 border-t border-slate-900 grid grid-cols-5 sm:grid-cols-10 gap-2">
+            <div className="pt-8 border-t border-slate-200 dark:border-slate-900 grid grid-cols-5 sm:grid-cols-10 gap-2">
                 {questions.map((_: any, idx: number) => {
                     const isAnswered = answers[questions[idx].id] !== undefined && answers[questions[idx].id] !== ""
                     const isCurrent = idx === currentQuestionIndex
@@ -221,17 +221,16 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                             key={idx}
                             onClick={() => setCurrentQuestionIndex(idx)}
                             className={`h-10 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${isCurrent
-                                    ? "bg-purple-600 text-white ring-2 ring-purple-500 ring-offset-2 ring-offset-slate-950 scale-110"
-                                    : isAnswered
-                                        ? "bg-slate-800 text-slate-300 border border-slate-700"
-                                        : "bg-slate-900 text-slate-600 border border-slate-800"
+                                ? "bg-purple-600 text-white ring-2 ring-purple-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-950 scale-110"
+                                : isAnswered
+                                    ? "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700"
+                                    : "bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800"
                                 }`}
                         >
                             {idx + 1}
                         </button>
                     )
-                })}
-            </div>
+                })}</div>
         </div>
     )
 }

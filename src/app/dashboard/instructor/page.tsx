@@ -11,7 +11,9 @@ import {
     TrendingUp,
     Plus,
     Edit,
-    Eye
+    Eye,
+    Youtube,
+    Sparkles
 } from "lucide-react"
 
 export default async function InstructorDashboard() {
@@ -55,12 +57,26 @@ export default async function InstructorDashboard() {
                         {user.name} • {user.unitKerja || "Fasilitator"}
                     </p>
                 </div>
-                <Link href="/dashboard/courses/new">
-                    <Button className="bg-blue-600 hover:bg-blue-700">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Buat Kursus Baru
-                    </Button>
-                </Link>
+                <div className="flex gap-2">
+                    <Link href="/dashboard/instructor/import-youtube">
+                        <Button variant="outline" className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900/30 dark:hover:bg-red-900/10">
+                            <Youtube className="w-4 h-4 mr-2" />
+                            Import YouTube
+                        </Button>
+                    </Link>
+                    <Link href="/dashboard/instructor/curation">
+                        <Button variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-900/30 dark:hover:bg-purple-900/10">
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            AI Curation Lab
+                        </Button>
+                    </Link>
+                    <Link href="/dashboard/courses/new">
+                        <Button className="bg-blue-600 hover:bg-blue-700">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Buat Kursus Baru
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             {/* Stats Grid */}

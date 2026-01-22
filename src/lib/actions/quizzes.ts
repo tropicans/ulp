@@ -6,6 +6,9 @@ import { revalidatePath } from "next/cache"
 import { awardPoints, updateActivityStreak } from "./gamification"
 import { z } from "zod"
 import { QuizType, GradingStatus } from "@/generated/prisma"
+import { sendStatementAsync } from "@/lib/xapi"
+import { buildActor, buildActivity, buildResult } from "@/lib/xapi/utils"
+import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 const createQuizSchema = z.object({
     moduleId: z.string(),
@@ -237,6 +240,32 @@ export async function submitQuizAttempt(data: z.infer<typeof quizSubmissionSchem
         // Award points only if passed and no essay (auto-graded)
         if (isPassed && !hasEssay) {
             await awardPoints(session.user.id, "QUIZ_PASS")
+        }
+
+        // Send xAPI statement for quiz attempt
+        if (!hasEssay) {
+            const quizModule = await prisma.quiz.findUnique({
+                where: { id: validated.quizId },
+                include: { Module: { include: { Course: { select: { slug: true } } } } }
+            })
+
+            if (quizModule) {
+                sendStatementAsync({
+                    actor: buildActor(session.user.email || '', session.user.name),
+                    verb: isPassed ? VERBS.passed : VERBS.failed,
+                    object: buildActivity(
+                        `${PLATFORM_IRI}/courses/${quizModule.Module.Course.slug}/quizzes/${validated.quizId}`,
+                        ACTIVITY_TYPES.assessment,
+                        quiz.title,
+                        quiz.description || undefined
+                    ),
+                    result: buildResult({
+                        score: Math.round(score),
+                        success: isPassed,
+                        completion: true
+                    })
+                })
+            }
         }
 
         return { success: true, attemptId: attempt.id, score, isPassed, hasEssay }

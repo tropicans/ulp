@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { DeliveryMode, Difficulty } from "@/generated/prisma"
+import { sendStatementAsync, buildActor, buildActivity } from "@/lib/xapi"
+import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 const courseSchema = z.object({
     title: z.string().min(3, "Judul minimal 3 karakter"),
@@ -18,21 +20,40 @@ const courseSchema = z.object({
     endDate: z.date().optional().nullable(),
 })
 
+
 export async function getCourses(filters?: {
     deliveryMode?: DeliveryMode
     difficulty?: Difficulty
     category?: string
     isPublished?: boolean
+    limit?: number
+    offset?: number
 }) {
     try {
-        return await prisma.course.findMany({
+        const limit = filters?.limit || 20; // Default pagination
+        const offset = filters?.offset || 0;
+
+        const courses = await prisma.course.findMany({
             where: {
                 ...(filters?.deliveryMode && { deliveryMode: filters.deliveryMode }),
                 ...(filters?.difficulty && { difficulty: filters.difficulty }),
                 ...(filters?.category && { category: filters.category }),
                 ...(filters?.isPublished !== undefined && { isPublished: filters.isPublished }),
             },
-            include: {
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                description: true,
+                thumbnail: true,
+                deliveryMode: true,
+                difficulty: true,
+                category: true,
+                duration: true,
+                isPublished: true,
+                isFeatured: true,
+                createdAt: true,
+                ytPlaylistId: true,
                 User: {
                     select: {
                         name: true,
@@ -43,8 +64,47 @@ export async function getCourses(filters?: {
                     select: { Enrollment: true }
                 }
             },
-            orderBy: { createdAt: "desc" }
+            orderBy: { createdAt: "desc" },
+            take: limit,
+            skip: offset,
         })
+
+        // Enrich courses with YouTube thumbnails if they have ytPlaylistId and no custom thumbnail
+        const playlistIds = courses
+            .filter(c => c.ytPlaylistId && !c.thumbnail)
+            .map(c => c.ytPlaylistId as string)
+
+        if (playlistIds.length > 0) {
+            // Get first video (lowest videoNo) from each playlist
+            const firstVideos = await prisma.$queryRaw<{ playlistId: string, videoId: string }[]>`
+                SELECT DISTINCT ON (playlist_id) 
+                    playlist_id as "playlistId", 
+                    video_id as "videoId"
+                FROM yt_playlist_items
+                WHERE playlist_id = ANY(${playlistIds}::text[])
+                ORDER BY playlist_id, video_no ASC
+            `
+
+            const playlistToVideoId = new Map(
+                firstVideos.map(v => [v.playlistId, v.videoId])
+            )
+
+            // Enrich courses with YouTube thumbnail URL
+            return courses.map(course => {
+                if (course.ytPlaylistId && !course.thumbnail) {
+                    const videoId = playlistToVideoId.get(course.ytPlaylistId)
+                    if (videoId) {
+                        return {
+                            ...course,
+                            thumbnail: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
+                        }
+                    }
+                }
+                return course
+            })
+        }
+
+        return courses
     } catch (error) {
         console.error("Error fetching courses:", error)
         return []
@@ -187,6 +247,90 @@ export async function updateCourse(courseId: string, data: z.infer<typeof update
     }
 }
 
+export async function updateCourseThumbnail(courseId: string, thumbnailUrl: string) {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) {
+            return { error: "Unauthorized" }
+        }
+
+        // Check ownership
+        const course = await prisma.course.findUnique({
+            where: { id: courseId },
+            select: { instructorId: true }
+        })
+
+        if (!course) {
+            return { error: "Kursus tidak ditemukan" }
+        }
+
+        if (course.instructorId !== session.user.id &&
+            !["SUPER_ADMIN", "ADMIN_UNIT"].includes(session.user.role)) {
+            return { error: "Anda tidak memiliki akses untuk mengedit kursus ini" }
+        }
+
+        const updatedCourse = await prisma.course.update({
+            where: { id: courseId },
+            data: {
+                thumbnail: thumbnailUrl,
+                updatedAt: new Date(),
+            }
+        })
+
+        revalidatePath(`/dashboard/courses/${courseId}/edit`)
+        revalidatePath("/dashboard/courses")
+        revalidatePath("/courses")
+        return { success: true, thumbnail: updatedCourse.thumbnail }
+    } catch (error) {
+        console.error("Error updating thumbnail:", error)
+        return { error: "Gagal mengupdate thumbnail" }
+    }
+}
+
+export async function toggleCoursePublish(courseId: string) {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) {
+            return { error: "Unauthorized" }
+        }
+
+        // Check ownership
+        const course = await prisma.course.findUnique({
+            where: { id: courseId },
+            select: { instructorId: true, isPublished: true }
+        })
+
+        if (!course) {
+            return { error: "Kursus tidak ditemukan" }
+        }
+
+        if (course.instructorId !== session.user.id &&
+            !["SUPER_ADMIN", "ADMIN_UNIT"].includes(session.user.role)) {
+            return { error: "Anda tidak memiliki akses untuk mengedit kursus ini" }
+        }
+
+        const updatedCourse = await prisma.course.update({
+            where: { id: courseId },
+            data: {
+                isPublished: !course.isPublished,
+                updatedAt: new Date(),
+            }
+        })
+
+        revalidatePath(`/dashboard/courses/${courseId}/edit`)
+        revalidatePath("/dashboard/courses")
+        revalidatePath("/courses")
+        return {
+            success: true,
+            isPublished: updatedCourse.isPublished,
+            message: updatedCourse.isPublished ? "Kursus berhasil dipublish!" : "Kursus berhasil dijadikan draft."
+        }
+    } catch (error) {
+        console.error("Error toggling publish:", error)
+        return { error: "Gagal mengubah status publish" }
+    }
+}
+
 export async function enrollInCourse(courseId: string) {
     try {
         const session = await auth()
@@ -207,6 +351,11 @@ export async function enrollInCourse(courseId: string) {
             return { error: "Anda sudah terdaftar di kursus ini" }
         }
 
+        const course = await prisma.course.findUnique({
+            where: { id: courseId },
+            select: { title: true, slug: true, description: true }
+        })
+
         await prisma.enrollment.create({
             data: {
                 id: crypto.randomUUID(),
@@ -214,6 +363,20 @@ export async function enrollInCourse(courseId: string) {
                 courseId,
             }
         })
+
+        // Send xAPI statement for enrollment (async, fire-and-forget)
+        if (course) {
+            sendStatementAsync({
+                actor: buildActor(session.user.email || '', session.user.name),
+                verb: VERBS.enrolled,
+                object: buildActivity(
+                    `${PLATFORM_IRI}/courses/${course.slug}`,
+                    ACTIVITY_TYPES.course,
+                    course.title,
+                    course.description || undefined
+                )
+            })
+        }
 
         revalidatePath(`/courses/[slug]`, "page")
         revalidatePath("/dashboard")

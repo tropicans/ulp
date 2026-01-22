@@ -8,7 +8,8 @@ import {
     BookOpen,
     TrendingUp,
     Shield,
-    Settings
+    Settings,
+    Activity
 } from "lucide-react"
 
 export default async function AdminDashboard() {
@@ -101,6 +102,14 @@ export default async function AdminDashboard() {
                             <Shield className="w-6 h-6 text-purple-400 mb-2 group-hover:scale-110 transition-transform" />
                             <h3 className="font-bold text-slate-900 dark:text-white text-sm">Log Audit</h3>
                             <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-1">System Logs</p>
+                        </Link>
+                        <Link
+                            href="/dashboard/admin/xapi"
+                            className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/30 transition-all group"
+                        >
+                            <Activity className="w-6 h-6 text-orange-400 mb-2 group-hover:scale-110 transition-transform" />
+                            <h3 className="font-bold text-slate-900 dark:text-white text-sm">xAPI Analytics</h3>
+                            <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-1">Learning Records</p>
                         </Link>
                     </div>
                 </CardContent>

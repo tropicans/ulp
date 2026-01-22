@@ -31,6 +31,7 @@ interface Module {
         order: number
         duration: number | null
         contentType: string
+        ytVideoId?: string | null
     }[]
     Quiz?: {
         id: string
@@ -59,6 +60,7 @@ interface CourseSidebarProps {
         completedLessons: string[]
         sessions?: CourseSession[]
         deliveryMode?: DeliveryMode
+        refinedTitleMap?: Record<string, string>
     }
 }
 
@@ -103,10 +105,46 @@ export function CourseSidebar({
 
     return (
         <div className="h-full overflow-y-auto bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700">
-            <div className="p-4">
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Kurikulum</h2>
-
+            <div className="p-3">
                 <div className="space-y-2">
+                    {/* PRETEST Section */}
+                    {modules.some(m => m.Quiz?.some(q => q.type === 'PRETEST')) && (
+                        <>
+                            {modules.map(module =>
+                                module.Quiz?.filter(q => q.type === 'PRETEST').map(quiz => {
+                                    const active = quiz.id === currentQuizId
+                                    return (
+                                        <div key={quiz.id} className="mb-4">
+                                            <Link
+                                                href={`/courses/${course.slug}/learn?quiz=${quiz.id}`}
+                                                className={cn(
+                                                    "flex items-center gap-3 p-3 rounded-lg transition-colors border-2",
+                                                    active
+                                                        ? "bg-yellow-600/20 text-yellow-600 dark:text-yellow-400 border-yellow-600/40"
+                                                        : "hover:bg-yellow-50 dark:hover:bg-yellow-900/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-yellow-500/20"
+                                                )}
+                                            >
+                                                <div className="p-2 rounded-lg bg-yellow-500/20">
+                                                    <FileQuestion className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-bold truncate">
+                                                        {quiz.title}
+                                                    </p>
+                                                    <p className="text-[10px] text-yellow-600 dark:text-yellow-500 font-bold uppercase tracking-wider">
+                                                        Tes Awal (Wajib)
+                                                    </p>
+                                                </div>
+                                            </Link>
+                                            <div className="ml-4 mt-2 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-4" />
+                                        </div>
+                                    )
+                                })
+                            )}
+                        </>
+                    )}
+
+                    {/* Regular Modules */}
                     {modules.map((module) => {
                         const isExpanded = expandedModules.has(module.id)
                         const completedLessons = module.Lesson.filter(l => isLessonCompleted(l.id)).length
@@ -146,6 +184,10 @@ export function CourseSidebar({
                                         {module.Lesson.map((lesson) => {
                                             const completed = isLessonCompleted(lesson.id)
                                             const active = lesson.id === currentLessonId
+                                            // Use refined title if available from yt_playlist_items
+                                            const displayTitle = (lesson.ytVideoId && progress?.refinedTitleMap?.[lesson.ytVideoId])
+                                                ? progress.refinedTitleMap[lesson.ytVideoId]
+                                                : lesson.title
 
                                             return (
                                                 <Link
@@ -165,15 +207,15 @@ export function CourseSidebar({
                                                     )}
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm font-medium truncate">
-                                                            {lesson.title}
+                                                            {displayTitle}
                                                         </p>
                                                     </div>
                                                 </Link>
                                             )
                                         })}
 
-                                        {/* Quizzes */}
-                                        {module.Quiz?.map((quiz) => {
+                                        {/* Quizzes - exclude PRETEST and POSTTEST as they're shown separately */}
+                                        {module.Quiz?.filter(q => q.type !== 'PRETEST' && q.type !== 'POSTTEST').map((quiz) => {
                                             const active = quiz.id === currentQuizId
                                             // In a full implementation, we'd check if quiz is passed
                                             return (
@@ -202,6 +244,60 @@ export function CourseSidebar({
                             </div>
                         )
                     })}
+
+                    {/* POSTTEST Section */}
+                    {modules.some(m => m.Quiz?.some(q => q.type === 'POSTTEST')) && (
+                        <>
+                            <div className="ml-4 mt-2 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-4" />
+                            {modules.map(module =>
+                                module.Quiz?.filter(q => q.type === 'POSTTEST').map(quiz => {
+                                    const active = quiz.id === currentQuizId
+                                    const allLessonsComplete = modules.every(m =>
+                                        m.Lesson.every(l => progress?.completedLessons?.includes(l.id))
+                                    )
+                                    return (
+                                        <div key={quiz.id} className="mt-2">
+                                            <Link
+                                                href={`/courses/${course.slug}/learn?quiz=${quiz.id}`}
+                                                className={cn(
+                                                    "flex items-center gap-3 p-3 rounded-lg transition-colors border-2",
+                                                    active
+                                                        ? "bg-green-600/20 text-green-600 dark:text-green-400 border-green-600/40"
+                                                        : allLessonsComplete
+                                                            ? "hover:bg-green-50 dark:hover:bg-green-900/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-green-500/20"
+                                                            : "opacity-50 cursor-not-allowed border-slate-300 dark:border-slate-700"
+                                                )}
+                                                onClick={(e) => !allLessonsComplete && e.preventDefault()}
+                                            >
+                                                <div className={cn(
+                                                    "p-2 rounded-lg",
+                                                    allLessonsComplete ? "bg-green-500/20" : "bg-slate-200 dark:bg-slate-700"
+                                                )}>
+                                                    <FileQuestion className={cn(
+                                                        "w-5 h-5",
+                                                        allLessonsComplete ? "text-green-600 dark:text-green-400" : "text-slate-400"
+                                                    )} />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-bold truncate">
+                                                        {quiz.title}
+                                                    </p>
+                                                    <p className={cn(
+                                                        "text-[10px] font-bold uppercase tracking-wider",
+                                                        allLessonsComplete
+                                                            ? "text-green-600 dark:text-green-500"
+                                                            : "text-slate-400"
+                                                    )}>
+                                                        {allLessonsComplete ? "Evaluasi Akhir" : "Locked"}
+                                                    </p>
+                                                </div>
+                                            </Link>
+                                        </div>
+                                    )
+                                })
+                            )}
+                        </>
+                    )}
                 </div>
 
                 {/* Session Section - Only for non-async modes */}

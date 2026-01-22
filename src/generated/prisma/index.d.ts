@@ -129,6 +129,31 @@ export type SystemSetting = $Result.DefaultSelection<Prisma.$SystemSettingPayloa
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model YtPlaylist
+ * 
+ */
+export type YtPlaylist = $Result.DefaultSelection<Prisma.$YtPlaylistPayload>
+/**
+ * Model YtPlaylistItem
+ * 
+ */
+export type YtPlaylistItem = $Result.DefaultSelection<Prisma.$YtPlaylistItemPayload>
+/**
+ * Model YtUserSettings
+ * 
+ */
+export type YtUserSettings = $Result.DefaultSelection<Prisma.$YtUserSettingsPayload>
+/**
+ * Model YtCurationSession
+ * 
+ */
+export type YtCurationSession = $Result.DefaultSelection<Prisma.$YtCurationSessionPayload>
+/**
+ * Model YtCurationCandidate
+ * 
+ */
+export type YtCurationCandidate = $Result.DefaultSelection<Prisma.$YtCurationCandidatePayload>
+/**
  * Model UserBadge
  * 
  */
@@ -138,6 +163,11 @@ export type UserBadge = $Result.DefaultSelection<Prisma.$UserBadgePayload>
  * 
  */
 export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
+/**
+ * Model ProcessingJob
+ * 
+ */
+export type ProcessingJob = $Result.DefaultSelection<Prisma.$ProcessingJobPayload>
 
 /**
  * Enums
@@ -697,6 +727,56 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.ytPlaylist`: Exposes CRUD operations for the **YtPlaylist** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more YtPlaylists
+    * const ytPlaylists = await prisma.ytPlaylist.findMany()
+    * ```
+    */
+  get ytPlaylist(): Prisma.YtPlaylistDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.ytPlaylistItem`: Exposes CRUD operations for the **YtPlaylistItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more YtPlaylistItems
+    * const ytPlaylistItems = await prisma.ytPlaylistItem.findMany()
+    * ```
+    */
+  get ytPlaylistItem(): Prisma.YtPlaylistItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.ytUserSettings`: Exposes CRUD operations for the **YtUserSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more YtUserSettings
+    * const ytUserSettings = await prisma.ytUserSettings.findMany()
+    * ```
+    */
+  get ytUserSettings(): Prisma.YtUserSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.ytCurationSession`: Exposes CRUD operations for the **YtCurationSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more YtCurationSessions
+    * const ytCurationSessions = await prisma.ytCurationSession.findMany()
+    * ```
+    */
+  get ytCurationSession(): Prisma.YtCurationSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.ytCurationCandidate`: Exposes CRUD operations for the **YtCurationCandidate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more YtCurationCandidates
+    * const ytCurationCandidates = await prisma.ytCurationCandidate.findMany()
+    * ```
+    */
+  get ytCurationCandidate(): Prisma.YtCurationCandidateDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.userBadge`: Exposes CRUD operations for the **UserBadge** model.
     * Example usage:
     * ```ts
@@ -715,6 +795,16 @@ export class PrismaClient<
     * ```
     */
   get verificationToken(): Prisma.VerificationTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.processingJob`: Exposes CRUD operations for the **ProcessingJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProcessingJobs
+    * const processingJobs = await prisma.processingJob.findMany()
+    * ```
+    */
+  get processingJob(): Prisma.ProcessingJobDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1179,8 +1269,14 @@ export namespace Prisma {
     Session: 'Session',
     SystemSetting: 'SystemSetting',
     User: 'User',
+    YtPlaylist: 'YtPlaylist',
+    YtPlaylistItem: 'YtPlaylistItem',
+    YtUserSettings: 'YtUserSettings',
+    YtCurationSession: 'YtCurationSession',
+    YtCurationCandidate: 'YtCurationCandidate',
     UserBadge: 'UserBadge',
-    VerificationToken: 'VerificationToken'
+    VerificationToken: 'VerificationToken',
+    ProcessingJob: 'ProcessingJob'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1199,7 +1295,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendance" | "attendanceToken" | "auditLog" | "badge" | "certificate" | "course" | "courseSession" | "enrollment" | "forum" | "forumComment" | "forumPost" | "lesson" | "module" | "notification" | "progress" | "question" | "questionAnswer" | "quiz" | "quizAttempt" | "session" | "systemSetting" | "user" | "userBadge" | "verificationToken"
+      modelProps: "account" | "attendance" | "attendanceToken" | "auditLog" | "badge" | "certificate" | "course" | "courseSession" | "enrollment" | "forum" | "forumComment" | "forumPost" | "lesson" | "module" | "notification" | "progress" | "question" | "questionAnswer" | "quiz" | "quizAttempt" | "session" | "systemSetting" | "user" | "ytPlaylist" | "ytPlaylistItem" | "ytUserSettings" | "ytCurationSession" | "ytCurationCandidate" | "userBadge" | "verificationToken" | "processingJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2905,6 +3001,376 @@ export namespace Prisma {
           }
         }
       }
+      YtPlaylist: {
+        payload: Prisma.$YtPlaylistPayload<ExtArgs>
+        fields: Prisma.YtPlaylistFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.YtPlaylistFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.YtPlaylistFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>
+          }
+          findFirst: {
+            args: Prisma.YtPlaylistFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.YtPlaylistFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>
+          }
+          findMany: {
+            args: Prisma.YtPlaylistFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>[]
+          }
+          create: {
+            args: Prisma.YtPlaylistCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>
+          }
+          createMany: {
+            args: Prisma.YtPlaylistCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.YtPlaylistCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>[]
+          }
+          delete: {
+            args: Prisma.YtPlaylistDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>
+          }
+          update: {
+            args: Prisma.YtPlaylistUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>
+          }
+          deleteMany: {
+            args: Prisma.YtPlaylistDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.YtPlaylistUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.YtPlaylistUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>[]
+          }
+          upsert: {
+            args: Prisma.YtPlaylistUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistPayload>
+          }
+          aggregate: {
+            args: Prisma.YtPlaylistAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateYtPlaylist>
+          }
+          groupBy: {
+            args: Prisma.YtPlaylistGroupByArgs<ExtArgs>
+            result: $Utils.Optional<YtPlaylistGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.YtPlaylistCountArgs<ExtArgs>
+            result: $Utils.Optional<YtPlaylistCountAggregateOutputType> | number
+          }
+        }
+      }
+      YtPlaylistItem: {
+        payload: Prisma.$YtPlaylistItemPayload<ExtArgs>
+        fields: Prisma.YtPlaylistItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.YtPlaylistItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.YtPlaylistItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>
+          }
+          findFirst: {
+            args: Prisma.YtPlaylistItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.YtPlaylistItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>
+          }
+          findMany: {
+            args: Prisma.YtPlaylistItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>[]
+          }
+          create: {
+            args: Prisma.YtPlaylistItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>
+          }
+          createMany: {
+            args: Prisma.YtPlaylistItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.YtPlaylistItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>[]
+          }
+          delete: {
+            args: Prisma.YtPlaylistItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>
+          }
+          update: {
+            args: Prisma.YtPlaylistItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.YtPlaylistItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.YtPlaylistItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.YtPlaylistItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.YtPlaylistItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtPlaylistItemPayload>
+          }
+          aggregate: {
+            args: Prisma.YtPlaylistItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateYtPlaylistItem>
+          }
+          groupBy: {
+            args: Prisma.YtPlaylistItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<YtPlaylistItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.YtPlaylistItemCountArgs<ExtArgs>
+            result: $Utils.Optional<YtPlaylistItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      YtUserSettings: {
+        payload: Prisma.$YtUserSettingsPayload<ExtArgs>
+        fields: Prisma.YtUserSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.YtUserSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.YtUserSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.YtUserSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.YtUserSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.YtUserSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.YtUserSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.YtUserSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.YtUserSettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.YtUserSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>
+          }
+          update: {
+            args: Prisma.YtUserSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.YtUserSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.YtUserSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.YtUserSettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.YtUserSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtUserSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.YtUserSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateYtUserSettings>
+          }
+          groupBy: {
+            args: Prisma.YtUserSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<YtUserSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.YtUserSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<YtUserSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      YtCurationSession: {
+        payload: Prisma.$YtCurationSessionPayload<ExtArgs>
+        fields: Prisma.YtCurationSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.YtCurationSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.YtCurationSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.YtCurationSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.YtCurationSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>
+          }
+          findMany: {
+            args: Prisma.YtCurationSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>[]
+          }
+          create: {
+            args: Prisma.YtCurationSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>
+          }
+          createMany: {
+            args: Prisma.YtCurationSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.YtCurationSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.YtCurationSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>
+          }
+          update: {
+            args: Prisma.YtCurationSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.YtCurationSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.YtCurationSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.YtCurationSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.YtCurationSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.YtCurationSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateYtCurationSession>
+          }
+          groupBy: {
+            args: Prisma.YtCurationSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<YtCurationSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.YtCurationSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<YtCurationSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      YtCurationCandidate: {
+        payload: Prisma.$YtCurationCandidatePayload<ExtArgs>
+        fields: Prisma.YtCurationCandidateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.YtCurationCandidateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.YtCurationCandidateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>
+          }
+          findFirst: {
+            args: Prisma.YtCurationCandidateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.YtCurationCandidateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>
+          }
+          findMany: {
+            args: Prisma.YtCurationCandidateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>[]
+          }
+          create: {
+            args: Prisma.YtCurationCandidateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>
+          }
+          createMany: {
+            args: Prisma.YtCurationCandidateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.YtCurationCandidateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>[]
+          }
+          delete: {
+            args: Prisma.YtCurationCandidateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>
+          }
+          update: {
+            args: Prisma.YtCurationCandidateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>
+          }
+          deleteMany: {
+            args: Prisma.YtCurationCandidateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.YtCurationCandidateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.YtCurationCandidateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>[]
+          }
+          upsert: {
+            args: Prisma.YtCurationCandidateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$YtCurationCandidatePayload>
+          }
+          aggregate: {
+            args: Prisma.YtCurationCandidateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateYtCurationCandidate>
+          }
+          groupBy: {
+            args: Prisma.YtCurationCandidateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<YtCurationCandidateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.YtCurationCandidateCountArgs<ExtArgs>
+            result: $Utils.Optional<YtCurationCandidateCountAggregateOutputType> | number
+          }
+        }
+      }
       UserBadge: {
         payload: Prisma.$UserBadgePayload<ExtArgs>
         fields: Prisma.UserBadgeFieldRefs
@@ -3053,6 +3519,80 @@ export namespace Prisma {
           }
         }
       }
+      ProcessingJob: {
+        payload: Prisma.$ProcessingJobPayload<ExtArgs>
+        fields: Prisma.ProcessingJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProcessingJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProcessingJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>
+          }
+          findFirst: {
+            args: Prisma.ProcessingJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProcessingJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>
+          }
+          findMany: {
+            args: Prisma.ProcessingJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>[]
+          }
+          create: {
+            args: Prisma.ProcessingJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>
+          }
+          createMany: {
+            args: Prisma.ProcessingJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProcessingJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>[]
+          }
+          delete: {
+            args: Prisma.ProcessingJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>
+          }
+          update: {
+            args: Prisma.ProcessingJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProcessingJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProcessingJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProcessingJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProcessingJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessingJobPayload>
+          }
+          aggregate: {
+            args: Prisma.ProcessingJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProcessingJob>
+          }
+          groupBy: {
+            args: Prisma.ProcessingJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProcessingJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProcessingJobCountArgs<ExtArgs>
+            result: $Utils.Optional<ProcessingJobCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3172,8 +3712,14 @@ export namespace Prisma {
     session?: SessionOmit
     systemSetting?: SystemSettingOmit
     user?: UserOmit
+    ytPlaylist?: YtPlaylistOmit
+    ytPlaylistItem?: YtPlaylistItemOmit
+    ytUserSettings?: YtUserSettingsOmit
+    ytCurationSession?: YtCurationSessionOmit
+    ytCurationCandidate?: YtCurationCandidateOmit
     userBadge?: UserBadgeOmit
     verificationToken?: VerificationTokenOmit
+    processingJob?: ProcessingJobOmit
   }
 
   /* Types for Logging */
@@ -3749,6 +4295,37 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUserBadgeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserBadgeWhereInput
+  }
+
+
+  /**
+   * Count Type YtCurationSessionCountOutputType
+   */
+
+  export type YtCurationSessionCountOutputType = {
+    candidates: number
+  }
+
+  export type YtCurationSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    candidates?: boolean | YtCurationSessionCountOutputTypeCountCandidatesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * YtCurationSessionCountOutputType without action
+   */
+  export type YtCurationSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSessionCountOutputType
+     */
+    select?: YtCurationSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * YtCurationSessionCountOutputType without action
+   */
+  export type YtCurationSessionCountOutputTypeCountCandidatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: YtCurationCandidateWhereInput
   }
 
 
@@ -10511,11 +11088,13 @@ export namespace Prisma {
   export type CourseAvgAggregateOutputType = {
     capacity: number | null
     duration: number | null
+    jp: Decimal | null
   }
 
   export type CourseSumAggregateOutputType = {
     capacity: number | null
     duration: number | null
+    jp: Decimal | null
   }
 
   export type CourseMinAggregateOutputType = {
@@ -10536,6 +11115,18 @@ export namespace Prisma {
     instructorId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    courseShortDesc: string | null
+    courseDesc: string | null
+    courseLevel: string | null
+    language: string | null
+    requirements: string | null
+    outcomes: string | null
+    recommendedNext: string | null
+    jp: Decimal | null
+    ytPlaylistId: string | null
+    isProcessing: boolean | null
+    processingStatus: string | null
+    lastProcessedAt: Date | null
   }
 
   export type CourseMaxAggregateOutputType = {
@@ -10556,6 +11147,18 @@ export namespace Prisma {
     instructorId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    courseShortDesc: string | null
+    courseDesc: string | null
+    courseLevel: string | null
+    language: string | null
+    requirements: string | null
+    outcomes: string | null
+    recommendedNext: string | null
+    jp: Decimal | null
+    ytPlaylistId: string | null
+    isProcessing: boolean | null
+    processingStatus: string | null
+    lastProcessedAt: Date | null
   }
 
   export type CourseCountAggregateOutputType = {
@@ -10577,6 +11180,18 @@ export namespace Prisma {
     instructorId: number
     createdAt: number
     updatedAt: number
+    courseShortDesc: number
+    courseDesc: number
+    courseLevel: number
+    language: number
+    requirements: number
+    outcomes: number
+    recommendedNext: number
+    jp: number
+    ytPlaylistId: number
+    isProcessing: number
+    processingStatus: number
+    lastProcessedAt: number
     _all: number
   }
 
@@ -10584,11 +11199,13 @@ export namespace Prisma {
   export type CourseAvgAggregateInputType = {
     capacity?: true
     duration?: true
+    jp?: true
   }
 
   export type CourseSumAggregateInputType = {
     capacity?: true
     duration?: true
+    jp?: true
   }
 
   export type CourseMinAggregateInputType = {
@@ -10609,6 +11226,18 @@ export namespace Prisma {
     instructorId?: true
     createdAt?: true
     updatedAt?: true
+    courseShortDesc?: true
+    courseDesc?: true
+    courseLevel?: true
+    language?: true
+    requirements?: true
+    outcomes?: true
+    recommendedNext?: true
+    jp?: true
+    ytPlaylistId?: true
+    isProcessing?: true
+    processingStatus?: true
+    lastProcessedAt?: true
   }
 
   export type CourseMaxAggregateInputType = {
@@ -10629,6 +11258,18 @@ export namespace Prisma {
     instructorId?: true
     createdAt?: true
     updatedAt?: true
+    courseShortDesc?: true
+    courseDesc?: true
+    courseLevel?: true
+    language?: true
+    requirements?: true
+    outcomes?: true
+    recommendedNext?: true
+    jp?: true
+    ytPlaylistId?: true
+    isProcessing?: true
+    processingStatus?: true
+    lastProcessedAt?: true
   }
 
   export type CourseCountAggregateInputType = {
@@ -10650,6 +11291,18 @@ export namespace Prisma {
     instructorId?: true
     createdAt?: true
     updatedAt?: true
+    courseShortDesc?: true
+    courseDesc?: true
+    courseLevel?: true
+    language?: true
+    requirements?: true
+    outcomes?: true
+    recommendedNext?: true
+    jp?: true
+    ytPlaylistId?: true
+    isProcessing?: true
+    processingStatus?: true
+    lastProcessedAt?: true
     _all?: true
   }
 
@@ -10758,6 +11411,18 @@ export namespace Prisma {
     instructorId: string
     createdAt: Date
     updatedAt: Date
+    courseShortDesc: string | null
+    courseDesc: string | null
+    courseLevel: string | null
+    language: string | null
+    requirements: string | null
+    outcomes: string | null
+    recommendedNext: string | null
+    jp: Decimal | null
+    ytPlaylistId: string | null
+    isProcessing: boolean
+    processingStatus: string | null
+    lastProcessedAt: Date | null
     _count: CourseCountAggregateOutputType | null
     _avg: CourseAvgAggregateOutputType | null
     _sum: CourseSumAggregateOutputType | null
@@ -10798,6 +11463,18 @@ export namespace Prisma {
     instructorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    recommendedNext?: boolean
+    jp?: boolean
+    ytPlaylistId?: boolean
+    isProcessing?: boolean
+    processingStatus?: boolean
+    lastProcessedAt?: boolean
     Certificate?: boolean | Course$CertificateArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
     CourseSession?: boolean | Course$CourseSessionArgs<ExtArgs>
@@ -10826,6 +11503,18 @@ export namespace Prisma {
     instructorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    recommendedNext?: boolean
+    jp?: boolean
+    ytPlaylistId?: boolean
+    isProcessing?: boolean
+    processingStatus?: boolean
+    lastProcessedAt?: boolean
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -10848,6 +11537,18 @@ export namespace Prisma {
     instructorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    recommendedNext?: boolean
+    jp?: boolean
+    ytPlaylistId?: boolean
+    isProcessing?: boolean
+    processingStatus?: boolean
+    lastProcessedAt?: boolean
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -10870,9 +11571,21 @@ export namespace Prisma {
     instructorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    recommendedNext?: boolean
+    jp?: boolean
+    ytPlaylistId?: boolean
+    isProcessing?: boolean
+    processingStatus?: boolean
+    lastProcessedAt?: boolean
   }
 
-  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnail" | "deliveryMode" | "difficulty" | "category" | "tags" | "capacity" | "duration" | "startDate" | "endDate" | "isPublished" | "isFeatured" | "instructorId" | "createdAt" | "updatedAt", ExtArgs["result"]["course"]>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnail" | "deliveryMode" | "difficulty" | "category" | "tags" | "capacity" | "duration" | "startDate" | "endDate" | "isPublished" | "isFeatured" | "instructorId" | "createdAt" | "updatedAt" | "courseShortDesc" | "courseDesc" | "courseLevel" | "language" | "requirements" | "outcomes" | "recommendedNext" | "jp" | "ytPlaylistId" | "isProcessing" | "processingStatus" | "lastProcessedAt", ExtArgs["result"]["course"]>
   export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Certificate?: boolean | Course$CertificateArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
@@ -10918,6 +11631,18 @@ export namespace Prisma {
       instructorId: string
       createdAt: Date
       updatedAt: Date
+      courseShortDesc: string | null
+      courseDesc: string | null
+      courseLevel: string | null
+      language: string | null
+      requirements: string | null
+      outcomes: string | null
+      recommendedNext: string | null
+      jp: Prisma.Decimal | null
+      ytPlaylistId: string | null
+      isProcessing: boolean
+      processingStatus: string | null
+      lastProcessedAt: Date | null
     }, ExtArgs["result"]["course"]>
     composites: {}
   }
@@ -11365,6 +12090,18 @@ export namespace Prisma {
     readonly instructorId: FieldRef<"Course", 'String'>
     readonly createdAt: FieldRef<"Course", 'DateTime'>
     readonly updatedAt: FieldRef<"Course", 'DateTime'>
+    readonly courseShortDesc: FieldRef<"Course", 'String'>
+    readonly courseDesc: FieldRef<"Course", 'String'>
+    readonly courseLevel: FieldRef<"Course", 'String'>
+    readonly language: FieldRef<"Course", 'String'>
+    readonly requirements: FieldRef<"Course", 'String'>
+    readonly outcomes: FieldRef<"Course", 'String'>
+    readonly recommendedNext: FieldRef<"Course", 'String'>
+    readonly jp: FieldRef<"Course", 'Decimal'>
+    readonly ytPlaylistId: FieldRef<"Course", 'String'>
+    readonly isProcessing: FieldRef<"Course", 'Boolean'>
+    readonly processingStatus: FieldRef<"Course", 'String'>
+    readonly lastProcessedAt: FieldRef<"Course", 'DateTime'>
   }
     
 
@@ -17760,6 +18497,12 @@ export namespace Prisma {
     moduleId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    ytVideoId: string | null
+    transcript: string | null
+    summary: string | null
+    processingStatus: string | null
+    error: string | null
+    audioFilePath: string | null
   }
 
   export type LessonMaxAggregateOutputType = {
@@ -17777,6 +18520,12 @@ export namespace Prisma {
     moduleId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    ytVideoId: string | null
+    transcript: string | null
+    summary: string | null
+    processingStatus: string | null
+    error: string | null
+    audioFilePath: string | null
   }
 
   export type LessonCountAggregateOutputType = {
@@ -17794,6 +18543,12 @@ export namespace Prisma {
     moduleId: number
     createdAt: number
     updatedAt: number
+    ytVideoId: number
+    transcript: number
+    summary: number
+    processingStatus: number
+    error: number
+    audioFilePath: number
     _all: number
   }
 
@@ -17823,6 +18578,12 @@ export namespace Prisma {
     moduleId?: true
     createdAt?: true
     updatedAt?: true
+    ytVideoId?: true
+    transcript?: true
+    summary?: true
+    processingStatus?: true
+    error?: true
+    audioFilePath?: true
   }
 
   export type LessonMaxAggregateInputType = {
@@ -17840,6 +18601,12 @@ export namespace Prisma {
     moduleId?: true
     createdAt?: true
     updatedAt?: true
+    ytVideoId?: true
+    transcript?: true
+    summary?: true
+    processingStatus?: true
+    error?: true
+    audioFilePath?: true
   }
 
   export type LessonCountAggregateInputType = {
@@ -17857,6 +18624,12 @@ export namespace Prisma {
     moduleId?: true
     createdAt?: true
     updatedAt?: true
+    ytVideoId?: true
+    transcript?: true
+    summary?: true
+    processingStatus?: true
+    error?: true
+    audioFilePath?: true
     _all?: true
   }
 
@@ -17961,6 +18734,12 @@ export namespace Prisma {
     moduleId: string
     createdAt: Date
     updatedAt: Date
+    ytVideoId: string | null
+    transcript: string | null
+    summary: string | null
+    processingStatus: string | null
+    error: string | null
+    audioFilePath: string | null
     _count: LessonCountAggregateOutputType | null
     _avg: LessonAvgAggregateOutputType | null
     _sum: LessonSumAggregateOutputType | null
@@ -17997,6 +18776,12 @@ export namespace Prisma {
     moduleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    ytVideoId?: boolean
+    transcript?: boolean
+    summary?: boolean
+    processingStatus?: boolean
+    error?: boolean
+    audioFilePath?: boolean
     Module?: boolean | ModuleDefaultArgs<ExtArgs>
     Progress?: boolean | Lesson$ProgressArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
@@ -18017,6 +18802,12 @@ export namespace Prisma {
     moduleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    ytVideoId?: boolean
+    transcript?: boolean
+    summary?: boolean
+    processingStatus?: boolean
+    error?: boolean
+    audioFilePath?: boolean
     Module?: boolean | ModuleDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
@@ -18035,6 +18826,12 @@ export namespace Prisma {
     moduleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    ytVideoId?: boolean
+    transcript?: boolean
+    summary?: boolean
+    processingStatus?: boolean
+    error?: boolean
+    audioFilePath?: boolean
     Module?: boolean | ModuleDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
@@ -18053,9 +18850,15 @@ export namespace Prisma {
     moduleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    ytVideoId?: boolean
+    transcript?: boolean
+    summary?: boolean
+    processingStatus?: boolean
+    error?: boolean
+    audioFilePath?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "order" | "contentType" | "content" | "videoUrl" | "fileUrl" | "scormUrl" | "externalUrl" | "duration" | "moduleId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "order" | "contentType" | "content" | "videoUrl" | "fileUrl" | "scormUrl" | "externalUrl" | "duration" | "moduleId" | "createdAt" | "updatedAt" | "ytVideoId" | "transcript" | "summary" | "processingStatus" | "error" | "audioFilePath", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Module?: boolean | ModuleDefaultArgs<ExtArgs>
     Progress?: boolean | Lesson$ProgressArgs<ExtArgs>
@@ -18089,6 +18892,12 @@ export namespace Prisma {
       moduleId: string
       createdAt: Date
       updatedAt: Date
+      ytVideoId: string | null
+      transcript: string | null
+      summary: string | null
+      processingStatus: string | null
+      error: string | null
+      audioFilePath: string | null
     }, ExtArgs["result"]["lesson"]>
     composites: {}
   }
@@ -18528,6 +19337,12 @@ export namespace Prisma {
     readonly moduleId: FieldRef<"Lesson", 'String'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
     readonly updatedAt: FieldRef<"Lesson", 'DateTime'>
+    readonly ytVideoId: FieldRef<"Lesson", 'String'>
+    readonly transcript: FieldRef<"Lesson", 'String'>
+    readonly summary: FieldRef<"Lesson", 'String'>
+    readonly processingStatus: FieldRef<"Lesson", 'String'>
+    readonly error: FieldRef<"Lesson", 'String'>
+    readonly audioFilePath: FieldRef<"Lesson", 'String'>
   }
     
 
@@ -30787,6 +31602,6291 @@ export namespace Prisma {
 
 
   /**
+   * Model YtPlaylist
+   */
+
+  export type AggregateYtPlaylist = {
+    _count: YtPlaylistCountAggregateOutputType | null
+    _avg: YtPlaylistAvgAggregateOutputType | null
+    _sum: YtPlaylistSumAggregateOutputType | null
+    _min: YtPlaylistMinAggregateOutputType | null
+    _max: YtPlaylistMaxAggregateOutputType | null
+  }
+
+  export type YtPlaylistAvgAggregateOutputType = {
+    totalItems: number | null
+    totalVideos: number | null
+    quizPrepostCount: number | null
+    jp: Decimal | null
+  }
+
+  export type YtPlaylistSumAggregateOutputType = {
+    totalItems: number | null
+    totalVideos: number | null
+    quizPrepostCount: number | null
+    jp: Decimal | null
+  }
+
+  export type YtPlaylistMinAggregateOutputType = {
+    id: string | null
+    playlistId: string | null
+    playlistTitle: string | null
+    playlistUrl: string | null
+    author: string | null
+    totalItems: number | null
+    totalVideos: number | null
+    status: string | null
+    quizPrepost: string | null
+    hasQuizPrepost: boolean | null
+    quizPrepostCount: number | null
+    courseTitle: string | null
+    jp: Decimal | null
+    courseShortDesc: string | null
+    courseDesc: string | null
+    courseLevel: string | null
+    language: string | null
+    requirements: string | null
+    outcomes: string | null
+    metaKeys: string | null
+    metaDesc: string | null
+    recommendedNext: string | null
+    hasCourseMetadata: boolean | null
+    metadataGeneratedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    processedAt: Date | null
+  }
+
+  export type YtPlaylistMaxAggregateOutputType = {
+    id: string | null
+    playlistId: string | null
+    playlistTitle: string | null
+    playlistUrl: string | null
+    author: string | null
+    totalItems: number | null
+    totalVideos: number | null
+    status: string | null
+    quizPrepost: string | null
+    hasQuizPrepost: boolean | null
+    quizPrepostCount: number | null
+    courseTitle: string | null
+    jp: Decimal | null
+    courseShortDesc: string | null
+    courseDesc: string | null
+    courseLevel: string | null
+    language: string | null
+    requirements: string | null
+    outcomes: string | null
+    metaKeys: string | null
+    metaDesc: string | null
+    recommendedNext: string | null
+    hasCourseMetadata: boolean | null
+    metadataGeneratedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    processedAt: Date | null
+  }
+
+  export type YtPlaylistCountAggregateOutputType = {
+    id: number
+    playlistId: number
+    playlistTitle: number
+    playlistUrl: number
+    author: number
+    totalItems: number
+    totalVideos: number
+    status: number
+    quizPrepost: number
+    hasQuizPrepost: number
+    quizPrepostCount: number
+    courseTitle: number
+    jp: number
+    courseShortDesc: number
+    courseDesc: number
+    courseLevel: number
+    language: number
+    requirements: number
+    outcomes: number
+    metaKeys: number
+    metaDesc: number
+    recommendedNext: number
+    hasCourseMetadata: number
+    metadataGeneratedAt: number
+    createdAt: number
+    updatedAt: number
+    processedAt: number
+    _all: number
+  }
+
+
+  export type YtPlaylistAvgAggregateInputType = {
+    totalItems?: true
+    totalVideos?: true
+    quizPrepostCount?: true
+    jp?: true
+  }
+
+  export type YtPlaylistSumAggregateInputType = {
+    totalItems?: true
+    totalVideos?: true
+    quizPrepostCount?: true
+    jp?: true
+  }
+
+  export type YtPlaylistMinAggregateInputType = {
+    id?: true
+    playlistId?: true
+    playlistTitle?: true
+    playlistUrl?: true
+    author?: true
+    totalItems?: true
+    totalVideos?: true
+    status?: true
+    quizPrepost?: true
+    hasQuizPrepost?: true
+    quizPrepostCount?: true
+    courseTitle?: true
+    jp?: true
+    courseShortDesc?: true
+    courseDesc?: true
+    courseLevel?: true
+    language?: true
+    requirements?: true
+    outcomes?: true
+    metaKeys?: true
+    metaDesc?: true
+    recommendedNext?: true
+    hasCourseMetadata?: true
+    metadataGeneratedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    processedAt?: true
+  }
+
+  export type YtPlaylistMaxAggregateInputType = {
+    id?: true
+    playlistId?: true
+    playlistTitle?: true
+    playlistUrl?: true
+    author?: true
+    totalItems?: true
+    totalVideos?: true
+    status?: true
+    quizPrepost?: true
+    hasQuizPrepost?: true
+    quizPrepostCount?: true
+    courseTitle?: true
+    jp?: true
+    courseShortDesc?: true
+    courseDesc?: true
+    courseLevel?: true
+    language?: true
+    requirements?: true
+    outcomes?: true
+    metaKeys?: true
+    metaDesc?: true
+    recommendedNext?: true
+    hasCourseMetadata?: true
+    metadataGeneratedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    processedAt?: true
+  }
+
+  export type YtPlaylistCountAggregateInputType = {
+    id?: true
+    playlistId?: true
+    playlistTitle?: true
+    playlistUrl?: true
+    author?: true
+    totalItems?: true
+    totalVideos?: true
+    status?: true
+    quizPrepost?: true
+    hasQuizPrepost?: true
+    quizPrepostCount?: true
+    courseTitle?: true
+    jp?: true
+    courseShortDesc?: true
+    courseDesc?: true
+    courseLevel?: true
+    language?: true
+    requirements?: true
+    outcomes?: true
+    metaKeys?: true
+    metaDesc?: true
+    recommendedNext?: true
+    hasCourseMetadata?: true
+    metadataGeneratedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    processedAt?: true
+    _all?: true
+  }
+
+  export type YtPlaylistAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtPlaylist to aggregate.
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylists to fetch.
+     */
+    orderBy?: YtPlaylistOrderByWithRelationInput | YtPlaylistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: YtPlaylistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned YtPlaylists
+    **/
+    _count?: true | YtPlaylistCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: YtPlaylistAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: YtPlaylistSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: YtPlaylistMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: YtPlaylistMaxAggregateInputType
+  }
+
+  export type GetYtPlaylistAggregateType<T extends YtPlaylistAggregateArgs> = {
+        [P in keyof T & keyof AggregateYtPlaylist]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateYtPlaylist[P]>
+      : GetScalarType<T[P], AggregateYtPlaylist[P]>
+  }
+
+
+
+
+  export type YtPlaylistGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: YtPlaylistWhereInput
+    orderBy?: YtPlaylistOrderByWithAggregationInput | YtPlaylistOrderByWithAggregationInput[]
+    by: YtPlaylistScalarFieldEnum[] | YtPlaylistScalarFieldEnum
+    having?: YtPlaylistScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: YtPlaylistCountAggregateInputType | true
+    _avg?: YtPlaylistAvgAggregateInputType
+    _sum?: YtPlaylistSumAggregateInputType
+    _min?: YtPlaylistMinAggregateInputType
+    _max?: YtPlaylistMaxAggregateInputType
+  }
+
+  export type YtPlaylistGroupByOutputType = {
+    id: string
+    playlistId: string
+    playlistTitle: string
+    playlistUrl: string
+    author: string | null
+    totalItems: number | null
+    totalVideos: number | null
+    status: string | null
+    quizPrepost: string | null
+    hasQuizPrepost: boolean | null
+    quizPrepostCount: number | null
+    courseTitle: string | null
+    jp: Decimal | null
+    courseShortDesc: string | null
+    courseDesc: string | null
+    courseLevel: string | null
+    language: string | null
+    requirements: string | null
+    outcomes: string | null
+    metaKeys: string | null
+    metaDesc: string | null
+    recommendedNext: string | null
+    hasCourseMetadata: boolean | null
+    metadataGeneratedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    processedAt: Date | null
+    _count: YtPlaylistCountAggregateOutputType | null
+    _avg: YtPlaylistAvgAggregateOutputType | null
+    _sum: YtPlaylistSumAggregateOutputType | null
+    _min: YtPlaylistMinAggregateOutputType | null
+    _max: YtPlaylistMaxAggregateOutputType | null
+  }
+
+  type GetYtPlaylistGroupByPayload<T extends YtPlaylistGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<YtPlaylistGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof YtPlaylistGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], YtPlaylistGroupByOutputType[P]>
+            : GetScalarType<T[P], YtPlaylistGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type YtPlaylistSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    playlistTitle?: boolean
+    playlistUrl?: boolean
+    author?: boolean
+    totalItems?: boolean
+    totalVideos?: boolean
+    status?: boolean
+    quizPrepost?: boolean
+    hasQuizPrepost?: boolean
+    quizPrepostCount?: boolean
+    courseTitle?: boolean
+    jp?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    metaKeys?: boolean
+    metaDesc?: boolean
+    recommendedNext?: boolean
+    hasCourseMetadata?: boolean
+    metadataGeneratedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytPlaylist"]>
+
+  export type YtPlaylistSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    playlistTitle?: boolean
+    playlistUrl?: boolean
+    author?: boolean
+    totalItems?: boolean
+    totalVideos?: boolean
+    status?: boolean
+    quizPrepost?: boolean
+    hasQuizPrepost?: boolean
+    quizPrepostCount?: boolean
+    courseTitle?: boolean
+    jp?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    metaKeys?: boolean
+    metaDesc?: boolean
+    recommendedNext?: boolean
+    hasCourseMetadata?: boolean
+    metadataGeneratedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytPlaylist"]>
+
+  export type YtPlaylistSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    playlistTitle?: boolean
+    playlistUrl?: boolean
+    author?: boolean
+    totalItems?: boolean
+    totalVideos?: boolean
+    status?: boolean
+    quizPrepost?: boolean
+    hasQuizPrepost?: boolean
+    quizPrepostCount?: boolean
+    courseTitle?: boolean
+    jp?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    metaKeys?: boolean
+    metaDesc?: boolean
+    recommendedNext?: boolean
+    hasCourseMetadata?: boolean
+    metadataGeneratedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytPlaylist"]>
+
+  export type YtPlaylistSelectScalar = {
+    id?: boolean
+    playlistId?: boolean
+    playlistTitle?: boolean
+    playlistUrl?: boolean
+    author?: boolean
+    totalItems?: boolean
+    totalVideos?: boolean
+    status?: boolean
+    quizPrepost?: boolean
+    hasQuizPrepost?: boolean
+    quizPrepostCount?: boolean
+    courseTitle?: boolean
+    jp?: boolean
+    courseShortDesc?: boolean
+    courseDesc?: boolean
+    courseLevel?: boolean
+    language?: boolean
+    requirements?: boolean
+    outcomes?: boolean
+    metaKeys?: boolean
+    metaDesc?: boolean
+    recommendedNext?: boolean
+    hasCourseMetadata?: boolean
+    metadataGeneratedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }
+
+  export type YtPlaylistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "playlistId" | "playlistTitle" | "playlistUrl" | "author" | "totalItems" | "totalVideos" | "status" | "quizPrepost" | "hasQuizPrepost" | "quizPrepostCount" | "courseTitle" | "jp" | "courseShortDesc" | "courseDesc" | "courseLevel" | "language" | "requirements" | "outcomes" | "metaKeys" | "metaDesc" | "recommendedNext" | "hasCourseMetadata" | "metadataGeneratedAt" | "createdAt" | "updatedAt" | "processedAt", ExtArgs["result"]["ytPlaylist"]>
+
+  export type $YtPlaylistPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "YtPlaylist"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      playlistId: string
+      playlistTitle: string
+      playlistUrl: string
+      author: string | null
+      totalItems: number | null
+      totalVideos: number | null
+      status: string | null
+      quizPrepost: string | null
+      hasQuizPrepost: boolean | null
+      quizPrepostCount: number | null
+      courseTitle: string | null
+      jp: Prisma.Decimal | null
+      courseShortDesc: string | null
+      courseDesc: string | null
+      courseLevel: string | null
+      language: string | null
+      requirements: string | null
+      outcomes: string | null
+      metaKeys: string | null
+      metaDesc: string | null
+      recommendedNext: string | null
+      hasCourseMetadata: boolean | null
+      metadataGeneratedAt: Date | null
+      createdAt: Date | null
+      updatedAt: Date | null
+      processedAt: Date | null
+    }, ExtArgs["result"]["ytPlaylist"]>
+    composites: {}
+  }
+
+  type YtPlaylistGetPayload<S extends boolean | null | undefined | YtPlaylistDefaultArgs> = $Result.GetResult<Prisma.$YtPlaylistPayload, S>
+
+  type YtPlaylistCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<YtPlaylistFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: YtPlaylistCountAggregateInputType | true
+    }
+
+  export interface YtPlaylistDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['YtPlaylist'], meta: { name: 'YtPlaylist' } }
+    /**
+     * Find zero or one YtPlaylist that matches the filter.
+     * @param {YtPlaylistFindUniqueArgs} args - Arguments to find a YtPlaylist
+     * @example
+     * // Get one YtPlaylist
+     * const ytPlaylist = await prisma.ytPlaylist.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends YtPlaylistFindUniqueArgs>(args: SelectSubset<T, YtPlaylistFindUniqueArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one YtPlaylist that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {YtPlaylistFindUniqueOrThrowArgs} args - Arguments to find a YtPlaylist
+     * @example
+     * // Get one YtPlaylist
+     * const ytPlaylist = await prisma.ytPlaylist.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends YtPlaylistFindUniqueOrThrowArgs>(args: SelectSubset<T, YtPlaylistFindUniqueOrThrowArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtPlaylist that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistFindFirstArgs} args - Arguments to find a YtPlaylist
+     * @example
+     * // Get one YtPlaylist
+     * const ytPlaylist = await prisma.ytPlaylist.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends YtPlaylistFindFirstArgs>(args?: SelectSubset<T, YtPlaylistFindFirstArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtPlaylist that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistFindFirstOrThrowArgs} args - Arguments to find a YtPlaylist
+     * @example
+     * // Get one YtPlaylist
+     * const ytPlaylist = await prisma.ytPlaylist.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends YtPlaylistFindFirstOrThrowArgs>(args?: SelectSubset<T, YtPlaylistFindFirstOrThrowArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more YtPlaylists that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all YtPlaylists
+     * const ytPlaylists = await prisma.ytPlaylist.findMany()
+     * 
+     * // Get first 10 YtPlaylists
+     * const ytPlaylists = await prisma.ytPlaylist.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ytPlaylistWithIdOnly = await prisma.ytPlaylist.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends YtPlaylistFindManyArgs>(args?: SelectSubset<T, YtPlaylistFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a YtPlaylist.
+     * @param {YtPlaylistCreateArgs} args - Arguments to create a YtPlaylist.
+     * @example
+     * // Create one YtPlaylist
+     * const YtPlaylist = await prisma.ytPlaylist.create({
+     *   data: {
+     *     // ... data to create a YtPlaylist
+     *   }
+     * })
+     * 
+     */
+    create<T extends YtPlaylistCreateArgs>(args: SelectSubset<T, YtPlaylistCreateArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many YtPlaylists.
+     * @param {YtPlaylistCreateManyArgs} args - Arguments to create many YtPlaylists.
+     * @example
+     * // Create many YtPlaylists
+     * const ytPlaylist = await prisma.ytPlaylist.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends YtPlaylistCreateManyArgs>(args?: SelectSubset<T, YtPlaylistCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many YtPlaylists and returns the data saved in the database.
+     * @param {YtPlaylistCreateManyAndReturnArgs} args - Arguments to create many YtPlaylists.
+     * @example
+     * // Create many YtPlaylists
+     * const ytPlaylist = await prisma.ytPlaylist.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many YtPlaylists and only return the `id`
+     * const ytPlaylistWithIdOnly = await prisma.ytPlaylist.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends YtPlaylistCreateManyAndReturnArgs>(args?: SelectSubset<T, YtPlaylistCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a YtPlaylist.
+     * @param {YtPlaylistDeleteArgs} args - Arguments to delete one YtPlaylist.
+     * @example
+     * // Delete one YtPlaylist
+     * const YtPlaylist = await prisma.ytPlaylist.delete({
+     *   where: {
+     *     // ... filter to delete one YtPlaylist
+     *   }
+     * })
+     * 
+     */
+    delete<T extends YtPlaylistDeleteArgs>(args: SelectSubset<T, YtPlaylistDeleteArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one YtPlaylist.
+     * @param {YtPlaylistUpdateArgs} args - Arguments to update one YtPlaylist.
+     * @example
+     * // Update one YtPlaylist
+     * const ytPlaylist = await prisma.ytPlaylist.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends YtPlaylistUpdateArgs>(args: SelectSubset<T, YtPlaylistUpdateArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more YtPlaylists.
+     * @param {YtPlaylistDeleteManyArgs} args - Arguments to filter YtPlaylists to delete.
+     * @example
+     * // Delete a few YtPlaylists
+     * const { count } = await prisma.ytPlaylist.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends YtPlaylistDeleteManyArgs>(args?: SelectSubset<T, YtPlaylistDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtPlaylists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many YtPlaylists
+     * const ytPlaylist = await prisma.ytPlaylist.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends YtPlaylistUpdateManyArgs>(args: SelectSubset<T, YtPlaylistUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtPlaylists and returns the data updated in the database.
+     * @param {YtPlaylistUpdateManyAndReturnArgs} args - Arguments to update many YtPlaylists.
+     * @example
+     * // Update many YtPlaylists
+     * const ytPlaylist = await prisma.ytPlaylist.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more YtPlaylists and only return the `id`
+     * const ytPlaylistWithIdOnly = await prisma.ytPlaylist.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends YtPlaylistUpdateManyAndReturnArgs>(args: SelectSubset<T, YtPlaylistUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one YtPlaylist.
+     * @param {YtPlaylistUpsertArgs} args - Arguments to update or create a YtPlaylist.
+     * @example
+     * // Update or create a YtPlaylist
+     * const ytPlaylist = await prisma.ytPlaylist.upsert({
+     *   create: {
+     *     // ... data to create a YtPlaylist
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the YtPlaylist we want to update
+     *   }
+     * })
+     */
+    upsert<T extends YtPlaylistUpsertArgs>(args: SelectSubset<T, YtPlaylistUpsertArgs<ExtArgs>>): Prisma__YtPlaylistClient<$Result.GetResult<Prisma.$YtPlaylistPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of YtPlaylists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistCountArgs} args - Arguments to filter YtPlaylists to count.
+     * @example
+     * // Count the number of YtPlaylists
+     * const count = await prisma.ytPlaylist.count({
+     *   where: {
+     *     // ... the filter for the YtPlaylists we want to count
+     *   }
+     * })
+    **/
+    count<T extends YtPlaylistCountArgs>(
+      args?: Subset<T, YtPlaylistCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], YtPlaylistCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a YtPlaylist.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends YtPlaylistAggregateArgs>(args: Subset<T, YtPlaylistAggregateArgs>): Prisma.PrismaPromise<GetYtPlaylistAggregateType<T>>
+
+    /**
+     * Group by YtPlaylist.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends YtPlaylistGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: YtPlaylistGroupByArgs['orderBy'] }
+        : { orderBy?: YtPlaylistGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, YtPlaylistGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetYtPlaylistGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the YtPlaylist model
+   */
+  readonly fields: YtPlaylistFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for YtPlaylist.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__YtPlaylistClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the YtPlaylist model
+   */
+  interface YtPlaylistFieldRefs {
+    readonly id: FieldRef<"YtPlaylist", 'String'>
+    readonly playlistId: FieldRef<"YtPlaylist", 'String'>
+    readonly playlistTitle: FieldRef<"YtPlaylist", 'String'>
+    readonly playlistUrl: FieldRef<"YtPlaylist", 'String'>
+    readonly author: FieldRef<"YtPlaylist", 'String'>
+    readonly totalItems: FieldRef<"YtPlaylist", 'Int'>
+    readonly totalVideos: FieldRef<"YtPlaylist", 'Int'>
+    readonly status: FieldRef<"YtPlaylist", 'String'>
+    readonly quizPrepost: FieldRef<"YtPlaylist", 'String'>
+    readonly hasQuizPrepost: FieldRef<"YtPlaylist", 'Boolean'>
+    readonly quizPrepostCount: FieldRef<"YtPlaylist", 'Int'>
+    readonly courseTitle: FieldRef<"YtPlaylist", 'String'>
+    readonly jp: FieldRef<"YtPlaylist", 'Decimal'>
+    readonly courseShortDesc: FieldRef<"YtPlaylist", 'String'>
+    readonly courseDesc: FieldRef<"YtPlaylist", 'String'>
+    readonly courseLevel: FieldRef<"YtPlaylist", 'String'>
+    readonly language: FieldRef<"YtPlaylist", 'String'>
+    readonly requirements: FieldRef<"YtPlaylist", 'String'>
+    readonly outcomes: FieldRef<"YtPlaylist", 'String'>
+    readonly metaKeys: FieldRef<"YtPlaylist", 'String'>
+    readonly metaDesc: FieldRef<"YtPlaylist", 'String'>
+    readonly recommendedNext: FieldRef<"YtPlaylist", 'String'>
+    readonly hasCourseMetadata: FieldRef<"YtPlaylist", 'Boolean'>
+    readonly metadataGeneratedAt: FieldRef<"YtPlaylist", 'DateTime'>
+    readonly createdAt: FieldRef<"YtPlaylist", 'DateTime'>
+    readonly updatedAt: FieldRef<"YtPlaylist", 'DateTime'>
+    readonly processedAt: FieldRef<"YtPlaylist", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * YtPlaylist findUnique
+   */
+  export type YtPlaylistFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylist to fetch.
+     */
+    where: YtPlaylistWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylist findUniqueOrThrow
+   */
+  export type YtPlaylistFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylist to fetch.
+     */
+    where: YtPlaylistWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylist findFirst
+   */
+  export type YtPlaylistFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylist to fetch.
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylists to fetch.
+     */
+    orderBy?: YtPlaylistOrderByWithRelationInput | YtPlaylistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtPlaylists.
+     */
+    cursor?: YtPlaylistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtPlaylists.
+     */
+    distinct?: YtPlaylistScalarFieldEnum | YtPlaylistScalarFieldEnum[]
+  }
+
+  /**
+   * YtPlaylist findFirstOrThrow
+   */
+  export type YtPlaylistFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylist to fetch.
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylists to fetch.
+     */
+    orderBy?: YtPlaylistOrderByWithRelationInput | YtPlaylistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtPlaylists.
+     */
+    cursor?: YtPlaylistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtPlaylists.
+     */
+    distinct?: YtPlaylistScalarFieldEnum | YtPlaylistScalarFieldEnum[]
+  }
+
+  /**
+   * YtPlaylist findMany
+   */
+  export type YtPlaylistFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylists to fetch.
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylists to fetch.
+     */
+    orderBy?: YtPlaylistOrderByWithRelationInput | YtPlaylistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing YtPlaylists.
+     */
+    cursor?: YtPlaylistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylists.
+     */
+    skip?: number
+    distinct?: YtPlaylistScalarFieldEnum | YtPlaylistScalarFieldEnum[]
+  }
+
+  /**
+   * YtPlaylist create
+   */
+  export type YtPlaylistCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * The data needed to create a YtPlaylist.
+     */
+    data: XOR<YtPlaylistCreateInput, YtPlaylistUncheckedCreateInput>
+  }
+
+  /**
+   * YtPlaylist createMany
+   */
+  export type YtPlaylistCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many YtPlaylists.
+     */
+    data: YtPlaylistCreateManyInput | YtPlaylistCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtPlaylist createManyAndReturn
+   */
+  export type YtPlaylistCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * The data used to create many YtPlaylists.
+     */
+    data: YtPlaylistCreateManyInput | YtPlaylistCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtPlaylist update
+   */
+  export type YtPlaylistUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * The data needed to update a YtPlaylist.
+     */
+    data: XOR<YtPlaylistUpdateInput, YtPlaylistUncheckedUpdateInput>
+    /**
+     * Choose, which YtPlaylist to update.
+     */
+    where: YtPlaylistWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylist updateMany
+   */
+  export type YtPlaylistUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update YtPlaylists.
+     */
+    data: XOR<YtPlaylistUpdateManyMutationInput, YtPlaylistUncheckedUpdateManyInput>
+    /**
+     * Filter which YtPlaylists to update
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * Limit how many YtPlaylists to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtPlaylist updateManyAndReturn
+   */
+  export type YtPlaylistUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * The data used to update YtPlaylists.
+     */
+    data: XOR<YtPlaylistUpdateManyMutationInput, YtPlaylistUncheckedUpdateManyInput>
+    /**
+     * Filter which YtPlaylists to update
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * Limit how many YtPlaylists to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtPlaylist upsert
+   */
+  export type YtPlaylistUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * The filter to search for the YtPlaylist to update in case it exists.
+     */
+    where: YtPlaylistWhereUniqueInput
+    /**
+     * In case the YtPlaylist found by the `where` argument doesn't exist, create a new YtPlaylist with this data.
+     */
+    create: XOR<YtPlaylistCreateInput, YtPlaylistUncheckedCreateInput>
+    /**
+     * In case the YtPlaylist was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<YtPlaylistUpdateInput, YtPlaylistUncheckedUpdateInput>
+  }
+
+  /**
+   * YtPlaylist delete
+   */
+  export type YtPlaylistDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+    /**
+     * Filter which YtPlaylist to delete.
+     */
+    where: YtPlaylistWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylist deleteMany
+   */
+  export type YtPlaylistDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtPlaylists to delete
+     */
+    where?: YtPlaylistWhereInput
+    /**
+     * Limit how many YtPlaylists to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtPlaylist without action
+   */
+  export type YtPlaylistDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylist
+     */
+    select?: YtPlaylistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylist
+     */
+    omit?: YtPlaylistOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model YtPlaylistItem
+   */
+
+  export type AggregateYtPlaylistItem = {
+    _count: YtPlaylistItemCountAggregateOutputType | null
+    _avg: YtPlaylistItemAvgAggregateOutputType | null
+    _sum: YtPlaylistItemSumAggregateOutputType | null
+    _min: YtPlaylistItemMinAggregateOutputType | null
+    _max: YtPlaylistItemMaxAggregateOutputType | null
+  }
+
+  export type YtPlaylistItemAvgAggregateOutputType = {
+    videoNo: number | null
+    transcriptLength: number | null
+    wordCount: number | null
+  }
+
+  export type YtPlaylistItemSumAggregateOutputType = {
+    videoNo: number | null
+    transcriptLength: number | null
+    wordCount: number | null
+  }
+
+  export type YtPlaylistItemMinAggregateOutputType = {
+    id: string | null
+    playlistId: string | null
+    videoId: string | null
+    videoNo: number | null
+    videoTitle: string | null
+    durationStr: string | null
+    embedUrl: string | null
+    audioPath: string | null
+    audioFilePath: string | null
+    transcript: string | null
+    hasTranscript: boolean | null
+    transcriptLength: number | null
+    wordCount: number | null
+    summary: string | null
+    hasSummary: boolean | null
+    refinedTitle: string | null
+    hasRefinedTitle: boolean | null
+    quizPrepost: string | null
+    quizKnowledgeCheck: string | null
+    hasQuizKnowledgeCheck: boolean | null
+    status: string | null
+    errorMessage: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    receivedAt: Date | null
+    processedAt: Date | null
+  }
+
+  export type YtPlaylistItemMaxAggregateOutputType = {
+    id: string | null
+    playlistId: string | null
+    videoId: string | null
+    videoNo: number | null
+    videoTitle: string | null
+    durationStr: string | null
+    embedUrl: string | null
+    audioPath: string | null
+    audioFilePath: string | null
+    transcript: string | null
+    hasTranscript: boolean | null
+    transcriptLength: number | null
+    wordCount: number | null
+    summary: string | null
+    hasSummary: boolean | null
+    refinedTitle: string | null
+    hasRefinedTitle: boolean | null
+    quizPrepost: string | null
+    quizKnowledgeCheck: string | null
+    hasQuizKnowledgeCheck: boolean | null
+    status: string | null
+    errorMessage: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    receivedAt: Date | null
+    processedAt: Date | null
+  }
+
+  export type YtPlaylistItemCountAggregateOutputType = {
+    id: number
+    playlistId: number
+    videoId: number
+    videoNo: number
+    videoTitle: number
+    durationStr: number
+    embedUrl: number
+    audioPath: number
+    audioFilePath: number
+    transcript: number
+    hasTranscript: number
+    transcriptLength: number
+    wordCount: number
+    summary: number
+    hasSummary: number
+    refinedTitle: number
+    hasRefinedTitle: number
+    quizPrepost: number
+    quizKnowledgeCheck: number
+    hasQuizKnowledgeCheck: number
+    status: number
+    errorMessage: number
+    createdAt: number
+    updatedAt: number
+    receivedAt: number
+    processedAt: number
+    _all: number
+  }
+
+
+  export type YtPlaylistItemAvgAggregateInputType = {
+    videoNo?: true
+    transcriptLength?: true
+    wordCount?: true
+  }
+
+  export type YtPlaylistItemSumAggregateInputType = {
+    videoNo?: true
+    transcriptLength?: true
+    wordCount?: true
+  }
+
+  export type YtPlaylistItemMinAggregateInputType = {
+    id?: true
+    playlistId?: true
+    videoId?: true
+    videoNo?: true
+    videoTitle?: true
+    durationStr?: true
+    embedUrl?: true
+    audioPath?: true
+    audioFilePath?: true
+    transcript?: true
+    hasTranscript?: true
+    transcriptLength?: true
+    wordCount?: true
+    summary?: true
+    hasSummary?: true
+    refinedTitle?: true
+    hasRefinedTitle?: true
+    quizPrepost?: true
+    quizKnowledgeCheck?: true
+    hasQuizKnowledgeCheck?: true
+    status?: true
+    errorMessage?: true
+    createdAt?: true
+    updatedAt?: true
+    receivedAt?: true
+    processedAt?: true
+  }
+
+  export type YtPlaylistItemMaxAggregateInputType = {
+    id?: true
+    playlistId?: true
+    videoId?: true
+    videoNo?: true
+    videoTitle?: true
+    durationStr?: true
+    embedUrl?: true
+    audioPath?: true
+    audioFilePath?: true
+    transcript?: true
+    hasTranscript?: true
+    transcriptLength?: true
+    wordCount?: true
+    summary?: true
+    hasSummary?: true
+    refinedTitle?: true
+    hasRefinedTitle?: true
+    quizPrepost?: true
+    quizKnowledgeCheck?: true
+    hasQuizKnowledgeCheck?: true
+    status?: true
+    errorMessage?: true
+    createdAt?: true
+    updatedAt?: true
+    receivedAt?: true
+    processedAt?: true
+  }
+
+  export type YtPlaylistItemCountAggregateInputType = {
+    id?: true
+    playlistId?: true
+    videoId?: true
+    videoNo?: true
+    videoTitle?: true
+    durationStr?: true
+    embedUrl?: true
+    audioPath?: true
+    audioFilePath?: true
+    transcript?: true
+    hasTranscript?: true
+    transcriptLength?: true
+    wordCount?: true
+    summary?: true
+    hasSummary?: true
+    refinedTitle?: true
+    hasRefinedTitle?: true
+    quizPrepost?: true
+    quizKnowledgeCheck?: true
+    hasQuizKnowledgeCheck?: true
+    status?: true
+    errorMessage?: true
+    createdAt?: true
+    updatedAt?: true
+    receivedAt?: true
+    processedAt?: true
+    _all?: true
+  }
+
+  export type YtPlaylistItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtPlaylistItem to aggregate.
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylistItems to fetch.
+     */
+    orderBy?: YtPlaylistItemOrderByWithRelationInput | YtPlaylistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: YtPlaylistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned YtPlaylistItems
+    **/
+    _count?: true | YtPlaylistItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: YtPlaylistItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: YtPlaylistItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: YtPlaylistItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: YtPlaylistItemMaxAggregateInputType
+  }
+
+  export type GetYtPlaylistItemAggregateType<T extends YtPlaylistItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateYtPlaylistItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateYtPlaylistItem[P]>
+      : GetScalarType<T[P], AggregateYtPlaylistItem[P]>
+  }
+
+
+
+
+  export type YtPlaylistItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: YtPlaylistItemWhereInput
+    orderBy?: YtPlaylistItemOrderByWithAggregationInput | YtPlaylistItemOrderByWithAggregationInput[]
+    by: YtPlaylistItemScalarFieldEnum[] | YtPlaylistItemScalarFieldEnum
+    having?: YtPlaylistItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: YtPlaylistItemCountAggregateInputType | true
+    _avg?: YtPlaylistItemAvgAggregateInputType
+    _sum?: YtPlaylistItemSumAggregateInputType
+    _min?: YtPlaylistItemMinAggregateInputType
+    _max?: YtPlaylistItemMaxAggregateInputType
+  }
+
+  export type YtPlaylistItemGroupByOutputType = {
+    id: string
+    playlistId: string
+    videoId: string
+    videoNo: number
+    videoTitle: string
+    durationStr: string | null
+    embedUrl: string | null
+    audioPath: string | null
+    audioFilePath: string | null
+    transcript: string | null
+    hasTranscript: boolean | null
+    transcriptLength: number | null
+    wordCount: number | null
+    summary: string | null
+    hasSummary: boolean | null
+    refinedTitle: string | null
+    hasRefinedTitle: boolean | null
+    quizPrepost: string | null
+    quizKnowledgeCheck: string | null
+    hasQuizKnowledgeCheck: boolean | null
+    status: string | null
+    errorMessage: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    receivedAt: Date | null
+    processedAt: Date | null
+    _count: YtPlaylistItemCountAggregateOutputType | null
+    _avg: YtPlaylistItemAvgAggregateOutputType | null
+    _sum: YtPlaylistItemSumAggregateOutputType | null
+    _min: YtPlaylistItemMinAggregateOutputType | null
+    _max: YtPlaylistItemMaxAggregateOutputType | null
+  }
+
+  type GetYtPlaylistItemGroupByPayload<T extends YtPlaylistItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<YtPlaylistItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof YtPlaylistItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], YtPlaylistItemGroupByOutputType[P]>
+            : GetScalarType<T[P], YtPlaylistItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type YtPlaylistItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    videoId?: boolean
+    videoNo?: boolean
+    videoTitle?: boolean
+    durationStr?: boolean
+    embedUrl?: boolean
+    audioPath?: boolean
+    audioFilePath?: boolean
+    transcript?: boolean
+    hasTranscript?: boolean
+    transcriptLength?: boolean
+    wordCount?: boolean
+    summary?: boolean
+    hasSummary?: boolean
+    refinedTitle?: boolean
+    hasRefinedTitle?: boolean
+    quizPrepost?: boolean
+    quizKnowledgeCheck?: boolean
+    hasQuizKnowledgeCheck?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    receivedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytPlaylistItem"]>
+
+  export type YtPlaylistItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    videoId?: boolean
+    videoNo?: boolean
+    videoTitle?: boolean
+    durationStr?: boolean
+    embedUrl?: boolean
+    audioPath?: boolean
+    audioFilePath?: boolean
+    transcript?: boolean
+    hasTranscript?: boolean
+    transcriptLength?: boolean
+    wordCount?: boolean
+    summary?: boolean
+    hasSummary?: boolean
+    refinedTitle?: boolean
+    hasRefinedTitle?: boolean
+    quizPrepost?: boolean
+    quizKnowledgeCheck?: boolean
+    hasQuizKnowledgeCheck?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    receivedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytPlaylistItem"]>
+
+  export type YtPlaylistItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    playlistId?: boolean
+    videoId?: boolean
+    videoNo?: boolean
+    videoTitle?: boolean
+    durationStr?: boolean
+    embedUrl?: boolean
+    audioPath?: boolean
+    audioFilePath?: boolean
+    transcript?: boolean
+    hasTranscript?: boolean
+    transcriptLength?: boolean
+    wordCount?: boolean
+    summary?: boolean
+    hasSummary?: boolean
+    refinedTitle?: boolean
+    hasRefinedTitle?: boolean
+    quizPrepost?: boolean
+    quizKnowledgeCheck?: boolean
+    hasQuizKnowledgeCheck?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    receivedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytPlaylistItem"]>
+
+  export type YtPlaylistItemSelectScalar = {
+    id?: boolean
+    playlistId?: boolean
+    videoId?: boolean
+    videoNo?: boolean
+    videoTitle?: boolean
+    durationStr?: boolean
+    embedUrl?: boolean
+    audioPath?: boolean
+    audioFilePath?: boolean
+    transcript?: boolean
+    hasTranscript?: boolean
+    transcriptLength?: boolean
+    wordCount?: boolean
+    summary?: boolean
+    hasSummary?: boolean
+    refinedTitle?: boolean
+    hasRefinedTitle?: boolean
+    quizPrepost?: boolean
+    quizKnowledgeCheck?: boolean
+    hasQuizKnowledgeCheck?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    receivedAt?: boolean
+    processedAt?: boolean
+  }
+
+  export type YtPlaylistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "playlistId" | "videoId" | "videoNo" | "videoTitle" | "durationStr" | "embedUrl" | "audioPath" | "audioFilePath" | "transcript" | "hasTranscript" | "transcriptLength" | "wordCount" | "summary" | "hasSummary" | "refinedTitle" | "hasRefinedTitle" | "quizPrepost" | "quizKnowledgeCheck" | "hasQuizKnowledgeCheck" | "status" | "errorMessage" | "createdAt" | "updatedAt" | "receivedAt" | "processedAt", ExtArgs["result"]["ytPlaylistItem"]>
+
+  export type $YtPlaylistItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "YtPlaylistItem"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      playlistId: string
+      videoId: string
+      videoNo: number
+      videoTitle: string
+      durationStr: string | null
+      embedUrl: string | null
+      audioPath: string | null
+      audioFilePath: string | null
+      transcript: string | null
+      hasTranscript: boolean | null
+      transcriptLength: number | null
+      wordCount: number | null
+      summary: string | null
+      hasSummary: boolean | null
+      refinedTitle: string | null
+      hasRefinedTitle: boolean | null
+      quizPrepost: string | null
+      quizKnowledgeCheck: string | null
+      hasQuizKnowledgeCheck: boolean | null
+      status: string | null
+      errorMessage: string | null
+      createdAt: Date | null
+      updatedAt: Date | null
+      receivedAt: Date | null
+      processedAt: Date | null
+    }, ExtArgs["result"]["ytPlaylistItem"]>
+    composites: {}
+  }
+
+  type YtPlaylistItemGetPayload<S extends boolean | null | undefined | YtPlaylistItemDefaultArgs> = $Result.GetResult<Prisma.$YtPlaylistItemPayload, S>
+
+  type YtPlaylistItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<YtPlaylistItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: YtPlaylistItemCountAggregateInputType | true
+    }
+
+  export interface YtPlaylistItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['YtPlaylistItem'], meta: { name: 'YtPlaylistItem' } }
+    /**
+     * Find zero or one YtPlaylistItem that matches the filter.
+     * @param {YtPlaylistItemFindUniqueArgs} args - Arguments to find a YtPlaylistItem
+     * @example
+     * // Get one YtPlaylistItem
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends YtPlaylistItemFindUniqueArgs>(args: SelectSubset<T, YtPlaylistItemFindUniqueArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one YtPlaylistItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {YtPlaylistItemFindUniqueOrThrowArgs} args - Arguments to find a YtPlaylistItem
+     * @example
+     * // Get one YtPlaylistItem
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends YtPlaylistItemFindUniqueOrThrowArgs>(args: SelectSubset<T, YtPlaylistItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtPlaylistItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemFindFirstArgs} args - Arguments to find a YtPlaylistItem
+     * @example
+     * // Get one YtPlaylistItem
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends YtPlaylistItemFindFirstArgs>(args?: SelectSubset<T, YtPlaylistItemFindFirstArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtPlaylistItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemFindFirstOrThrowArgs} args - Arguments to find a YtPlaylistItem
+     * @example
+     * // Get one YtPlaylistItem
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends YtPlaylistItemFindFirstOrThrowArgs>(args?: SelectSubset<T, YtPlaylistItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more YtPlaylistItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all YtPlaylistItems
+     * const ytPlaylistItems = await prisma.ytPlaylistItem.findMany()
+     * 
+     * // Get first 10 YtPlaylistItems
+     * const ytPlaylistItems = await prisma.ytPlaylistItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ytPlaylistItemWithIdOnly = await prisma.ytPlaylistItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends YtPlaylistItemFindManyArgs>(args?: SelectSubset<T, YtPlaylistItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a YtPlaylistItem.
+     * @param {YtPlaylistItemCreateArgs} args - Arguments to create a YtPlaylistItem.
+     * @example
+     * // Create one YtPlaylistItem
+     * const YtPlaylistItem = await prisma.ytPlaylistItem.create({
+     *   data: {
+     *     // ... data to create a YtPlaylistItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends YtPlaylistItemCreateArgs>(args: SelectSubset<T, YtPlaylistItemCreateArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many YtPlaylistItems.
+     * @param {YtPlaylistItemCreateManyArgs} args - Arguments to create many YtPlaylistItems.
+     * @example
+     * // Create many YtPlaylistItems
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends YtPlaylistItemCreateManyArgs>(args?: SelectSubset<T, YtPlaylistItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many YtPlaylistItems and returns the data saved in the database.
+     * @param {YtPlaylistItemCreateManyAndReturnArgs} args - Arguments to create many YtPlaylistItems.
+     * @example
+     * // Create many YtPlaylistItems
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many YtPlaylistItems and only return the `id`
+     * const ytPlaylistItemWithIdOnly = await prisma.ytPlaylistItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends YtPlaylistItemCreateManyAndReturnArgs>(args?: SelectSubset<T, YtPlaylistItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a YtPlaylistItem.
+     * @param {YtPlaylistItemDeleteArgs} args - Arguments to delete one YtPlaylistItem.
+     * @example
+     * // Delete one YtPlaylistItem
+     * const YtPlaylistItem = await prisma.ytPlaylistItem.delete({
+     *   where: {
+     *     // ... filter to delete one YtPlaylistItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends YtPlaylistItemDeleteArgs>(args: SelectSubset<T, YtPlaylistItemDeleteArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one YtPlaylistItem.
+     * @param {YtPlaylistItemUpdateArgs} args - Arguments to update one YtPlaylistItem.
+     * @example
+     * // Update one YtPlaylistItem
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends YtPlaylistItemUpdateArgs>(args: SelectSubset<T, YtPlaylistItemUpdateArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more YtPlaylistItems.
+     * @param {YtPlaylistItemDeleteManyArgs} args - Arguments to filter YtPlaylistItems to delete.
+     * @example
+     * // Delete a few YtPlaylistItems
+     * const { count } = await prisma.ytPlaylistItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends YtPlaylistItemDeleteManyArgs>(args?: SelectSubset<T, YtPlaylistItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtPlaylistItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many YtPlaylistItems
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends YtPlaylistItemUpdateManyArgs>(args: SelectSubset<T, YtPlaylistItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtPlaylistItems and returns the data updated in the database.
+     * @param {YtPlaylistItemUpdateManyAndReturnArgs} args - Arguments to update many YtPlaylistItems.
+     * @example
+     * // Update many YtPlaylistItems
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more YtPlaylistItems and only return the `id`
+     * const ytPlaylistItemWithIdOnly = await prisma.ytPlaylistItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends YtPlaylistItemUpdateManyAndReturnArgs>(args: SelectSubset<T, YtPlaylistItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one YtPlaylistItem.
+     * @param {YtPlaylistItemUpsertArgs} args - Arguments to update or create a YtPlaylistItem.
+     * @example
+     * // Update or create a YtPlaylistItem
+     * const ytPlaylistItem = await prisma.ytPlaylistItem.upsert({
+     *   create: {
+     *     // ... data to create a YtPlaylistItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the YtPlaylistItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends YtPlaylistItemUpsertArgs>(args: SelectSubset<T, YtPlaylistItemUpsertArgs<ExtArgs>>): Prisma__YtPlaylistItemClient<$Result.GetResult<Prisma.$YtPlaylistItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of YtPlaylistItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemCountArgs} args - Arguments to filter YtPlaylistItems to count.
+     * @example
+     * // Count the number of YtPlaylistItems
+     * const count = await prisma.ytPlaylistItem.count({
+     *   where: {
+     *     // ... the filter for the YtPlaylistItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends YtPlaylistItemCountArgs>(
+      args?: Subset<T, YtPlaylistItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], YtPlaylistItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a YtPlaylistItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends YtPlaylistItemAggregateArgs>(args: Subset<T, YtPlaylistItemAggregateArgs>): Prisma.PrismaPromise<GetYtPlaylistItemAggregateType<T>>
+
+    /**
+     * Group by YtPlaylistItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtPlaylistItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends YtPlaylistItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: YtPlaylistItemGroupByArgs['orderBy'] }
+        : { orderBy?: YtPlaylistItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, YtPlaylistItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetYtPlaylistItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the YtPlaylistItem model
+   */
+  readonly fields: YtPlaylistItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for YtPlaylistItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__YtPlaylistItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the YtPlaylistItem model
+   */
+  interface YtPlaylistItemFieldRefs {
+    readonly id: FieldRef<"YtPlaylistItem", 'String'>
+    readonly playlistId: FieldRef<"YtPlaylistItem", 'String'>
+    readonly videoId: FieldRef<"YtPlaylistItem", 'String'>
+    readonly videoNo: FieldRef<"YtPlaylistItem", 'Int'>
+    readonly videoTitle: FieldRef<"YtPlaylistItem", 'String'>
+    readonly durationStr: FieldRef<"YtPlaylistItem", 'String'>
+    readonly embedUrl: FieldRef<"YtPlaylistItem", 'String'>
+    readonly audioPath: FieldRef<"YtPlaylistItem", 'String'>
+    readonly audioFilePath: FieldRef<"YtPlaylistItem", 'String'>
+    readonly transcript: FieldRef<"YtPlaylistItem", 'String'>
+    readonly hasTranscript: FieldRef<"YtPlaylistItem", 'Boolean'>
+    readonly transcriptLength: FieldRef<"YtPlaylistItem", 'Int'>
+    readonly wordCount: FieldRef<"YtPlaylistItem", 'Int'>
+    readonly summary: FieldRef<"YtPlaylistItem", 'String'>
+    readonly hasSummary: FieldRef<"YtPlaylistItem", 'Boolean'>
+    readonly refinedTitle: FieldRef<"YtPlaylistItem", 'String'>
+    readonly hasRefinedTitle: FieldRef<"YtPlaylistItem", 'Boolean'>
+    readonly quizPrepost: FieldRef<"YtPlaylistItem", 'String'>
+    readonly quizKnowledgeCheck: FieldRef<"YtPlaylistItem", 'String'>
+    readonly hasQuizKnowledgeCheck: FieldRef<"YtPlaylistItem", 'Boolean'>
+    readonly status: FieldRef<"YtPlaylistItem", 'String'>
+    readonly errorMessage: FieldRef<"YtPlaylistItem", 'String'>
+    readonly createdAt: FieldRef<"YtPlaylistItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"YtPlaylistItem", 'DateTime'>
+    readonly receivedAt: FieldRef<"YtPlaylistItem", 'DateTime'>
+    readonly processedAt: FieldRef<"YtPlaylistItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * YtPlaylistItem findUnique
+   */
+  export type YtPlaylistItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylistItem to fetch.
+     */
+    where: YtPlaylistItemWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylistItem findUniqueOrThrow
+   */
+  export type YtPlaylistItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylistItem to fetch.
+     */
+    where: YtPlaylistItemWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylistItem findFirst
+   */
+  export type YtPlaylistItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylistItem to fetch.
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylistItems to fetch.
+     */
+    orderBy?: YtPlaylistItemOrderByWithRelationInput | YtPlaylistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtPlaylistItems.
+     */
+    cursor?: YtPlaylistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtPlaylistItems.
+     */
+    distinct?: YtPlaylistItemScalarFieldEnum | YtPlaylistItemScalarFieldEnum[]
+  }
+
+  /**
+   * YtPlaylistItem findFirstOrThrow
+   */
+  export type YtPlaylistItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylistItem to fetch.
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylistItems to fetch.
+     */
+    orderBy?: YtPlaylistItemOrderByWithRelationInput | YtPlaylistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtPlaylistItems.
+     */
+    cursor?: YtPlaylistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtPlaylistItems.
+     */
+    distinct?: YtPlaylistItemScalarFieldEnum | YtPlaylistItemScalarFieldEnum[]
+  }
+
+  /**
+   * YtPlaylistItem findMany
+   */
+  export type YtPlaylistItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * Filter, which YtPlaylistItems to fetch.
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtPlaylistItems to fetch.
+     */
+    orderBy?: YtPlaylistItemOrderByWithRelationInput | YtPlaylistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing YtPlaylistItems.
+     */
+    cursor?: YtPlaylistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtPlaylistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtPlaylistItems.
+     */
+    skip?: number
+    distinct?: YtPlaylistItemScalarFieldEnum | YtPlaylistItemScalarFieldEnum[]
+  }
+
+  /**
+   * YtPlaylistItem create
+   */
+  export type YtPlaylistItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * The data needed to create a YtPlaylistItem.
+     */
+    data: XOR<YtPlaylistItemCreateInput, YtPlaylistItemUncheckedCreateInput>
+  }
+
+  /**
+   * YtPlaylistItem createMany
+   */
+  export type YtPlaylistItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many YtPlaylistItems.
+     */
+    data: YtPlaylistItemCreateManyInput | YtPlaylistItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtPlaylistItem createManyAndReturn
+   */
+  export type YtPlaylistItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many YtPlaylistItems.
+     */
+    data: YtPlaylistItemCreateManyInput | YtPlaylistItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtPlaylistItem update
+   */
+  export type YtPlaylistItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * The data needed to update a YtPlaylistItem.
+     */
+    data: XOR<YtPlaylistItemUpdateInput, YtPlaylistItemUncheckedUpdateInput>
+    /**
+     * Choose, which YtPlaylistItem to update.
+     */
+    where: YtPlaylistItemWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylistItem updateMany
+   */
+  export type YtPlaylistItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update YtPlaylistItems.
+     */
+    data: XOR<YtPlaylistItemUpdateManyMutationInput, YtPlaylistItemUncheckedUpdateManyInput>
+    /**
+     * Filter which YtPlaylistItems to update
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * Limit how many YtPlaylistItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtPlaylistItem updateManyAndReturn
+   */
+  export type YtPlaylistItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * The data used to update YtPlaylistItems.
+     */
+    data: XOR<YtPlaylistItemUpdateManyMutationInput, YtPlaylistItemUncheckedUpdateManyInput>
+    /**
+     * Filter which YtPlaylistItems to update
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * Limit how many YtPlaylistItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtPlaylistItem upsert
+   */
+  export type YtPlaylistItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * The filter to search for the YtPlaylistItem to update in case it exists.
+     */
+    where: YtPlaylistItemWhereUniqueInput
+    /**
+     * In case the YtPlaylistItem found by the `where` argument doesn't exist, create a new YtPlaylistItem with this data.
+     */
+    create: XOR<YtPlaylistItemCreateInput, YtPlaylistItemUncheckedCreateInput>
+    /**
+     * In case the YtPlaylistItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<YtPlaylistItemUpdateInput, YtPlaylistItemUncheckedUpdateInput>
+  }
+
+  /**
+   * YtPlaylistItem delete
+   */
+  export type YtPlaylistItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+    /**
+     * Filter which YtPlaylistItem to delete.
+     */
+    where: YtPlaylistItemWhereUniqueInput
+  }
+
+  /**
+   * YtPlaylistItem deleteMany
+   */
+  export type YtPlaylistItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtPlaylistItems to delete
+     */
+    where?: YtPlaylistItemWhereInput
+    /**
+     * Limit how many YtPlaylistItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtPlaylistItem without action
+   */
+  export type YtPlaylistItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtPlaylistItem
+     */
+    select?: YtPlaylistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtPlaylistItem
+     */
+    omit?: YtPlaylistItemOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model YtUserSettings
+   */
+
+  export type AggregateYtUserSettings = {
+    _count: YtUserSettingsCountAggregateOutputType | null
+    _avg: YtUserSettingsAvgAggregateOutputType | null
+    _sum: YtUserSettingsSumAggregateOutputType | null
+    _min: YtUserSettingsMinAggregateOutputType | null
+    _max: YtUserSettingsMaxAggregateOutputType | null
+  }
+
+  export type YtUserSettingsAvgAggregateOutputType = {
+    autoRefreshInterval: number | null
+  }
+
+  export type YtUserSettingsSumAggregateOutputType = {
+    autoRefreshInterval: number | null
+  }
+
+  export type YtUserSettingsMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    fullName: string | null
+    email: string | null
+    role: string | null
+    emailNotifications: boolean | null
+    pushNotifications: boolean | null
+    weeklyDigest: boolean | null
+    twoFactorEnabled: boolean | null
+    newsletterSubscribed: boolean | null
+    theme: string | null
+    language: string | null
+    autoRefreshInterval: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type YtUserSettingsMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    fullName: string | null
+    email: string | null
+    role: string | null
+    emailNotifications: boolean | null
+    pushNotifications: boolean | null
+    weeklyDigest: boolean | null
+    twoFactorEnabled: boolean | null
+    newsletterSubscribed: boolean | null
+    theme: string | null
+    language: string | null
+    autoRefreshInterval: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type YtUserSettingsCountAggregateOutputType = {
+    id: number
+    userId: number
+    fullName: number
+    email: number
+    role: number
+    emailNotifications: number
+    pushNotifications: number
+    weeklyDigest: number
+    twoFactorEnabled: number
+    newsletterSubscribed: number
+    theme: number
+    language: number
+    autoRefreshInterval: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type YtUserSettingsAvgAggregateInputType = {
+    autoRefreshInterval?: true
+  }
+
+  export type YtUserSettingsSumAggregateInputType = {
+    autoRefreshInterval?: true
+  }
+
+  export type YtUserSettingsMinAggregateInputType = {
+    id?: true
+    userId?: true
+    fullName?: true
+    email?: true
+    role?: true
+    emailNotifications?: true
+    pushNotifications?: true
+    weeklyDigest?: true
+    twoFactorEnabled?: true
+    newsletterSubscribed?: true
+    theme?: true
+    language?: true
+    autoRefreshInterval?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type YtUserSettingsMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    fullName?: true
+    email?: true
+    role?: true
+    emailNotifications?: true
+    pushNotifications?: true
+    weeklyDigest?: true
+    twoFactorEnabled?: true
+    newsletterSubscribed?: true
+    theme?: true
+    language?: true
+    autoRefreshInterval?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type YtUserSettingsCountAggregateInputType = {
+    id?: true
+    userId?: true
+    fullName?: true
+    email?: true
+    role?: true
+    emailNotifications?: true
+    pushNotifications?: true
+    weeklyDigest?: true
+    twoFactorEnabled?: true
+    newsletterSubscribed?: true
+    theme?: true
+    language?: true
+    autoRefreshInterval?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type YtUserSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtUserSettings to aggregate.
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtUserSettings to fetch.
+     */
+    orderBy?: YtUserSettingsOrderByWithRelationInput | YtUserSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: YtUserSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtUserSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtUserSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned YtUserSettings
+    **/
+    _count?: true | YtUserSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: YtUserSettingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: YtUserSettingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: YtUserSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: YtUserSettingsMaxAggregateInputType
+  }
+
+  export type GetYtUserSettingsAggregateType<T extends YtUserSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateYtUserSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateYtUserSettings[P]>
+      : GetScalarType<T[P], AggregateYtUserSettings[P]>
+  }
+
+
+
+
+  export type YtUserSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: YtUserSettingsWhereInput
+    orderBy?: YtUserSettingsOrderByWithAggregationInput | YtUserSettingsOrderByWithAggregationInput[]
+    by: YtUserSettingsScalarFieldEnum[] | YtUserSettingsScalarFieldEnum
+    having?: YtUserSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: YtUserSettingsCountAggregateInputType | true
+    _avg?: YtUserSettingsAvgAggregateInputType
+    _sum?: YtUserSettingsSumAggregateInputType
+    _min?: YtUserSettingsMinAggregateInputType
+    _max?: YtUserSettingsMaxAggregateInputType
+  }
+
+  export type YtUserSettingsGroupByOutputType = {
+    id: string
+    userId: string
+    fullName: string | null
+    email: string | null
+    role: string | null
+    emailNotifications: boolean | null
+    pushNotifications: boolean | null
+    weeklyDigest: boolean | null
+    twoFactorEnabled: boolean | null
+    newsletterSubscribed: boolean | null
+    theme: string | null
+    language: string | null
+    autoRefreshInterval: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    _count: YtUserSettingsCountAggregateOutputType | null
+    _avg: YtUserSettingsAvgAggregateOutputType | null
+    _sum: YtUserSettingsSumAggregateOutputType | null
+    _min: YtUserSettingsMinAggregateOutputType | null
+    _max: YtUserSettingsMaxAggregateOutputType | null
+  }
+
+  type GetYtUserSettingsGroupByPayload<T extends YtUserSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<YtUserSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof YtUserSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], YtUserSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], YtUserSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type YtUserSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    fullName?: boolean
+    email?: boolean
+    role?: boolean
+    emailNotifications?: boolean
+    pushNotifications?: boolean
+    weeklyDigest?: boolean
+    twoFactorEnabled?: boolean
+    newsletterSubscribed?: boolean
+    theme?: boolean
+    language?: boolean
+    autoRefreshInterval?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["ytUserSettings"]>
+
+  export type YtUserSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    fullName?: boolean
+    email?: boolean
+    role?: boolean
+    emailNotifications?: boolean
+    pushNotifications?: boolean
+    weeklyDigest?: boolean
+    twoFactorEnabled?: boolean
+    newsletterSubscribed?: boolean
+    theme?: boolean
+    language?: boolean
+    autoRefreshInterval?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["ytUserSettings"]>
+
+  export type YtUserSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    fullName?: boolean
+    email?: boolean
+    role?: boolean
+    emailNotifications?: boolean
+    pushNotifications?: boolean
+    weeklyDigest?: boolean
+    twoFactorEnabled?: boolean
+    newsletterSubscribed?: boolean
+    theme?: boolean
+    language?: boolean
+    autoRefreshInterval?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["ytUserSettings"]>
+
+  export type YtUserSettingsSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    fullName?: boolean
+    email?: boolean
+    role?: boolean
+    emailNotifications?: boolean
+    pushNotifications?: boolean
+    weeklyDigest?: boolean
+    twoFactorEnabled?: boolean
+    newsletterSubscribed?: boolean
+    theme?: boolean
+    language?: boolean
+    autoRefreshInterval?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type YtUserSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "email" | "role" | "emailNotifications" | "pushNotifications" | "weeklyDigest" | "twoFactorEnabled" | "newsletterSubscribed" | "theme" | "language" | "autoRefreshInterval" | "createdAt" | "updatedAt", ExtArgs["result"]["ytUserSettings"]>
+
+  export type $YtUserSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "YtUserSettings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      fullName: string | null
+      email: string | null
+      role: string | null
+      emailNotifications: boolean | null
+      pushNotifications: boolean | null
+      weeklyDigest: boolean | null
+      twoFactorEnabled: boolean | null
+      newsletterSubscribed: boolean | null
+      theme: string | null
+      language: string | null
+      autoRefreshInterval: number | null
+      createdAt: Date | null
+      updatedAt: Date | null
+    }, ExtArgs["result"]["ytUserSettings"]>
+    composites: {}
+  }
+
+  type YtUserSettingsGetPayload<S extends boolean | null | undefined | YtUserSettingsDefaultArgs> = $Result.GetResult<Prisma.$YtUserSettingsPayload, S>
+
+  type YtUserSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<YtUserSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: YtUserSettingsCountAggregateInputType | true
+    }
+
+  export interface YtUserSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['YtUserSettings'], meta: { name: 'YtUserSettings' } }
+    /**
+     * Find zero or one YtUserSettings that matches the filter.
+     * @param {YtUserSettingsFindUniqueArgs} args - Arguments to find a YtUserSettings
+     * @example
+     * // Get one YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends YtUserSettingsFindUniqueArgs>(args: SelectSubset<T, YtUserSettingsFindUniqueArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one YtUserSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {YtUserSettingsFindUniqueOrThrowArgs} args - Arguments to find a YtUserSettings
+     * @example
+     * // Get one YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends YtUserSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, YtUserSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtUserSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsFindFirstArgs} args - Arguments to find a YtUserSettings
+     * @example
+     * // Get one YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends YtUserSettingsFindFirstArgs>(args?: SelectSubset<T, YtUserSettingsFindFirstArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtUserSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsFindFirstOrThrowArgs} args - Arguments to find a YtUserSettings
+     * @example
+     * // Get one YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends YtUserSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, YtUserSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more YtUserSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.findMany()
+     * 
+     * // Get first 10 YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ytUserSettingsWithIdOnly = await prisma.ytUserSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends YtUserSettingsFindManyArgs>(args?: SelectSubset<T, YtUserSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a YtUserSettings.
+     * @param {YtUserSettingsCreateArgs} args - Arguments to create a YtUserSettings.
+     * @example
+     * // Create one YtUserSettings
+     * const YtUserSettings = await prisma.ytUserSettings.create({
+     *   data: {
+     *     // ... data to create a YtUserSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends YtUserSettingsCreateArgs>(args: SelectSubset<T, YtUserSettingsCreateArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many YtUserSettings.
+     * @param {YtUserSettingsCreateManyArgs} args - Arguments to create many YtUserSettings.
+     * @example
+     * // Create many YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends YtUserSettingsCreateManyArgs>(args?: SelectSubset<T, YtUserSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many YtUserSettings and returns the data saved in the database.
+     * @param {YtUserSettingsCreateManyAndReturnArgs} args - Arguments to create many YtUserSettings.
+     * @example
+     * // Create many YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many YtUserSettings and only return the `id`
+     * const ytUserSettingsWithIdOnly = await prisma.ytUserSettings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends YtUserSettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, YtUserSettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a YtUserSettings.
+     * @param {YtUserSettingsDeleteArgs} args - Arguments to delete one YtUserSettings.
+     * @example
+     * // Delete one YtUserSettings
+     * const YtUserSettings = await prisma.ytUserSettings.delete({
+     *   where: {
+     *     // ... filter to delete one YtUserSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends YtUserSettingsDeleteArgs>(args: SelectSubset<T, YtUserSettingsDeleteArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one YtUserSettings.
+     * @param {YtUserSettingsUpdateArgs} args - Arguments to update one YtUserSettings.
+     * @example
+     * // Update one YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends YtUserSettingsUpdateArgs>(args: SelectSubset<T, YtUserSettingsUpdateArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more YtUserSettings.
+     * @param {YtUserSettingsDeleteManyArgs} args - Arguments to filter YtUserSettings to delete.
+     * @example
+     * // Delete a few YtUserSettings
+     * const { count } = await prisma.ytUserSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends YtUserSettingsDeleteManyArgs>(args?: SelectSubset<T, YtUserSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtUserSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends YtUserSettingsUpdateManyArgs>(args: SelectSubset<T, YtUserSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtUserSettings and returns the data updated in the database.
+     * @param {YtUserSettingsUpdateManyAndReturnArgs} args - Arguments to update many YtUserSettings.
+     * @example
+     * // Update many YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more YtUserSettings and only return the `id`
+     * const ytUserSettingsWithIdOnly = await prisma.ytUserSettings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends YtUserSettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, YtUserSettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one YtUserSettings.
+     * @param {YtUserSettingsUpsertArgs} args - Arguments to update or create a YtUserSettings.
+     * @example
+     * // Update or create a YtUserSettings
+     * const ytUserSettings = await prisma.ytUserSettings.upsert({
+     *   create: {
+     *     // ... data to create a YtUserSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the YtUserSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends YtUserSettingsUpsertArgs>(args: SelectSubset<T, YtUserSettingsUpsertArgs<ExtArgs>>): Prisma__YtUserSettingsClient<$Result.GetResult<Prisma.$YtUserSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of YtUserSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsCountArgs} args - Arguments to filter YtUserSettings to count.
+     * @example
+     * // Count the number of YtUserSettings
+     * const count = await prisma.ytUserSettings.count({
+     *   where: {
+     *     // ... the filter for the YtUserSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends YtUserSettingsCountArgs>(
+      args?: Subset<T, YtUserSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], YtUserSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a YtUserSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends YtUserSettingsAggregateArgs>(args: Subset<T, YtUserSettingsAggregateArgs>): Prisma.PrismaPromise<GetYtUserSettingsAggregateType<T>>
+
+    /**
+     * Group by YtUserSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtUserSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends YtUserSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: YtUserSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: YtUserSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, YtUserSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetYtUserSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the YtUserSettings model
+   */
+  readonly fields: YtUserSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for YtUserSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__YtUserSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the YtUserSettings model
+   */
+  interface YtUserSettingsFieldRefs {
+    readonly id: FieldRef<"YtUserSettings", 'String'>
+    readonly userId: FieldRef<"YtUserSettings", 'String'>
+    readonly fullName: FieldRef<"YtUserSettings", 'String'>
+    readonly email: FieldRef<"YtUserSettings", 'String'>
+    readonly role: FieldRef<"YtUserSettings", 'String'>
+    readonly emailNotifications: FieldRef<"YtUserSettings", 'Boolean'>
+    readonly pushNotifications: FieldRef<"YtUserSettings", 'Boolean'>
+    readonly weeklyDigest: FieldRef<"YtUserSettings", 'Boolean'>
+    readonly twoFactorEnabled: FieldRef<"YtUserSettings", 'Boolean'>
+    readonly newsletterSubscribed: FieldRef<"YtUserSettings", 'Boolean'>
+    readonly theme: FieldRef<"YtUserSettings", 'String'>
+    readonly language: FieldRef<"YtUserSettings", 'String'>
+    readonly autoRefreshInterval: FieldRef<"YtUserSettings", 'Int'>
+    readonly createdAt: FieldRef<"YtUserSettings", 'DateTime'>
+    readonly updatedAt: FieldRef<"YtUserSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * YtUserSettings findUnique
+   */
+  export type YtUserSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which YtUserSettings to fetch.
+     */
+    where: YtUserSettingsWhereUniqueInput
+  }
+
+  /**
+   * YtUserSettings findUniqueOrThrow
+   */
+  export type YtUserSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which YtUserSettings to fetch.
+     */
+    where: YtUserSettingsWhereUniqueInput
+  }
+
+  /**
+   * YtUserSettings findFirst
+   */
+  export type YtUserSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which YtUserSettings to fetch.
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtUserSettings to fetch.
+     */
+    orderBy?: YtUserSettingsOrderByWithRelationInput | YtUserSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtUserSettings.
+     */
+    cursor?: YtUserSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtUserSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtUserSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtUserSettings.
+     */
+    distinct?: YtUserSettingsScalarFieldEnum | YtUserSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * YtUserSettings findFirstOrThrow
+   */
+  export type YtUserSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which YtUserSettings to fetch.
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtUserSettings to fetch.
+     */
+    orderBy?: YtUserSettingsOrderByWithRelationInput | YtUserSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtUserSettings.
+     */
+    cursor?: YtUserSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtUserSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtUserSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtUserSettings.
+     */
+    distinct?: YtUserSettingsScalarFieldEnum | YtUserSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * YtUserSettings findMany
+   */
+  export type YtUserSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which YtUserSettings to fetch.
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtUserSettings to fetch.
+     */
+    orderBy?: YtUserSettingsOrderByWithRelationInput | YtUserSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing YtUserSettings.
+     */
+    cursor?: YtUserSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtUserSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtUserSettings.
+     */
+    skip?: number
+    distinct?: YtUserSettingsScalarFieldEnum | YtUserSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * YtUserSettings create
+   */
+  export type YtUserSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a YtUserSettings.
+     */
+    data: XOR<YtUserSettingsCreateInput, YtUserSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * YtUserSettings createMany
+   */
+  export type YtUserSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many YtUserSettings.
+     */
+    data: YtUserSettingsCreateManyInput | YtUserSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtUserSettings createManyAndReturn
+   */
+  export type YtUserSettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many YtUserSettings.
+     */
+    data: YtUserSettingsCreateManyInput | YtUserSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtUserSettings update
+   */
+  export type YtUserSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a YtUserSettings.
+     */
+    data: XOR<YtUserSettingsUpdateInput, YtUserSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which YtUserSettings to update.
+     */
+    where: YtUserSettingsWhereUniqueInput
+  }
+
+  /**
+   * YtUserSettings updateMany
+   */
+  export type YtUserSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update YtUserSettings.
+     */
+    data: XOR<YtUserSettingsUpdateManyMutationInput, YtUserSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which YtUserSettings to update
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * Limit how many YtUserSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtUserSettings updateManyAndReturn
+   */
+  export type YtUserSettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update YtUserSettings.
+     */
+    data: XOR<YtUserSettingsUpdateManyMutationInput, YtUserSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which YtUserSettings to update
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * Limit how many YtUserSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtUserSettings upsert
+   */
+  export type YtUserSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the YtUserSettings to update in case it exists.
+     */
+    where: YtUserSettingsWhereUniqueInput
+    /**
+     * In case the YtUserSettings found by the `where` argument doesn't exist, create a new YtUserSettings with this data.
+     */
+    create: XOR<YtUserSettingsCreateInput, YtUserSettingsUncheckedCreateInput>
+    /**
+     * In case the YtUserSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<YtUserSettingsUpdateInput, YtUserSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * YtUserSettings delete
+   */
+  export type YtUserSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+    /**
+     * Filter which YtUserSettings to delete.
+     */
+    where: YtUserSettingsWhereUniqueInput
+  }
+
+  /**
+   * YtUserSettings deleteMany
+   */
+  export type YtUserSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtUserSettings to delete
+     */
+    where?: YtUserSettingsWhereInput
+    /**
+     * Limit how many YtUserSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtUserSettings without action
+   */
+  export type YtUserSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtUserSettings
+     */
+    select?: YtUserSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtUserSettings
+     */
+    omit?: YtUserSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model YtCurationSession
+   */
+
+  export type AggregateYtCurationSession = {
+    _count: YtCurationSessionCountAggregateOutputType | null
+    _avg: YtCurationSessionAvgAggregateOutputType | null
+    _sum: YtCurationSessionSumAggregateOutputType | null
+    _min: YtCurationSessionMinAggregateOutputType | null
+    _max: YtCurationSessionMaxAggregateOutputType | null
+  }
+
+  export type YtCurationSessionAvgAggregateOutputType = {
+    targetDurationMin: number | null
+  }
+
+  export type YtCurationSessionSumAggregateOutputType = {
+    targetDurationMin: number | null
+  }
+
+  export type YtCurationSessionMinAggregateOutputType = {
+    id: string | null
+    sessionUuid: string | null
+    topic: string | null
+    language: string | null
+    level: string | null
+    targetDurationMin: number | null
+    includeChannels: string | null
+    excludeChannels: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    processedAt: Date | null
+  }
+
+  export type YtCurationSessionMaxAggregateOutputType = {
+    id: string | null
+    sessionUuid: string | null
+    topic: string | null
+    language: string | null
+    level: string | null
+    targetDurationMin: number | null
+    includeChannels: string | null
+    excludeChannels: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    processedAt: Date | null
+  }
+
+  export type YtCurationSessionCountAggregateOutputType = {
+    id: number
+    sessionUuid: number
+    topic: number
+    language: number
+    level: number
+    targetDurationMin: number
+    includeChannels: number
+    excludeChannels: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    processedAt: number
+    _all: number
+  }
+
+
+  export type YtCurationSessionAvgAggregateInputType = {
+    targetDurationMin?: true
+  }
+
+  export type YtCurationSessionSumAggregateInputType = {
+    targetDurationMin?: true
+  }
+
+  export type YtCurationSessionMinAggregateInputType = {
+    id?: true
+    sessionUuid?: true
+    topic?: true
+    language?: true
+    level?: true
+    targetDurationMin?: true
+    includeChannels?: true
+    excludeChannels?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    processedAt?: true
+  }
+
+  export type YtCurationSessionMaxAggregateInputType = {
+    id?: true
+    sessionUuid?: true
+    topic?: true
+    language?: true
+    level?: true
+    targetDurationMin?: true
+    includeChannels?: true
+    excludeChannels?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    processedAt?: true
+  }
+
+  export type YtCurationSessionCountAggregateInputType = {
+    id?: true
+    sessionUuid?: true
+    topic?: true
+    language?: true
+    level?: true
+    targetDurationMin?: true
+    includeChannels?: true
+    excludeChannels?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    processedAt?: true
+    _all?: true
+  }
+
+  export type YtCurationSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtCurationSession to aggregate.
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationSessions to fetch.
+     */
+    orderBy?: YtCurationSessionOrderByWithRelationInput | YtCurationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: YtCurationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned YtCurationSessions
+    **/
+    _count?: true | YtCurationSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: YtCurationSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: YtCurationSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: YtCurationSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: YtCurationSessionMaxAggregateInputType
+  }
+
+  export type GetYtCurationSessionAggregateType<T extends YtCurationSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateYtCurationSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateYtCurationSession[P]>
+      : GetScalarType<T[P], AggregateYtCurationSession[P]>
+  }
+
+
+
+
+  export type YtCurationSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: YtCurationSessionWhereInput
+    orderBy?: YtCurationSessionOrderByWithAggregationInput | YtCurationSessionOrderByWithAggregationInput[]
+    by: YtCurationSessionScalarFieldEnum[] | YtCurationSessionScalarFieldEnum
+    having?: YtCurationSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: YtCurationSessionCountAggregateInputType | true
+    _avg?: YtCurationSessionAvgAggregateInputType
+    _sum?: YtCurationSessionSumAggregateInputType
+    _min?: YtCurationSessionMinAggregateInputType
+    _max?: YtCurationSessionMaxAggregateInputType
+  }
+
+  export type YtCurationSessionGroupByOutputType = {
+    id: string
+    sessionUuid: string
+    topic: string
+    language: string | null
+    level: string | null
+    targetDurationMin: number
+    includeChannels: string | null
+    excludeChannels: string | null
+    status: string
+    createdAt: Date | null
+    updatedAt: Date | null
+    processedAt: Date | null
+    _count: YtCurationSessionCountAggregateOutputType | null
+    _avg: YtCurationSessionAvgAggregateOutputType | null
+    _sum: YtCurationSessionSumAggregateOutputType | null
+    _min: YtCurationSessionMinAggregateOutputType | null
+    _max: YtCurationSessionMaxAggregateOutputType | null
+  }
+
+  type GetYtCurationSessionGroupByPayload<T extends YtCurationSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<YtCurationSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof YtCurationSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], YtCurationSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], YtCurationSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type YtCurationSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionUuid?: boolean
+    topic?: boolean
+    language?: boolean
+    level?: boolean
+    targetDurationMin?: boolean
+    includeChannels?: boolean
+    excludeChannels?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+    candidates?: boolean | YtCurationSession$candidatesArgs<ExtArgs>
+    _count?: boolean | YtCurationSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ytCurationSession"]>
+
+  export type YtCurationSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionUuid?: boolean
+    topic?: boolean
+    language?: boolean
+    level?: boolean
+    targetDurationMin?: boolean
+    includeChannels?: boolean
+    excludeChannels?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytCurationSession"]>
+
+  export type YtCurationSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionUuid?: boolean
+    topic?: boolean
+    language?: boolean
+    level?: boolean
+    targetDurationMin?: boolean
+    includeChannels?: boolean
+    excludeChannels?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }, ExtArgs["result"]["ytCurationSession"]>
+
+  export type YtCurationSessionSelectScalar = {
+    id?: boolean
+    sessionUuid?: boolean
+    topic?: boolean
+    language?: boolean
+    level?: boolean
+    targetDurationMin?: boolean
+    includeChannels?: boolean
+    excludeChannels?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    processedAt?: boolean
+  }
+
+  export type YtCurationSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionUuid" | "topic" | "language" | "level" | "targetDurationMin" | "includeChannels" | "excludeChannels" | "status" | "createdAt" | "updatedAt" | "processedAt", ExtArgs["result"]["ytCurationSession"]>
+  export type YtCurationSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    candidates?: boolean | YtCurationSession$candidatesArgs<ExtArgs>
+    _count?: boolean | YtCurationSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type YtCurationSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type YtCurationSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $YtCurationSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "YtCurationSession"
+    objects: {
+      candidates: Prisma.$YtCurationCandidatePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionUuid: string
+      topic: string
+      language: string | null
+      level: string | null
+      targetDurationMin: number
+      includeChannels: string | null
+      excludeChannels: string | null
+      status: string
+      createdAt: Date | null
+      updatedAt: Date | null
+      processedAt: Date | null
+    }, ExtArgs["result"]["ytCurationSession"]>
+    composites: {}
+  }
+
+  type YtCurationSessionGetPayload<S extends boolean | null | undefined | YtCurationSessionDefaultArgs> = $Result.GetResult<Prisma.$YtCurationSessionPayload, S>
+
+  type YtCurationSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<YtCurationSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: YtCurationSessionCountAggregateInputType | true
+    }
+
+  export interface YtCurationSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['YtCurationSession'], meta: { name: 'YtCurationSession' } }
+    /**
+     * Find zero or one YtCurationSession that matches the filter.
+     * @param {YtCurationSessionFindUniqueArgs} args - Arguments to find a YtCurationSession
+     * @example
+     * // Get one YtCurationSession
+     * const ytCurationSession = await prisma.ytCurationSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends YtCurationSessionFindUniqueArgs>(args: SelectSubset<T, YtCurationSessionFindUniqueArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one YtCurationSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {YtCurationSessionFindUniqueOrThrowArgs} args - Arguments to find a YtCurationSession
+     * @example
+     * // Get one YtCurationSession
+     * const ytCurationSession = await prisma.ytCurationSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends YtCurationSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, YtCurationSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtCurationSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionFindFirstArgs} args - Arguments to find a YtCurationSession
+     * @example
+     * // Get one YtCurationSession
+     * const ytCurationSession = await prisma.ytCurationSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends YtCurationSessionFindFirstArgs>(args?: SelectSubset<T, YtCurationSessionFindFirstArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtCurationSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionFindFirstOrThrowArgs} args - Arguments to find a YtCurationSession
+     * @example
+     * // Get one YtCurationSession
+     * const ytCurationSession = await prisma.ytCurationSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends YtCurationSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, YtCurationSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more YtCurationSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all YtCurationSessions
+     * const ytCurationSessions = await prisma.ytCurationSession.findMany()
+     * 
+     * // Get first 10 YtCurationSessions
+     * const ytCurationSessions = await prisma.ytCurationSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ytCurationSessionWithIdOnly = await prisma.ytCurationSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends YtCurationSessionFindManyArgs>(args?: SelectSubset<T, YtCurationSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a YtCurationSession.
+     * @param {YtCurationSessionCreateArgs} args - Arguments to create a YtCurationSession.
+     * @example
+     * // Create one YtCurationSession
+     * const YtCurationSession = await prisma.ytCurationSession.create({
+     *   data: {
+     *     // ... data to create a YtCurationSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends YtCurationSessionCreateArgs>(args: SelectSubset<T, YtCurationSessionCreateArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many YtCurationSessions.
+     * @param {YtCurationSessionCreateManyArgs} args - Arguments to create many YtCurationSessions.
+     * @example
+     * // Create many YtCurationSessions
+     * const ytCurationSession = await prisma.ytCurationSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends YtCurationSessionCreateManyArgs>(args?: SelectSubset<T, YtCurationSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many YtCurationSessions and returns the data saved in the database.
+     * @param {YtCurationSessionCreateManyAndReturnArgs} args - Arguments to create many YtCurationSessions.
+     * @example
+     * // Create many YtCurationSessions
+     * const ytCurationSession = await prisma.ytCurationSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many YtCurationSessions and only return the `id`
+     * const ytCurationSessionWithIdOnly = await prisma.ytCurationSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends YtCurationSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, YtCurationSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a YtCurationSession.
+     * @param {YtCurationSessionDeleteArgs} args - Arguments to delete one YtCurationSession.
+     * @example
+     * // Delete one YtCurationSession
+     * const YtCurationSession = await prisma.ytCurationSession.delete({
+     *   where: {
+     *     // ... filter to delete one YtCurationSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends YtCurationSessionDeleteArgs>(args: SelectSubset<T, YtCurationSessionDeleteArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one YtCurationSession.
+     * @param {YtCurationSessionUpdateArgs} args - Arguments to update one YtCurationSession.
+     * @example
+     * // Update one YtCurationSession
+     * const ytCurationSession = await prisma.ytCurationSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends YtCurationSessionUpdateArgs>(args: SelectSubset<T, YtCurationSessionUpdateArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more YtCurationSessions.
+     * @param {YtCurationSessionDeleteManyArgs} args - Arguments to filter YtCurationSessions to delete.
+     * @example
+     * // Delete a few YtCurationSessions
+     * const { count } = await prisma.ytCurationSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends YtCurationSessionDeleteManyArgs>(args?: SelectSubset<T, YtCurationSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtCurationSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many YtCurationSessions
+     * const ytCurationSession = await prisma.ytCurationSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends YtCurationSessionUpdateManyArgs>(args: SelectSubset<T, YtCurationSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtCurationSessions and returns the data updated in the database.
+     * @param {YtCurationSessionUpdateManyAndReturnArgs} args - Arguments to update many YtCurationSessions.
+     * @example
+     * // Update many YtCurationSessions
+     * const ytCurationSession = await prisma.ytCurationSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more YtCurationSessions and only return the `id`
+     * const ytCurationSessionWithIdOnly = await prisma.ytCurationSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends YtCurationSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, YtCurationSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one YtCurationSession.
+     * @param {YtCurationSessionUpsertArgs} args - Arguments to update or create a YtCurationSession.
+     * @example
+     * // Update or create a YtCurationSession
+     * const ytCurationSession = await prisma.ytCurationSession.upsert({
+     *   create: {
+     *     // ... data to create a YtCurationSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the YtCurationSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends YtCurationSessionUpsertArgs>(args: SelectSubset<T, YtCurationSessionUpsertArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of YtCurationSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionCountArgs} args - Arguments to filter YtCurationSessions to count.
+     * @example
+     * // Count the number of YtCurationSessions
+     * const count = await prisma.ytCurationSession.count({
+     *   where: {
+     *     // ... the filter for the YtCurationSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends YtCurationSessionCountArgs>(
+      args?: Subset<T, YtCurationSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], YtCurationSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a YtCurationSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends YtCurationSessionAggregateArgs>(args: Subset<T, YtCurationSessionAggregateArgs>): Prisma.PrismaPromise<GetYtCurationSessionAggregateType<T>>
+
+    /**
+     * Group by YtCurationSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends YtCurationSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: YtCurationSessionGroupByArgs['orderBy'] }
+        : { orderBy?: YtCurationSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, YtCurationSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetYtCurationSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the YtCurationSession model
+   */
+  readonly fields: YtCurationSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for YtCurationSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__YtCurationSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    candidates<T extends YtCurationSession$candidatesArgs<ExtArgs> = {}>(args?: Subset<T, YtCurationSession$candidatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the YtCurationSession model
+   */
+  interface YtCurationSessionFieldRefs {
+    readonly id: FieldRef<"YtCurationSession", 'String'>
+    readonly sessionUuid: FieldRef<"YtCurationSession", 'String'>
+    readonly topic: FieldRef<"YtCurationSession", 'String'>
+    readonly language: FieldRef<"YtCurationSession", 'String'>
+    readonly level: FieldRef<"YtCurationSession", 'String'>
+    readonly targetDurationMin: FieldRef<"YtCurationSession", 'Int'>
+    readonly includeChannels: FieldRef<"YtCurationSession", 'String'>
+    readonly excludeChannels: FieldRef<"YtCurationSession", 'String'>
+    readonly status: FieldRef<"YtCurationSession", 'String'>
+    readonly createdAt: FieldRef<"YtCurationSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"YtCurationSession", 'DateTime'>
+    readonly processedAt: FieldRef<"YtCurationSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * YtCurationSession findUnique
+   */
+  export type YtCurationSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationSession to fetch.
+     */
+    where: YtCurationSessionWhereUniqueInput
+  }
+
+  /**
+   * YtCurationSession findUniqueOrThrow
+   */
+  export type YtCurationSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationSession to fetch.
+     */
+    where: YtCurationSessionWhereUniqueInput
+  }
+
+  /**
+   * YtCurationSession findFirst
+   */
+  export type YtCurationSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationSession to fetch.
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationSessions to fetch.
+     */
+    orderBy?: YtCurationSessionOrderByWithRelationInput | YtCurationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtCurationSessions.
+     */
+    cursor?: YtCurationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtCurationSessions.
+     */
+    distinct?: YtCurationSessionScalarFieldEnum | YtCurationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationSession findFirstOrThrow
+   */
+  export type YtCurationSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationSession to fetch.
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationSessions to fetch.
+     */
+    orderBy?: YtCurationSessionOrderByWithRelationInput | YtCurationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtCurationSessions.
+     */
+    cursor?: YtCurationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtCurationSessions.
+     */
+    distinct?: YtCurationSessionScalarFieldEnum | YtCurationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationSession findMany
+   */
+  export type YtCurationSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationSessions to fetch.
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationSessions to fetch.
+     */
+    orderBy?: YtCurationSessionOrderByWithRelationInput | YtCurationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing YtCurationSessions.
+     */
+    cursor?: YtCurationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationSessions.
+     */
+    skip?: number
+    distinct?: YtCurationSessionScalarFieldEnum | YtCurationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationSession create
+   */
+  export type YtCurationSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a YtCurationSession.
+     */
+    data: XOR<YtCurationSessionCreateInput, YtCurationSessionUncheckedCreateInput>
+  }
+
+  /**
+   * YtCurationSession createMany
+   */
+  export type YtCurationSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many YtCurationSessions.
+     */
+    data: YtCurationSessionCreateManyInput | YtCurationSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtCurationSession createManyAndReturn
+   */
+  export type YtCurationSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many YtCurationSessions.
+     */
+    data: YtCurationSessionCreateManyInput | YtCurationSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtCurationSession update
+   */
+  export type YtCurationSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a YtCurationSession.
+     */
+    data: XOR<YtCurationSessionUpdateInput, YtCurationSessionUncheckedUpdateInput>
+    /**
+     * Choose, which YtCurationSession to update.
+     */
+    where: YtCurationSessionWhereUniqueInput
+  }
+
+  /**
+   * YtCurationSession updateMany
+   */
+  export type YtCurationSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update YtCurationSessions.
+     */
+    data: XOR<YtCurationSessionUpdateManyMutationInput, YtCurationSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which YtCurationSessions to update
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * Limit how many YtCurationSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtCurationSession updateManyAndReturn
+   */
+  export type YtCurationSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update YtCurationSessions.
+     */
+    data: XOR<YtCurationSessionUpdateManyMutationInput, YtCurationSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which YtCurationSessions to update
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * Limit how many YtCurationSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtCurationSession upsert
+   */
+  export type YtCurationSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the YtCurationSession to update in case it exists.
+     */
+    where: YtCurationSessionWhereUniqueInput
+    /**
+     * In case the YtCurationSession found by the `where` argument doesn't exist, create a new YtCurationSession with this data.
+     */
+    create: XOR<YtCurationSessionCreateInput, YtCurationSessionUncheckedCreateInput>
+    /**
+     * In case the YtCurationSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<YtCurationSessionUpdateInput, YtCurationSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * YtCurationSession delete
+   */
+  export type YtCurationSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+    /**
+     * Filter which YtCurationSession to delete.
+     */
+    where: YtCurationSessionWhereUniqueInput
+  }
+
+  /**
+   * YtCurationSession deleteMany
+   */
+  export type YtCurationSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtCurationSessions to delete
+     */
+    where?: YtCurationSessionWhereInput
+    /**
+     * Limit how many YtCurationSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtCurationSession.candidates
+   */
+  export type YtCurationSession$candidatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    where?: YtCurationCandidateWhereInput
+    orderBy?: YtCurationCandidateOrderByWithRelationInput | YtCurationCandidateOrderByWithRelationInput[]
+    cursor?: YtCurationCandidateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: YtCurationCandidateScalarFieldEnum | YtCurationCandidateScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationSession without action
+   */
+  export type YtCurationSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationSession
+     */
+    select?: YtCurationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationSession
+     */
+    omit?: YtCurationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model YtCurationCandidate
+   */
+
+  export type AggregateYtCurationCandidate = {
+    _count: YtCurationCandidateCountAggregateOutputType | null
+    _avg: YtCurationCandidateAvgAggregateOutputType | null
+    _sum: YtCurationCandidateSumAggregateOutputType | null
+    _min: YtCurationCandidateMinAggregateOutputType | null
+    _max: YtCurationCandidateMaxAggregateOutputType | null
+  }
+
+  export type YtCurationCandidateAvgAggregateOutputType = {
+    durationSeconds: number | null
+    overallScore: number | null
+    relevanceScore: number | null
+    qualityScore: number | null
+    engagementScore: number | null
+    orderInPlaylist: number | null
+  }
+
+  export type YtCurationCandidateSumAggregateOutputType = {
+    durationSeconds: number | null
+    overallScore: number | null
+    relevanceScore: number | null
+    qualityScore: number | null
+    engagementScore: number | null
+    orderInPlaylist: number | null
+  }
+
+  export type YtCurationCandidateMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    videoId: string | null
+    videoTitle: string | null
+    videoThumbnail: string | null
+    channelTitle: string | null
+    publishedAt: Date | null
+    durationSeconds: number | null
+    overallScore: number | null
+    relevanceScore: number | null
+    qualityScore: number | null
+    engagementScore: number | null
+    recommendation: string | null
+    roleSuggestion: string | null
+    aiSummary: string | null
+    selected: boolean | null
+    orderInPlaylist: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type YtCurationCandidateMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    videoId: string | null
+    videoTitle: string | null
+    videoThumbnail: string | null
+    channelTitle: string | null
+    publishedAt: Date | null
+    durationSeconds: number | null
+    overallScore: number | null
+    relevanceScore: number | null
+    qualityScore: number | null
+    engagementScore: number | null
+    recommendation: string | null
+    roleSuggestion: string | null
+    aiSummary: string | null
+    selected: boolean | null
+    orderInPlaylist: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type YtCurationCandidateCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    videoId: number
+    videoTitle: number
+    videoThumbnail: number
+    channelTitle: number
+    publishedAt: number
+    durationSeconds: number
+    overallScore: number
+    relevanceScore: number
+    qualityScore: number
+    engagementScore: number
+    recommendation: number
+    roleSuggestion: number
+    aiSummary: number
+    selected: number
+    orderInPlaylist: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type YtCurationCandidateAvgAggregateInputType = {
+    durationSeconds?: true
+    overallScore?: true
+    relevanceScore?: true
+    qualityScore?: true
+    engagementScore?: true
+    orderInPlaylist?: true
+  }
+
+  export type YtCurationCandidateSumAggregateInputType = {
+    durationSeconds?: true
+    overallScore?: true
+    relevanceScore?: true
+    qualityScore?: true
+    engagementScore?: true
+    orderInPlaylist?: true
+  }
+
+  export type YtCurationCandidateMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    videoId?: true
+    videoTitle?: true
+    videoThumbnail?: true
+    channelTitle?: true
+    publishedAt?: true
+    durationSeconds?: true
+    overallScore?: true
+    relevanceScore?: true
+    qualityScore?: true
+    engagementScore?: true
+    recommendation?: true
+    roleSuggestion?: true
+    aiSummary?: true
+    selected?: true
+    orderInPlaylist?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type YtCurationCandidateMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    videoId?: true
+    videoTitle?: true
+    videoThumbnail?: true
+    channelTitle?: true
+    publishedAt?: true
+    durationSeconds?: true
+    overallScore?: true
+    relevanceScore?: true
+    qualityScore?: true
+    engagementScore?: true
+    recommendation?: true
+    roleSuggestion?: true
+    aiSummary?: true
+    selected?: true
+    orderInPlaylist?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type YtCurationCandidateCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    videoId?: true
+    videoTitle?: true
+    videoThumbnail?: true
+    channelTitle?: true
+    publishedAt?: true
+    durationSeconds?: true
+    overallScore?: true
+    relevanceScore?: true
+    qualityScore?: true
+    engagementScore?: true
+    recommendation?: true
+    roleSuggestion?: true
+    aiSummary?: true
+    selected?: true
+    orderInPlaylist?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type YtCurationCandidateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtCurationCandidate to aggregate.
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationCandidates to fetch.
+     */
+    orderBy?: YtCurationCandidateOrderByWithRelationInput | YtCurationCandidateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: YtCurationCandidateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationCandidates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationCandidates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned YtCurationCandidates
+    **/
+    _count?: true | YtCurationCandidateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: YtCurationCandidateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: YtCurationCandidateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: YtCurationCandidateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: YtCurationCandidateMaxAggregateInputType
+  }
+
+  export type GetYtCurationCandidateAggregateType<T extends YtCurationCandidateAggregateArgs> = {
+        [P in keyof T & keyof AggregateYtCurationCandidate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateYtCurationCandidate[P]>
+      : GetScalarType<T[P], AggregateYtCurationCandidate[P]>
+  }
+
+
+
+
+  export type YtCurationCandidateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: YtCurationCandidateWhereInput
+    orderBy?: YtCurationCandidateOrderByWithAggregationInput | YtCurationCandidateOrderByWithAggregationInput[]
+    by: YtCurationCandidateScalarFieldEnum[] | YtCurationCandidateScalarFieldEnum
+    having?: YtCurationCandidateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: YtCurationCandidateCountAggregateInputType | true
+    _avg?: YtCurationCandidateAvgAggregateInputType
+    _sum?: YtCurationCandidateSumAggregateInputType
+    _min?: YtCurationCandidateMinAggregateInputType
+    _max?: YtCurationCandidateMaxAggregateInputType
+  }
+
+  export type YtCurationCandidateGroupByOutputType = {
+    id: string
+    sessionId: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail: string | null
+    channelTitle: string | null
+    publishedAt: Date | null
+    durationSeconds: number | null
+    overallScore: number | null
+    relevanceScore: number | null
+    qualityScore: number | null
+    engagementScore: number | null
+    recommendation: string | null
+    roleSuggestion: string | null
+    aiSummary: string | null
+    selected: boolean | null
+    orderInPlaylist: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    _count: YtCurationCandidateCountAggregateOutputType | null
+    _avg: YtCurationCandidateAvgAggregateOutputType | null
+    _sum: YtCurationCandidateSumAggregateOutputType | null
+    _min: YtCurationCandidateMinAggregateOutputType | null
+    _max: YtCurationCandidateMaxAggregateOutputType | null
+  }
+
+  type GetYtCurationCandidateGroupByPayload<T extends YtCurationCandidateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<YtCurationCandidateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof YtCurationCandidateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], YtCurationCandidateGroupByOutputType[P]>
+            : GetScalarType<T[P], YtCurationCandidateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type YtCurationCandidateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    videoId?: boolean
+    videoTitle?: boolean
+    videoThumbnail?: boolean
+    channelTitle?: boolean
+    publishedAt?: boolean
+    durationSeconds?: boolean
+    overallScore?: boolean
+    relevanceScore?: boolean
+    qualityScore?: boolean
+    engagementScore?: boolean
+    recommendation?: boolean
+    roleSuggestion?: boolean
+    aiSummary?: boolean
+    selected?: boolean
+    orderInPlaylist?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | YtCurationSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ytCurationCandidate"]>
+
+  export type YtCurationCandidateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    videoId?: boolean
+    videoTitle?: boolean
+    videoThumbnail?: boolean
+    channelTitle?: boolean
+    publishedAt?: boolean
+    durationSeconds?: boolean
+    overallScore?: boolean
+    relevanceScore?: boolean
+    qualityScore?: boolean
+    engagementScore?: boolean
+    recommendation?: boolean
+    roleSuggestion?: boolean
+    aiSummary?: boolean
+    selected?: boolean
+    orderInPlaylist?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | YtCurationSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ytCurationCandidate"]>
+
+  export type YtCurationCandidateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    videoId?: boolean
+    videoTitle?: boolean
+    videoThumbnail?: boolean
+    channelTitle?: boolean
+    publishedAt?: boolean
+    durationSeconds?: boolean
+    overallScore?: boolean
+    relevanceScore?: boolean
+    qualityScore?: boolean
+    engagementScore?: boolean
+    recommendation?: boolean
+    roleSuggestion?: boolean
+    aiSummary?: boolean
+    selected?: boolean
+    orderInPlaylist?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | YtCurationSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ytCurationCandidate"]>
+
+  export type YtCurationCandidateSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    videoId?: boolean
+    videoTitle?: boolean
+    videoThumbnail?: boolean
+    channelTitle?: boolean
+    publishedAt?: boolean
+    durationSeconds?: boolean
+    overallScore?: boolean
+    relevanceScore?: boolean
+    qualityScore?: boolean
+    engagementScore?: boolean
+    recommendation?: boolean
+    roleSuggestion?: boolean
+    aiSummary?: boolean
+    selected?: boolean
+    orderInPlaylist?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type YtCurationCandidateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "videoId" | "videoTitle" | "videoThumbnail" | "channelTitle" | "publishedAt" | "durationSeconds" | "overallScore" | "relevanceScore" | "qualityScore" | "engagementScore" | "recommendation" | "roleSuggestion" | "aiSummary" | "selected" | "orderInPlaylist" | "createdAt" | "updatedAt", ExtArgs["result"]["ytCurationCandidate"]>
+  export type YtCurationCandidateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | YtCurationSessionDefaultArgs<ExtArgs>
+  }
+  export type YtCurationCandidateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | YtCurationSessionDefaultArgs<ExtArgs>
+  }
+  export type YtCurationCandidateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | YtCurationSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $YtCurationCandidatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "YtCurationCandidate"
+    objects: {
+      session: Prisma.$YtCurationSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      videoId: string
+      videoTitle: string
+      videoThumbnail: string | null
+      channelTitle: string | null
+      publishedAt: Date | null
+      durationSeconds: number | null
+      overallScore: number | null
+      relevanceScore: number | null
+      qualityScore: number | null
+      engagementScore: number | null
+      recommendation: string | null
+      roleSuggestion: string | null
+      aiSummary: string | null
+      selected: boolean | null
+      orderInPlaylist: number | null
+      createdAt: Date | null
+      updatedAt: Date | null
+    }, ExtArgs["result"]["ytCurationCandidate"]>
+    composites: {}
+  }
+
+  type YtCurationCandidateGetPayload<S extends boolean | null | undefined | YtCurationCandidateDefaultArgs> = $Result.GetResult<Prisma.$YtCurationCandidatePayload, S>
+
+  type YtCurationCandidateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<YtCurationCandidateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: YtCurationCandidateCountAggregateInputType | true
+    }
+
+  export interface YtCurationCandidateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['YtCurationCandidate'], meta: { name: 'YtCurationCandidate' } }
+    /**
+     * Find zero or one YtCurationCandidate that matches the filter.
+     * @param {YtCurationCandidateFindUniqueArgs} args - Arguments to find a YtCurationCandidate
+     * @example
+     * // Get one YtCurationCandidate
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends YtCurationCandidateFindUniqueArgs>(args: SelectSubset<T, YtCurationCandidateFindUniqueArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one YtCurationCandidate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {YtCurationCandidateFindUniqueOrThrowArgs} args - Arguments to find a YtCurationCandidate
+     * @example
+     * // Get one YtCurationCandidate
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends YtCurationCandidateFindUniqueOrThrowArgs>(args: SelectSubset<T, YtCurationCandidateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtCurationCandidate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateFindFirstArgs} args - Arguments to find a YtCurationCandidate
+     * @example
+     * // Get one YtCurationCandidate
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends YtCurationCandidateFindFirstArgs>(args?: SelectSubset<T, YtCurationCandidateFindFirstArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first YtCurationCandidate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateFindFirstOrThrowArgs} args - Arguments to find a YtCurationCandidate
+     * @example
+     * // Get one YtCurationCandidate
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends YtCurationCandidateFindFirstOrThrowArgs>(args?: SelectSubset<T, YtCurationCandidateFindFirstOrThrowArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more YtCurationCandidates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all YtCurationCandidates
+     * const ytCurationCandidates = await prisma.ytCurationCandidate.findMany()
+     * 
+     * // Get first 10 YtCurationCandidates
+     * const ytCurationCandidates = await prisma.ytCurationCandidate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ytCurationCandidateWithIdOnly = await prisma.ytCurationCandidate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends YtCurationCandidateFindManyArgs>(args?: SelectSubset<T, YtCurationCandidateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a YtCurationCandidate.
+     * @param {YtCurationCandidateCreateArgs} args - Arguments to create a YtCurationCandidate.
+     * @example
+     * // Create one YtCurationCandidate
+     * const YtCurationCandidate = await prisma.ytCurationCandidate.create({
+     *   data: {
+     *     // ... data to create a YtCurationCandidate
+     *   }
+     * })
+     * 
+     */
+    create<T extends YtCurationCandidateCreateArgs>(args: SelectSubset<T, YtCurationCandidateCreateArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many YtCurationCandidates.
+     * @param {YtCurationCandidateCreateManyArgs} args - Arguments to create many YtCurationCandidates.
+     * @example
+     * // Create many YtCurationCandidates
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends YtCurationCandidateCreateManyArgs>(args?: SelectSubset<T, YtCurationCandidateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many YtCurationCandidates and returns the data saved in the database.
+     * @param {YtCurationCandidateCreateManyAndReturnArgs} args - Arguments to create many YtCurationCandidates.
+     * @example
+     * // Create many YtCurationCandidates
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many YtCurationCandidates and only return the `id`
+     * const ytCurationCandidateWithIdOnly = await prisma.ytCurationCandidate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends YtCurationCandidateCreateManyAndReturnArgs>(args?: SelectSubset<T, YtCurationCandidateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a YtCurationCandidate.
+     * @param {YtCurationCandidateDeleteArgs} args - Arguments to delete one YtCurationCandidate.
+     * @example
+     * // Delete one YtCurationCandidate
+     * const YtCurationCandidate = await prisma.ytCurationCandidate.delete({
+     *   where: {
+     *     // ... filter to delete one YtCurationCandidate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends YtCurationCandidateDeleteArgs>(args: SelectSubset<T, YtCurationCandidateDeleteArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one YtCurationCandidate.
+     * @param {YtCurationCandidateUpdateArgs} args - Arguments to update one YtCurationCandidate.
+     * @example
+     * // Update one YtCurationCandidate
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends YtCurationCandidateUpdateArgs>(args: SelectSubset<T, YtCurationCandidateUpdateArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more YtCurationCandidates.
+     * @param {YtCurationCandidateDeleteManyArgs} args - Arguments to filter YtCurationCandidates to delete.
+     * @example
+     * // Delete a few YtCurationCandidates
+     * const { count } = await prisma.ytCurationCandidate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends YtCurationCandidateDeleteManyArgs>(args?: SelectSubset<T, YtCurationCandidateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtCurationCandidates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many YtCurationCandidates
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends YtCurationCandidateUpdateManyArgs>(args: SelectSubset<T, YtCurationCandidateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more YtCurationCandidates and returns the data updated in the database.
+     * @param {YtCurationCandidateUpdateManyAndReturnArgs} args - Arguments to update many YtCurationCandidates.
+     * @example
+     * // Update many YtCurationCandidates
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more YtCurationCandidates and only return the `id`
+     * const ytCurationCandidateWithIdOnly = await prisma.ytCurationCandidate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends YtCurationCandidateUpdateManyAndReturnArgs>(args: SelectSubset<T, YtCurationCandidateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one YtCurationCandidate.
+     * @param {YtCurationCandidateUpsertArgs} args - Arguments to update or create a YtCurationCandidate.
+     * @example
+     * // Update or create a YtCurationCandidate
+     * const ytCurationCandidate = await prisma.ytCurationCandidate.upsert({
+     *   create: {
+     *     // ... data to create a YtCurationCandidate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the YtCurationCandidate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends YtCurationCandidateUpsertArgs>(args: SelectSubset<T, YtCurationCandidateUpsertArgs<ExtArgs>>): Prisma__YtCurationCandidateClient<$Result.GetResult<Prisma.$YtCurationCandidatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of YtCurationCandidates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateCountArgs} args - Arguments to filter YtCurationCandidates to count.
+     * @example
+     * // Count the number of YtCurationCandidates
+     * const count = await prisma.ytCurationCandidate.count({
+     *   where: {
+     *     // ... the filter for the YtCurationCandidates we want to count
+     *   }
+     * })
+    **/
+    count<T extends YtCurationCandidateCountArgs>(
+      args?: Subset<T, YtCurationCandidateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], YtCurationCandidateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a YtCurationCandidate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends YtCurationCandidateAggregateArgs>(args: Subset<T, YtCurationCandidateAggregateArgs>): Prisma.PrismaPromise<GetYtCurationCandidateAggregateType<T>>
+
+    /**
+     * Group by YtCurationCandidate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {YtCurationCandidateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends YtCurationCandidateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: YtCurationCandidateGroupByArgs['orderBy'] }
+        : { orderBy?: YtCurationCandidateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, YtCurationCandidateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetYtCurationCandidateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the YtCurationCandidate model
+   */
+  readonly fields: YtCurationCandidateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for YtCurationCandidate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__YtCurationCandidateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends YtCurationSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, YtCurationSessionDefaultArgs<ExtArgs>>): Prisma__YtCurationSessionClient<$Result.GetResult<Prisma.$YtCurationSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the YtCurationCandidate model
+   */
+  interface YtCurationCandidateFieldRefs {
+    readonly id: FieldRef<"YtCurationCandidate", 'String'>
+    readonly sessionId: FieldRef<"YtCurationCandidate", 'String'>
+    readonly videoId: FieldRef<"YtCurationCandidate", 'String'>
+    readonly videoTitle: FieldRef<"YtCurationCandidate", 'String'>
+    readonly videoThumbnail: FieldRef<"YtCurationCandidate", 'String'>
+    readonly channelTitle: FieldRef<"YtCurationCandidate", 'String'>
+    readonly publishedAt: FieldRef<"YtCurationCandidate", 'DateTime'>
+    readonly durationSeconds: FieldRef<"YtCurationCandidate", 'Int'>
+    readonly overallScore: FieldRef<"YtCurationCandidate", 'Int'>
+    readonly relevanceScore: FieldRef<"YtCurationCandidate", 'Int'>
+    readonly qualityScore: FieldRef<"YtCurationCandidate", 'Int'>
+    readonly engagementScore: FieldRef<"YtCurationCandidate", 'Int'>
+    readonly recommendation: FieldRef<"YtCurationCandidate", 'String'>
+    readonly roleSuggestion: FieldRef<"YtCurationCandidate", 'String'>
+    readonly aiSummary: FieldRef<"YtCurationCandidate", 'String'>
+    readonly selected: FieldRef<"YtCurationCandidate", 'Boolean'>
+    readonly orderInPlaylist: FieldRef<"YtCurationCandidate", 'Int'>
+    readonly createdAt: FieldRef<"YtCurationCandidate", 'DateTime'>
+    readonly updatedAt: FieldRef<"YtCurationCandidate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * YtCurationCandidate findUnique
+   */
+  export type YtCurationCandidateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationCandidate to fetch.
+     */
+    where: YtCurationCandidateWhereUniqueInput
+  }
+
+  /**
+   * YtCurationCandidate findUniqueOrThrow
+   */
+  export type YtCurationCandidateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationCandidate to fetch.
+     */
+    where: YtCurationCandidateWhereUniqueInput
+  }
+
+  /**
+   * YtCurationCandidate findFirst
+   */
+  export type YtCurationCandidateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationCandidate to fetch.
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationCandidates to fetch.
+     */
+    orderBy?: YtCurationCandidateOrderByWithRelationInput | YtCurationCandidateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtCurationCandidates.
+     */
+    cursor?: YtCurationCandidateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationCandidates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationCandidates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtCurationCandidates.
+     */
+    distinct?: YtCurationCandidateScalarFieldEnum | YtCurationCandidateScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationCandidate findFirstOrThrow
+   */
+  export type YtCurationCandidateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationCandidate to fetch.
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationCandidates to fetch.
+     */
+    orderBy?: YtCurationCandidateOrderByWithRelationInput | YtCurationCandidateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for YtCurationCandidates.
+     */
+    cursor?: YtCurationCandidateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationCandidates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationCandidates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of YtCurationCandidates.
+     */
+    distinct?: YtCurationCandidateScalarFieldEnum | YtCurationCandidateScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationCandidate findMany
+   */
+  export type YtCurationCandidateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * Filter, which YtCurationCandidates to fetch.
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of YtCurationCandidates to fetch.
+     */
+    orderBy?: YtCurationCandidateOrderByWithRelationInput | YtCurationCandidateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing YtCurationCandidates.
+     */
+    cursor?: YtCurationCandidateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` YtCurationCandidates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` YtCurationCandidates.
+     */
+    skip?: number
+    distinct?: YtCurationCandidateScalarFieldEnum | YtCurationCandidateScalarFieldEnum[]
+  }
+
+  /**
+   * YtCurationCandidate create
+   */
+  export type YtCurationCandidateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a YtCurationCandidate.
+     */
+    data: XOR<YtCurationCandidateCreateInput, YtCurationCandidateUncheckedCreateInput>
+  }
+
+  /**
+   * YtCurationCandidate createMany
+   */
+  export type YtCurationCandidateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many YtCurationCandidates.
+     */
+    data: YtCurationCandidateCreateManyInput | YtCurationCandidateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * YtCurationCandidate createManyAndReturn
+   */
+  export type YtCurationCandidateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * The data used to create many YtCurationCandidates.
+     */
+    data: YtCurationCandidateCreateManyInput | YtCurationCandidateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * YtCurationCandidate update
+   */
+  export type YtCurationCandidateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a YtCurationCandidate.
+     */
+    data: XOR<YtCurationCandidateUpdateInput, YtCurationCandidateUncheckedUpdateInput>
+    /**
+     * Choose, which YtCurationCandidate to update.
+     */
+    where: YtCurationCandidateWhereUniqueInput
+  }
+
+  /**
+   * YtCurationCandidate updateMany
+   */
+  export type YtCurationCandidateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update YtCurationCandidates.
+     */
+    data: XOR<YtCurationCandidateUpdateManyMutationInput, YtCurationCandidateUncheckedUpdateManyInput>
+    /**
+     * Filter which YtCurationCandidates to update
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * Limit how many YtCurationCandidates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtCurationCandidate updateManyAndReturn
+   */
+  export type YtCurationCandidateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * The data used to update YtCurationCandidates.
+     */
+    data: XOR<YtCurationCandidateUpdateManyMutationInput, YtCurationCandidateUncheckedUpdateManyInput>
+    /**
+     * Filter which YtCurationCandidates to update
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * Limit how many YtCurationCandidates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * YtCurationCandidate upsert
+   */
+  export type YtCurationCandidateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the YtCurationCandidate to update in case it exists.
+     */
+    where: YtCurationCandidateWhereUniqueInput
+    /**
+     * In case the YtCurationCandidate found by the `where` argument doesn't exist, create a new YtCurationCandidate with this data.
+     */
+    create: XOR<YtCurationCandidateCreateInput, YtCurationCandidateUncheckedCreateInput>
+    /**
+     * In case the YtCurationCandidate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<YtCurationCandidateUpdateInput, YtCurationCandidateUncheckedUpdateInput>
+  }
+
+  /**
+   * YtCurationCandidate delete
+   */
+  export type YtCurationCandidateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+    /**
+     * Filter which YtCurationCandidate to delete.
+     */
+    where: YtCurationCandidateWhereUniqueInput
+  }
+
+  /**
+   * YtCurationCandidate deleteMany
+   */
+  export type YtCurationCandidateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which YtCurationCandidates to delete
+     */
+    where?: YtCurationCandidateWhereInput
+    /**
+     * Limit how many YtCurationCandidates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * YtCurationCandidate without action
+   */
+  export type YtCurationCandidateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the YtCurationCandidate
+     */
+    select?: YtCurationCandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the YtCurationCandidate
+     */
+    omit?: YtCurationCandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: YtCurationCandidateInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model UserBadge
    */
 
@@ -32809,6 +39909,1083 @@ export namespace Prisma {
 
 
   /**
+   * Model ProcessingJob
+   */
+
+  export type AggregateProcessingJob = {
+    _count: ProcessingJobCountAggregateOutputType | null
+    _avg: ProcessingJobAvgAggregateOutputType | null
+    _sum: ProcessingJobSumAggregateOutputType | null
+    _min: ProcessingJobMinAggregateOutputType | null
+    _max: ProcessingJobMaxAggregateOutputType | null
+  }
+
+  export type ProcessingJobAvgAggregateOutputType = {
+    retries: number | null
+  }
+
+  export type ProcessingJobSumAggregateOutputType = {
+    retries: number | null
+  }
+
+  export type ProcessingJobMinAggregateOutputType = {
+    id: string | null
+    type: string | null
+    status: string | null
+    targetId: string | null
+    error: string | null
+    retries: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProcessingJobMaxAggregateOutputType = {
+    id: string | null
+    type: string | null
+    status: string | null
+    targetId: string | null
+    error: string | null
+    retries: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProcessingJobCountAggregateOutputType = {
+    id: number
+    type: number
+    status: number
+    targetId: number
+    payload: number
+    error: number
+    retries: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProcessingJobAvgAggregateInputType = {
+    retries?: true
+  }
+
+  export type ProcessingJobSumAggregateInputType = {
+    retries?: true
+  }
+
+  export type ProcessingJobMinAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    targetId?: true
+    error?: true
+    retries?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProcessingJobMaxAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    targetId?: true
+    error?: true
+    retries?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProcessingJobCountAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    targetId?: true
+    payload?: true
+    error?: true
+    retries?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProcessingJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProcessingJob to aggregate.
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessingJobs to fetch.
+     */
+    orderBy?: ProcessingJobOrderByWithRelationInput | ProcessingJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProcessingJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessingJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessingJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProcessingJobs
+    **/
+    _count?: true | ProcessingJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProcessingJobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProcessingJobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProcessingJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProcessingJobMaxAggregateInputType
+  }
+
+  export type GetProcessingJobAggregateType<T extends ProcessingJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateProcessingJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProcessingJob[P]>
+      : GetScalarType<T[P], AggregateProcessingJob[P]>
+  }
+
+
+
+
+  export type ProcessingJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessingJobWhereInput
+    orderBy?: ProcessingJobOrderByWithAggregationInput | ProcessingJobOrderByWithAggregationInput[]
+    by: ProcessingJobScalarFieldEnum[] | ProcessingJobScalarFieldEnum
+    having?: ProcessingJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProcessingJobCountAggregateInputType | true
+    _avg?: ProcessingJobAvgAggregateInputType
+    _sum?: ProcessingJobSumAggregateInputType
+    _min?: ProcessingJobMinAggregateInputType
+    _max?: ProcessingJobMaxAggregateInputType
+  }
+
+  export type ProcessingJobGroupByOutputType = {
+    id: string
+    type: string
+    status: string
+    targetId: string
+    payload: JsonValue | null
+    error: string | null
+    retries: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ProcessingJobCountAggregateOutputType | null
+    _avg: ProcessingJobAvgAggregateOutputType | null
+    _sum: ProcessingJobSumAggregateOutputType | null
+    _min: ProcessingJobMinAggregateOutputType | null
+    _max: ProcessingJobMaxAggregateOutputType | null
+  }
+
+  type GetProcessingJobGroupByPayload<T extends ProcessingJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProcessingJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProcessingJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProcessingJobGroupByOutputType[P]>
+            : GetScalarType<T[P], ProcessingJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProcessingJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    targetId?: boolean
+    payload?: boolean
+    error?: boolean
+    retries?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["processingJob"]>
+
+  export type ProcessingJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    targetId?: boolean
+    payload?: boolean
+    error?: boolean
+    retries?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["processingJob"]>
+
+  export type ProcessingJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    targetId?: boolean
+    payload?: boolean
+    error?: boolean
+    retries?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["processingJob"]>
+
+  export type ProcessingJobSelectScalar = {
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    targetId?: boolean
+    payload?: boolean
+    error?: boolean
+    retries?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProcessingJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "status" | "targetId" | "payload" | "error" | "retries" | "createdAt" | "updatedAt", ExtArgs["result"]["processingJob"]>
+
+  export type $ProcessingJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProcessingJob"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: string
+      status: string
+      targetId: string
+      payload: Prisma.JsonValue | null
+      error: string | null
+      retries: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["processingJob"]>
+    composites: {}
+  }
+
+  type ProcessingJobGetPayload<S extends boolean | null | undefined | ProcessingJobDefaultArgs> = $Result.GetResult<Prisma.$ProcessingJobPayload, S>
+
+  type ProcessingJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProcessingJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProcessingJobCountAggregateInputType | true
+    }
+
+  export interface ProcessingJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProcessingJob'], meta: { name: 'ProcessingJob' } }
+    /**
+     * Find zero or one ProcessingJob that matches the filter.
+     * @param {ProcessingJobFindUniqueArgs} args - Arguments to find a ProcessingJob
+     * @example
+     * // Get one ProcessingJob
+     * const processingJob = await prisma.processingJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProcessingJobFindUniqueArgs>(args: SelectSubset<T, ProcessingJobFindUniqueArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProcessingJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProcessingJobFindUniqueOrThrowArgs} args - Arguments to find a ProcessingJob
+     * @example
+     * // Get one ProcessingJob
+     * const processingJob = await prisma.processingJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProcessingJobFindUniqueOrThrowArgs>(args: SelectSubset<T, ProcessingJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProcessingJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobFindFirstArgs} args - Arguments to find a ProcessingJob
+     * @example
+     * // Get one ProcessingJob
+     * const processingJob = await prisma.processingJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProcessingJobFindFirstArgs>(args?: SelectSubset<T, ProcessingJobFindFirstArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProcessingJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobFindFirstOrThrowArgs} args - Arguments to find a ProcessingJob
+     * @example
+     * // Get one ProcessingJob
+     * const processingJob = await prisma.processingJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProcessingJobFindFirstOrThrowArgs>(args?: SelectSubset<T, ProcessingJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProcessingJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProcessingJobs
+     * const processingJobs = await prisma.processingJob.findMany()
+     * 
+     * // Get first 10 ProcessingJobs
+     * const processingJobs = await prisma.processingJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const processingJobWithIdOnly = await prisma.processingJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProcessingJobFindManyArgs>(args?: SelectSubset<T, ProcessingJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProcessingJob.
+     * @param {ProcessingJobCreateArgs} args - Arguments to create a ProcessingJob.
+     * @example
+     * // Create one ProcessingJob
+     * const ProcessingJob = await prisma.processingJob.create({
+     *   data: {
+     *     // ... data to create a ProcessingJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProcessingJobCreateArgs>(args: SelectSubset<T, ProcessingJobCreateArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProcessingJobs.
+     * @param {ProcessingJobCreateManyArgs} args - Arguments to create many ProcessingJobs.
+     * @example
+     * // Create many ProcessingJobs
+     * const processingJob = await prisma.processingJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProcessingJobCreateManyArgs>(args?: SelectSubset<T, ProcessingJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProcessingJobs and returns the data saved in the database.
+     * @param {ProcessingJobCreateManyAndReturnArgs} args - Arguments to create many ProcessingJobs.
+     * @example
+     * // Create many ProcessingJobs
+     * const processingJob = await prisma.processingJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProcessingJobs and only return the `id`
+     * const processingJobWithIdOnly = await prisma.processingJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProcessingJobCreateManyAndReturnArgs>(args?: SelectSubset<T, ProcessingJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProcessingJob.
+     * @param {ProcessingJobDeleteArgs} args - Arguments to delete one ProcessingJob.
+     * @example
+     * // Delete one ProcessingJob
+     * const ProcessingJob = await prisma.processingJob.delete({
+     *   where: {
+     *     // ... filter to delete one ProcessingJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProcessingJobDeleteArgs>(args: SelectSubset<T, ProcessingJobDeleteArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProcessingJob.
+     * @param {ProcessingJobUpdateArgs} args - Arguments to update one ProcessingJob.
+     * @example
+     * // Update one ProcessingJob
+     * const processingJob = await prisma.processingJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProcessingJobUpdateArgs>(args: SelectSubset<T, ProcessingJobUpdateArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProcessingJobs.
+     * @param {ProcessingJobDeleteManyArgs} args - Arguments to filter ProcessingJobs to delete.
+     * @example
+     * // Delete a few ProcessingJobs
+     * const { count } = await prisma.processingJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProcessingJobDeleteManyArgs>(args?: SelectSubset<T, ProcessingJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProcessingJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProcessingJobs
+     * const processingJob = await prisma.processingJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProcessingJobUpdateManyArgs>(args: SelectSubset<T, ProcessingJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProcessingJobs and returns the data updated in the database.
+     * @param {ProcessingJobUpdateManyAndReturnArgs} args - Arguments to update many ProcessingJobs.
+     * @example
+     * // Update many ProcessingJobs
+     * const processingJob = await prisma.processingJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProcessingJobs and only return the `id`
+     * const processingJobWithIdOnly = await prisma.processingJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProcessingJobUpdateManyAndReturnArgs>(args: SelectSubset<T, ProcessingJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProcessingJob.
+     * @param {ProcessingJobUpsertArgs} args - Arguments to update or create a ProcessingJob.
+     * @example
+     * // Update or create a ProcessingJob
+     * const processingJob = await prisma.processingJob.upsert({
+     *   create: {
+     *     // ... data to create a ProcessingJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProcessingJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProcessingJobUpsertArgs>(args: SelectSubset<T, ProcessingJobUpsertArgs<ExtArgs>>): Prisma__ProcessingJobClient<$Result.GetResult<Prisma.$ProcessingJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProcessingJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobCountArgs} args - Arguments to filter ProcessingJobs to count.
+     * @example
+     * // Count the number of ProcessingJobs
+     * const count = await prisma.processingJob.count({
+     *   where: {
+     *     // ... the filter for the ProcessingJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProcessingJobCountArgs>(
+      args?: Subset<T, ProcessingJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProcessingJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProcessingJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProcessingJobAggregateArgs>(args: Subset<T, ProcessingJobAggregateArgs>): Prisma.PrismaPromise<GetProcessingJobAggregateType<T>>
+
+    /**
+     * Group by ProcessingJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessingJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProcessingJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProcessingJobGroupByArgs['orderBy'] }
+        : { orderBy?: ProcessingJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProcessingJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProcessingJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProcessingJob model
+   */
+  readonly fields: ProcessingJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProcessingJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProcessingJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProcessingJob model
+   */
+  interface ProcessingJobFieldRefs {
+    readonly id: FieldRef<"ProcessingJob", 'String'>
+    readonly type: FieldRef<"ProcessingJob", 'String'>
+    readonly status: FieldRef<"ProcessingJob", 'String'>
+    readonly targetId: FieldRef<"ProcessingJob", 'String'>
+    readonly payload: FieldRef<"ProcessingJob", 'Json'>
+    readonly error: FieldRef<"ProcessingJob", 'String'>
+    readonly retries: FieldRef<"ProcessingJob", 'Int'>
+    readonly createdAt: FieldRef<"ProcessingJob", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProcessingJob", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProcessingJob findUnique
+   */
+  export type ProcessingJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * Filter, which ProcessingJob to fetch.
+     */
+    where: ProcessingJobWhereUniqueInput
+  }
+
+  /**
+   * ProcessingJob findUniqueOrThrow
+   */
+  export type ProcessingJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * Filter, which ProcessingJob to fetch.
+     */
+    where: ProcessingJobWhereUniqueInput
+  }
+
+  /**
+   * ProcessingJob findFirst
+   */
+  export type ProcessingJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * Filter, which ProcessingJob to fetch.
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessingJobs to fetch.
+     */
+    orderBy?: ProcessingJobOrderByWithRelationInput | ProcessingJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProcessingJobs.
+     */
+    cursor?: ProcessingJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessingJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessingJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProcessingJobs.
+     */
+    distinct?: ProcessingJobScalarFieldEnum | ProcessingJobScalarFieldEnum[]
+  }
+
+  /**
+   * ProcessingJob findFirstOrThrow
+   */
+  export type ProcessingJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * Filter, which ProcessingJob to fetch.
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessingJobs to fetch.
+     */
+    orderBy?: ProcessingJobOrderByWithRelationInput | ProcessingJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProcessingJobs.
+     */
+    cursor?: ProcessingJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessingJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessingJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProcessingJobs.
+     */
+    distinct?: ProcessingJobScalarFieldEnum | ProcessingJobScalarFieldEnum[]
+  }
+
+  /**
+   * ProcessingJob findMany
+   */
+  export type ProcessingJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * Filter, which ProcessingJobs to fetch.
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessingJobs to fetch.
+     */
+    orderBy?: ProcessingJobOrderByWithRelationInput | ProcessingJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProcessingJobs.
+     */
+    cursor?: ProcessingJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessingJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessingJobs.
+     */
+    skip?: number
+    distinct?: ProcessingJobScalarFieldEnum | ProcessingJobScalarFieldEnum[]
+  }
+
+  /**
+   * ProcessingJob create
+   */
+  export type ProcessingJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ProcessingJob.
+     */
+    data: XOR<ProcessingJobCreateInput, ProcessingJobUncheckedCreateInput>
+  }
+
+  /**
+   * ProcessingJob createMany
+   */
+  export type ProcessingJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProcessingJobs.
+     */
+    data: ProcessingJobCreateManyInput | ProcessingJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProcessingJob createManyAndReturn
+   */
+  export type ProcessingJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProcessingJobs.
+     */
+    data: ProcessingJobCreateManyInput | ProcessingJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProcessingJob update
+   */
+  export type ProcessingJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ProcessingJob.
+     */
+    data: XOR<ProcessingJobUpdateInput, ProcessingJobUncheckedUpdateInput>
+    /**
+     * Choose, which ProcessingJob to update.
+     */
+    where: ProcessingJobWhereUniqueInput
+  }
+
+  /**
+   * ProcessingJob updateMany
+   */
+  export type ProcessingJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProcessingJobs.
+     */
+    data: XOR<ProcessingJobUpdateManyMutationInput, ProcessingJobUncheckedUpdateManyInput>
+    /**
+     * Filter which ProcessingJobs to update
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * Limit how many ProcessingJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessingJob updateManyAndReturn
+   */
+  export type ProcessingJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * The data used to update ProcessingJobs.
+     */
+    data: XOR<ProcessingJobUpdateManyMutationInput, ProcessingJobUncheckedUpdateManyInput>
+    /**
+     * Filter which ProcessingJobs to update
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * Limit how many ProcessingJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessingJob upsert
+   */
+  export type ProcessingJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ProcessingJob to update in case it exists.
+     */
+    where: ProcessingJobWhereUniqueInput
+    /**
+     * In case the ProcessingJob found by the `where` argument doesn't exist, create a new ProcessingJob with this data.
+     */
+    create: XOR<ProcessingJobCreateInput, ProcessingJobUncheckedCreateInput>
+    /**
+     * In case the ProcessingJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProcessingJobUpdateInput, ProcessingJobUncheckedUpdateInput>
+  }
+
+  /**
+   * ProcessingJob delete
+   */
+  export type ProcessingJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+    /**
+     * Filter which ProcessingJob to delete.
+     */
+    where: ProcessingJobWhereUniqueInput
+  }
+
+  /**
+   * ProcessingJob deleteMany
+   */
+  export type ProcessingJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProcessingJobs to delete
+     */
+    where?: ProcessingJobWhereInput
+    /**
+     * Limit how many ProcessingJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessingJob without action
+   */
+  export type ProcessingJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessingJob
+     */
+    select?: ProcessingJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessingJob
+     */
+    omit?: ProcessingJobOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -32931,7 +41108,19 @@ export namespace Prisma {
     isFeatured: 'isFeatured',
     instructorId: 'instructorId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    courseShortDesc: 'courseShortDesc',
+    courseDesc: 'courseDesc',
+    courseLevel: 'courseLevel',
+    language: 'language',
+    requirements: 'requirements',
+    outcomes: 'outcomes',
+    recommendedNext: 'recommendedNext',
+    jp: 'jp',
+    ytPlaylistId: 'ytPlaylistId',
+    isProcessing: 'isProcessing',
+    processingStatus: 'processingStatus',
+    lastProcessedAt: 'lastProcessedAt'
   };
 
   export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
@@ -33030,7 +41219,13 @@ export namespace Prisma {
     duration: 'duration',
     moduleId: 'moduleId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    ytVideoId: 'ytVideoId',
+    transcript: 'transcript',
+    summary: 'summary',
+    processingStatus: 'processingStatus',
+    error: 'error',
+    audioFilePath: 'audioFilePath'
   };
 
   export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
@@ -33187,6 +41382,135 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const YtPlaylistScalarFieldEnum: {
+    id: 'id',
+    playlistId: 'playlistId',
+    playlistTitle: 'playlistTitle',
+    playlistUrl: 'playlistUrl',
+    author: 'author',
+    totalItems: 'totalItems',
+    totalVideos: 'totalVideos',
+    status: 'status',
+    quizPrepost: 'quizPrepost',
+    hasQuizPrepost: 'hasQuizPrepost',
+    quizPrepostCount: 'quizPrepostCount',
+    courseTitle: 'courseTitle',
+    jp: 'jp',
+    courseShortDesc: 'courseShortDesc',
+    courseDesc: 'courseDesc',
+    courseLevel: 'courseLevel',
+    language: 'language',
+    requirements: 'requirements',
+    outcomes: 'outcomes',
+    metaKeys: 'metaKeys',
+    metaDesc: 'metaDesc',
+    recommendedNext: 'recommendedNext',
+    hasCourseMetadata: 'hasCourseMetadata',
+    metadataGeneratedAt: 'metadataGeneratedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    processedAt: 'processedAt'
+  };
+
+  export type YtPlaylistScalarFieldEnum = (typeof YtPlaylistScalarFieldEnum)[keyof typeof YtPlaylistScalarFieldEnum]
+
+
+  export const YtPlaylistItemScalarFieldEnum: {
+    id: 'id',
+    playlistId: 'playlistId',
+    videoId: 'videoId',
+    videoNo: 'videoNo',
+    videoTitle: 'videoTitle',
+    durationStr: 'durationStr',
+    embedUrl: 'embedUrl',
+    audioPath: 'audioPath',
+    audioFilePath: 'audioFilePath',
+    transcript: 'transcript',
+    hasTranscript: 'hasTranscript',
+    transcriptLength: 'transcriptLength',
+    wordCount: 'wordCount',
+    summary: 'summary',
+    hasSummary: 'hasSummary',
+    refinedTitle: 'refinedTitle',
+    hasRefinedTitle: 'hasRefinedTitle',
+    quizPrepost: 'quizPrepost',
+    quizKnowledgeCheck: 'quizKnowledgeCheck',
+    hasQuizKnowledgeCheck: 'hasQuizKnowledgeCheck',
+    status: 'status',
+    errorMessage: 'errorMessage',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    receivedAt: 'receivedAt',
+    processedAt: 'processedAt'
+  };
+
+  export type YtPlaylistItemScalarFieldEnum = (typeof YtPlaylistItemScalarFieldEnum)[keyof typeof YtPlaylistItemScalarFieldEnum]
+
+
+  export const YtUserSettingsScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    fullName: 'fullName',
+    email: 'email',
+    role: 'role',
+    emailNotifications: 'emailNotifications',
+    pushNotifications: 'pushNotifications',
+    weeklyDigest: 'weeklyDigest',
+    twoFactorEnabled: 'twoFactorEnabled',
+    newsletterSubscribed: 'newsletterSubscribed',
+    theme: 'theme',
+    language: 'language',
+    autoRefreshInterval: 'autoRefreshInterval',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type YtUserSettingsScalarFieldEnum = (typeof YtUserSettingsScalarFieldEnum)[keyof typeof YtUserSettingsScalarFieldEnum]
+
+
+  export const YtCurationSessionScalarFieldEnum: {
+    id: 'id',
+    sessionUuid: 'sessionUuid',
+    topic: 'topic',
+    language: 'language',
+    level: 'level',
+    targetDurationMin: 'targetDurationMin',
+    includeChannels: 'includeChannels',
+    excludeChannels: 'excludeChannels',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    processedAt: 'processedAt'
+  };
+
+  export type YtCurationSessionScalarFieldEnum = (typeof YtCurationSessionScalarFieldEnum)[keyof typeof YtCurationSessionScalarFieldEnum]
+
+
+  export const YtCurationCandidateScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    videoId: 'videoId',
+    videoTitle: 'videoTitle',
+    videoThumbnail: 'videoThumbnail',
+    channelTitle: 'channelTitle',
+    publishedAt: 'publishedAt',
+    durationSeconds: 'durationSeconds',
+    overallScore: 'overallScore',
+    relevanceScore: 'relevanceScore',
+    qualityScore: 'qualityScore',
+    engagementScore: 'engagementScore',
+    recommendation: 'recommendation',
+    roleSuggestion: 'roleSuggestion',
+    aiSummary: 'aiSummary',
+    selected: 'selected',
+    orderInPlaylist: 'orderInPlaylist',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type YtCurationCandidateScalarFieldEnum = (typeof YtCurationCandidateScalarFieldEnum)[keyof typeof YtCurationCandidateScalarFieldEnum]
+
+
   export const UserBadgeScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -33204,6 +41528,21 @@ export namespace Prisma {
   };
 
   export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+  export const ProcessingJobScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    status: 'status',
+    targetId: 'targetId',
+    payload: 'payload',
+    error: 'error',
+    retries: 'retries',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProcessingJobScalarFieldEnum = (typeof ProcessingJobScalarFieldEnum)[keyof typeof ProcessingJobScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -33403,6 +41742,20 @@ export namespace Prisma {
    * Reference to a field of type 'Difficulty[]'
    */
   export type ListEnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -34023,6 +42376,18 @@ export namespace Prisma {
     instructorId?: StringFilter<"Course"> | string
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
+    courseShortDesc?: StringNullableFilter<"Course"> | string | null
+    courseDesc?: StringNullableFilter<"Course"> | string | null
+    courseLevel?: StringNullableFilter<"Course"> | string | null
+    language?: StringNullableFilter<"Course"> | string | null
+    requirements?: StringNullableFilter<"Course"> | string | null
+    outcomes?: StringNullableFilter<"Course"> | string | null
+    recommendedNext?: StringNullableFilter<"Course"> | string | null
+    jp?: DecimalNullableFilter<"Course"> | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: StringNullableFilter<"Course"> | string | null
+    isProcessing?: BoolFilter<"Course"> | boolean
+    processingStatus?: StringNullableFilter<"Course"> | string | null
+    lastProcessedAt?: DateTimeNullableFilter<"Course"> | Date | string | null
     Certificate?: CertificateListRelationFilter
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
     CourseSession?: CourseSessionListRelationFilter
@@ -34050,6 +42415,18 @@ export namespace Prisma {
     instructorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    courseShortDesc?: SortOrderInput | SortOrder
+    courseDesc?: SortOrderInput | SortOrder
+    courseLevel?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    outcomes?: SortOrderInput | SortOrder
+    recommendedNext?: SortOrderInput | SortOrder
+    jp?: SortOrderInput | SortOrder
+    ytPlaylistId?: SortOrderInput | SortOrder
+    isProcessing?: SortOrder
+    processingStatus?: SortOrderInput | SortOrder
+    lastProcessedAt?: SortOrderInput | SortOrder
     Certificate?: CertificateOrderByRelationAggregateInput
     User?: UserOrderByWithRelationInput
     CourseSession?: CourseSessionOrderByRelationAggregateInput
@@ -34061,6 +42438,7 @@ export namespace Prisma {
   export type CourseWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     slug?: string
+    ytPlaylistId?: string
     AND?: CourseWhereInput | CourseWhereInput[]
     OR?: CourseWhereInput[]
     NOT?: CourseWhereInput | CourseWhereInput[]
@@ -34080,13 +42458,24 @@ export namespace Prisma {
     instructorId?: StringFilter<"Course"> | string
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
+    courseShortDesc?: StringNullableFilter<"Course"> | string | null
+    courseDesc?: StringNullableFilter<"Course"> | string | null
+    courseLevel?: StringNullableFilter<"Course"> | string | null
+    language?: StringNullableFilter<"Course"> | string | null
+    requirements?: StringNullableFilter<"Course"> | string | null
+    outcomes?: StringNullableFilter<"Course"> | string | null
+    recommendedNext?: StringNullableFilter<"Course"> | string | null
+    jp?: DecimalNullableFilter<"Course"> | Decimal | DecimalJsLike | number | string | null
+    isProcessing?: BoolFilter<"Course"> | boolean
+    processingStatus?: StringNullableFilter<"Course"> | string | null
+    lastProcessedAt?: DateTimeNullableFilter<"Course"> | Date | string | null
     Certificate?: CertificateListRelationFilter
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
     CourseSession?: CourseSessionListRelationFilter
     Enrollment?: EnrollmentListRelationFilter
     Forum?: ForumListRelationFilter
     Module?: ModuleListRelationFilter
-  }, "id" | "slug">
+  }, "id" | "slug" | "ytPlaylistId">
 
   export type CourseOrderByWithAggregationInput = {
     id?: SortOrder
@@ -34107,6 +42496,18 @@ export namespace Prisma {
     instructorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    courseShortDesc?: SortOrderInput | SortOrder
+    courseDesc?: SortOrderInput | SortOrder
+    courseLevel?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    outcomes?: SortOrderInput | SortOrder
+    recommendedNext?: SortOrderInput | SortOrder
+    jp?: SortOrderInput | SortOrder
+    ytPlaylistId?: SortOrderInput | SortOrder
+    isProcessing?: SortOrder
+    processingStatus?: SortOrderInput | SortOrder
+    lastProcessedAt?: SortOrderInput | SortOrder
     _count?: CourseCountOrderByAggregateInput
     _avg?: CourseAvgOrderByAggregateInput
     _max?: CourseMaxOrderByAggregateInput
@@ -34136,6 +42537,18 @@ export namespace Prisma {
     instructorId?: StringWithAggregatesFilter<"Course"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Course"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Course"> | Date | string
+    courseShortDesc?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    courseDesc?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    courseLevel?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    language?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    requirements?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    outcomes?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    recommendedNext?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    jp?: DecimalNullableWithAggregatesFilter<"Course"> | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    isProcessing?: BoolWithAggregatesFilter<"Course"> | boolean
+    processingStatus?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    lastProcessedAt?: DateTimeNullableWithAggregatesFilter<"Course"> | Date | string | null
   }
 
   export type CourseSessionWhereInput = {
@@ -34577,6 +42990,12 @@ export namespace Prisma {
     moduleId?: StringFilter<"Lesson"> | string
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
+    ytVideoId?: StringNullableFilter<"Lesson"> | string | null
+    transcript?: StringNullableFilter<"Lesson"> | string | null
+    summary?: StringNullableFilter<"Lesson"> | string | null
+    processingStatus?: StringNullableFilter<"Lesson"> | string | null
+    error?: StringNullableFilter<"Lesson"> | string | null
+    audioFilePath?: StringNullableFilter<"Lesson"> | string | null
     Module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     Progress?: ProgressListRelationFilter
   }
@@ -34596,6 +43015,12 @@ export namespace Prisma {
     moduleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    ytVideoId?: SortOrderInput | SortOrder
+    transcript?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    processingStatus?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    audioFilePath?: SortOrderInput | SortOrder
     Module?: ModuleOrderByWithRelationInput
     Progress?: ProgressOrderByRelationAggregateInput
   }
@@ -34618,6 +43043,12 @@ export namespace Prisma {
     moduleId?: StringFilter<"Lesson"> | string
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
+    ytVideoId?: StringNullableFilter<"Lesson"> | string | null
+    transcript?: StringNullableFilter<"Lesson"> | string | null
+    summary?: StringNullableFilter<"Lesson"> | string | null
+    processingStatus?: StringNullableFilter<"Lesson"> | string | null
+    error?: StringNullableFilter<"Lesson"> | string | null
+    audioFilePath?: StringNullableFilter<"Lesson"> | string | null
     Module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
     Progress?: ProgressListRelationFilter
   }, "id">
@@ -34637,6 +43068,12 @@ export namespace Prisma {
     moduleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    ytVideoId?: SortOrderInput | SortOrder
+    transcript?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    processingStatus?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    audioFilePath?: SortOrderInput | SortOrder
     _count?: LessonCountOrderByAggregateInput
     _avg?: LessonAvgOrderByAggregateInput
     _max?: LessonMaxOrderByAggregateInput
@@ -34662,6 +43099,12 @@ export namespace Prisma {
     moduleId?: StringWithAggregatesFilter<"Lesson"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
+    ytVideoId?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    transcript?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    summary?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    processingStatus?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    error?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    audioFilePath?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
   }
 
   export type ModuleWhereInput = {
@@ -35492,6 +43935,653 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
+  export type YtPlaylistWhereInput = {
+    AND?: YtPlaylistWhereInput | YtPlaylistWhereInput[]
+    OR?: YtPlaylistWhereInput[]
+    NOT?: YtPlaylistWhereInput | YtPlaylistWhereInput[]
+    id?: UuidFilter<"YtPlaylist"> | string
+    playlistId?: StringFilter<"YtPlaylist"> | string
+    playlistTitle?: StringFilter<"YtPlaylist"> | string
+    playlistUrl?: StringFilter<"YtPlaylist"> | string
+    author?: StringNullableFilter<"YtPlaylist"> | string | null
+    totalItems?: IntNullableFilter<"YtPlaylist"> | number | null
+    totalVideos?: IntNullableFilter<"YtPlaylist"> | number | null
+    status?: StringNullableFilter<"YtPlaylist"> | string | null
+    quizPrepost?: StringNullableFilter<"YtPlaylist"> | string | null
+    hasQuizPrepost?: BoolNullableFilter<"YtPlaylist"> | boolean | null
+    quizPrepostCount?: IntNullableFilter<"YtPlaylist"> | number | null
+    courseTitle?: StringNullableFilter<"YtPlaylist"> | string | null
+    jp?: DecimalNullableFilter<"YtPlaylist"> | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: StringNullableFilter<"YtPlaylist"> | string | null
+    courseDesc?: StringNullableFilter<"YtPlaylist"> | string | null
+    courseLevel?: StringNullableFilter<"YtPlaylist"> | string | null
+    language?: StringNullableFilter<"YtPlaylist"> | string | null
+    requirements?: StringNullableFilter<"YtPlaylist"> | string | null
+    outcomes?: StringNullableFilter<"YtPlaylist"> | string | null
+    metaKeys?: StringNullableFilter<"YtPlaylist"> | string | null
+    metaDesc?: StringNullableFilter<"YtPlaylist"> | string | null
+    recommendedNext?: StringNullableFilter<"YtPlaylist"> | string | null
+    hasCourseMetadata?: BoolNullableFilter<"YtPlaylist"> | boolean | null
+    metadataGeneratedAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+    createdAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+    processedAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+  }
+
+  export type YtPlaylistOrderByWithRelationInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    playlistTitle?: SortOrder
+    playlistUrl?: SortOrder
+    author?: SortOrderInput | SortOrder
+    totalItems?: SortOrderInput | SortOrder
+    totalVideos?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    quizPrepost?: SortOrderInput | SortOrder
+    hasQuizPrepost?: SortOrderInput | SortOrder
+    quizPrepostCount?: SortOrderInput | SortOrder
+    courseTitle?: SortOrderInput | SortOrder
+    jp?: SortOrderInput | SortOrder
+    courseShortDesc?: SortOrderInput | SortOrder
+    courseDesc?: SortOrderInput | SortOrder
+    courseLevel?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    outcomes?: SortOrderInput | SortOrder
+    metaKeys?: SortOrderInput | SortOrder
+    metaDesc?: SortOrderInput | SortOrder
+    recommendedNext?: SortOrderInput | SortOrder
+    hasCourseMetadata?: SortOrderInput | SortOrder
+    metadataGeneratedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    processedAt?: SortOrderInput | SortOrder
+  }
+
+  export type YtPlaylistWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    playlistId?: string
+    playlistUrl?: string
+    AND?: YtPlaylistWhereInput | YtPlaylistWhereInput[]
+    OR?: YtPlaylistWhereInput[]
+    NOT?: YtPlaylistWhereInput | YtPlaylistWhereInput[]
+    playlistTitle?: StringFilter<"YtPlaylist"> | string
+    author?: StringNullableFilter<"YtPlaylist"> | string | null
+    totalItems?: IntNullableFilter<"YtPlaylist"> | number | null
+    totalVideos?: IntNullableFilter<"YtPlaylist"> | number | null
+    status?: StringNullableFilter<"YtPlaylist"> | string | null
+    quizPrepost?: StringNullableFilter<"YtPlaylist"> | string | null
+    hasQuizPrepost?: BoolNullableFilter<"YtPlaylist"> | boolean | null
+    quizPrepostCount?: IntNullableFilter<"YtPlaylist"> | number | null
+    courseTitle?: StringNullableFilter<"YtPlaylist"> | string | null
+    jp?: DecimalNullableFilter<"YtPlaylist"> | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: StringNullableFilter<"YtPlaylist"> | string | null
+    courseDesc?: StringNullableFilter<"YtPlaylist"> | string | null
+    courseLevel?: StringNullableFilter<"YtPlaylist"> | string | null
+    language?: StringNullableFilter<"YtPlaylist"> | string | null
+    requirements?: StringNullableFilter<"YtPlaylist"> | string | null
+    outcomes?: StringNullableFilter<"YtPlaylist"> | string | null
+    metaKeys?: StringNullableFilter<"YtPlaylist"> | string | null
+    metaDesc?: StringNullableFilter<"YtPlaylist"> | string | null
+    recommendedNext?: StringNullableFilter<"YtPlaylist"> | string | null
+    hasCourseMetadata?: BoolNullableFilter<"YtPlaylist"> | boolean | null
+    metadataGeneratedAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+    createdAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+    processedAt?: DateTimeNullableFilter<"YtPlaylist"> | Date | string | null
+  }, "id" | "playlistId" | "playlistUrl">
+
+  export type YtPlaylistOrderByWithAggregationInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    playlistTitle?: SortOrder
+    playlistUrl?: SortOrder
+    author?: SortOrderInput | SortOrder
+    totalItems?: SortOrderInput | SortOrder
+    totalVideos?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    quizPrepost?: SortOrderInput | SortOrder
+    hasQuizPrepost?: SortOrderInput | SortOrder
+    quizPrepostCount?: SortOrderInput | SortOrder
+    courseTitle?: SortOrderInput | SortOrder
+    jp?: SortOrderInput | SortOrder
+    courseShortDesc?: SortOrderInput | SortOrder
+    courseDesc?: SortOrderInput | SortOrder
+    courseLevel?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    outcomes?: SortOrderInput | SortOrder
+    metaKeys?: SortOrderInput | SortOrder
+    metaDesc?: SortOrderInput | SortOrder
+    recommendedNext?: SortOrderInput | SortOrder
+    hasCourseMetadata?: SortOrderInput | SortOrder
+    metadataGeneratedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    _count?: YtPlaylistCountOrderByAggregateInput
+    _avg?: YtPlaylistAvgOrderByAggregateInput
+    _max?: YtPlaylistMaxOrderByAggregateInput
+    _min?: YtPlaylistMinOrderByAggregateInput
+    _sum?: YtPlaylistSumOrderByAggregateInput
+  }
+
+  export type YtPlaylistScalarWhereWithAggregatesInput = {
+    AND?: YtPlaylistScalarWhereWithAggregatesInput | YtPlaylistScalarWhereWithAggregatesInput[]
+    OR?: YtPlaylistScalarWhereWithAggregatesInput[]
+    NOT?: YtPlaylistScalarWhereWithAggregatesInput | YtPlaylistScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"YtPlaylist"> | string
+    playlistId?: StringWithAggregatesFilter<"YtPlaylist"> | string
+    playlistTitle?: StringWithAggregatesFilter<"YtPlaylist"> | string
+    playlistUrl?: StringWithAggregatesFilter<"YtPlaylist"> | string
+    author?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    totalItems?: IntNullableWithAggregatesFilter<"YtPlaylist"> | number | null
+    totalVideos?: IntNullableWithAggregatesFilter<"YtPlaylist"> | number | null
+    status?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    quizPrepost?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    hasQuizPrepost?: BoolNullableWithAggregatesFilter<"YtPlaylist"> | boolean | null
+    quizPrepostCount?: IntNullableWithAggregatesFilter<"YtPlaylist"> | number | null
+    courseTitle?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    jp?: DecimalNullableWithAggregatesFilter<"YtPlaylist"> | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    courseDesc?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    courseLevel?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    language?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    requirements?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    outcomes?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    metaKeys?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    metaDesc?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    recommendedNext?: StringNullableWithAggregatesFilter<"YtPlaylist"> | string | null
+    hasCourseMetadata?: BoolNullableWithAggregatesFilter<"YtPlaylist"> | boolean | null
+    metadataGeneratedAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylist"> | Date | string | null
+    createdAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylist"> | Date | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylist"> | Date | string | null
+    processedAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylist"> | Date | string | null
+  }
+
+  export type YtPlaylistItemWhereInput = {
+    AND?: YtPlaylistItemWhereInput | YtPlaylistItemWhereInput[]
+    OR?: YtPlaylistItemWhereInput[]
+    NOT?: YtPlaylistItemWhereInput | YtPlaylistItemWhereInput[]
+    id?: UuidFilter<"YtPlaylistItem"> | string
+    playlistId?: StringFilter<"YtPlaylistItem"> | string
+    videoId?: StringFilter<"YtPlaylistItem"> | string
+    videoNo?: IntFilter<"YtPlaylistItem"> | number
+    videoTitle?: StringFilter<"YtPlaylistItem"> | string
+    durationStr?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    embedUrl?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    audioPath?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    audioFilePath?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    transcript?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasTranscript?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    transcriptLength?: IntNullableFilter<"YtPlaylistItem"> | number | null
+    wordCount?: IntNullableFilter<"YtPlaylistItem"> | number | null
+    summary?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasSummary?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    refinedTitle?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasRefinedTitle?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    quizPrepost?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    quizKnowledgeCheck?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasQuizKnowledgeCheck?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    status?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    errorMessage?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    createdAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+    receivedAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+    processedAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+  }
+
+  export type YtPlaylistItemOrderByWithRelationInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    videoId?: SortOrder
+    videoNo?: SortOrder
+    videoTitle?: SortOrder
+    durationStr?: SortOrderInput | SortOrder
+    embedUrl?: SortOrderInput | SortOrder
+    audioPath?: SortOrderInput | SortOrder
+    audioFilePath?: SortOrderInput | SortOrder
+    transcript?: SortOrderInput | SortOrder
+    hasTranscript?: SortOrderInput | SortOrder
+    transcriptLength?: SortOrderInput | SortOrder
+    wordCount?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    hasSummary?: SortOrderInput | SortOrder
+    refinedTitle?: SortOrderInput | SortOrder
+    hasRefinedTitle?: SortOrderInput | SortOrder
+    quizPrepost?: SortOrderInput | SortOrder
+    quizKnowledgeCheck?: SortOrderInput | SortOrder
+    hasQuizKnowledgeCheck?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    receivedAt?: SortOrderInput | SortOrder
+    processedAt?: SortOrderInput | SortOrder
+  }
+
+  export type YtPlaylistItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    playlistId_videoNo?: YtPlaylistItemPlaylistIdVideoNoCompoundUniqueInput
+    AND?: YtPlaylistItemWhereInput | YtPlaylistItemWhereInput[]
+    OR?: YtPlaylistItemWhereInput[]
+    NOT?: YtPlaylistItemWhereInput | YtPlaylistItemWhereInput[]
+    playlistId?: StringFilter<"YtPlaylistItem"> | string
+    videoId?: StringFilter<"YtPlaylistItem"> | string
+    videoNo?: IntFilter<"YtPlaylistItem"> | number
+    videoTitle?: StringFilter<"YtPlaylistItem"> | string
+    durationStr?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    embedUrl?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    audioPath?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    audioFilePath?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    transcript?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasTranscript?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    transcriptLength?: IntNullableFilter<"YtPlaylistItem"> | number | null
+    wordCount?: IntNullableFilter<"YtPlaylistItem"> | number | null
+    summary?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasSummary?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    refinedTitle?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasRefinedTitle?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    quizPrepost?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    quizKnowledgeCheck?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    hasQuizKnowledgeCheck?: BoolNullableFilter<"YtPlaylistItem"> | boolean | null
+    status?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    errorMessage?: StringNullableFilter<"YtPlaylistItem"> | string | null
+    createdAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+    receivedAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+    processedAt?: DateTimeNullableFilter<"YtPlaylistItem"> | Date | string | null
+  }, "id" | "playlistId_videoNo">
+
+  export type YtPlaylistItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    videoId?: SortOrder
+    videoNo?: SortOrder
+    videoTitle?: SortOrder
+    durationStr?: SortOrderInput | SortOrder
+    embedUrl?: SortOrderInput | SortOrder
+    audioPath?: SortOrderInput | SortOrder
+    audioFilePath?: SortOrderInput | SortOrder
+    transcript?: SortOrderInput | SortOrder
+    hasTranscript?: SortOrderInput | SortOrder
+    transcriptLength?: SortOrderInput | SortOrder
+    wordCount?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    hasSummary?: SortOrderInput | SortOrder
+    refinedTitle?: SortOrderInput | SortOrder
+    hasRefinedTitle?: SortOrderInput | SortOrder
+    quizPrepost?: SortOrderInput | SortOrder
+    quizKnowledgeCheck?: SortOrderInput | SortOrder
+    hasQuizKnowledgeCheck?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    receivedAt?: SortOrderInput | SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    _count?: YtPlaylistItemCountOrderByAggregateInput
+    _avg?: YtPlaylistItemAvgOrderByAggregateInput
+    _max?: YtPlaylistItemMaxOrderByAggregateInput
+    _min?: YtPlaylistItemMinOrderByAggregateInput
+    _sum?: YtPlaylistItemSumOrderByAggregateInput
+  }
+
+  export type YtPlaylistItemScalarWhereWithAggregatesInput = {
+    AND?: YtPlaylistItemScalarWhereWithAggregatesInput | YtPlaylistItemScalarWhereWithAggregatesInput[]
+    OR?: YtPlaylistItemScalarWhereWithAggregatesInput[]
+    NOT?: YtPlaylistItemScalarWhereWithAggregatesInput | YtPlaylistItemScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"YtPlaylistItem"> | string
+    playlistId?: StringWithAggregatesFilter<"YtPlaylistItem"> | string
+    videoId?: StringWithAggregatesFilter<"YtPlaylistItem"> | string
+    videoNo?: IntWithAggregatesFilter<"YtPlaylistItem"> | number
+    videoTitle?: StringWithAggregatesFilter<"YtPlaylistItem"> | string
+    durationStr?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    embedUrl?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    audioPath?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    audioFilePath?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    transcript?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    hasTranscript?: BoolNullableWithAggregatesFilter<"YtPlaylistItem"> | boolean | null
+    transcriptLength?: IntNullableWithAggregatesFilter<"YtPlaylistItem"> | number | null
+    wordCount?: IntNullableWithAggregatesFilter<"YtPlaylistItem"> | number | null
+    summary?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    hasSummary?: BoolNullableWithAggregatesFilter<"YtPlaylistItem"> | boolean | null
+    refinedTitle?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    hasRefinedTitle?: BoolNullableWithAggregatesFilter<"YtPlaylistItem"> | boolean | null
+    quizPrepost?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    quizKnowledgeCheck?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    hasQuizKnowledgeCheck?: BoolNullableWithAggregatesFilter<"YtPlaylistItem"> | boolean | null
+    status?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    errorMessage?: StringNullableWithAggregatesFilter<"YtPlaylistItem"> | string | null
+    createdAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylistItem"> | Date | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylistItem"> | Date | string | null
+    receivedAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylistItem"> | Date | string | null
+    processedAt?: DateTimeNullableWithAggregatesFilter<"YtPlaylistItem"> | Date | string | null
+  }
+
+  export type YtUserSettingsWhereInput = {
+    AND?: YtUserSettingsWhereInput | YtUserSettingsWhereInput[]
+    OR?: YtUserSettingsWhereInput[]
+    NOT?: YtUserSettingsWhereInput | YtUserSettingsWhereInput[]
+    id?: UuidFilter<"YtUserSettings"> | string
+    userId?: StringFilter<"YtUserSettings"> | string
+    fullName?: StringNullableFilter<"YtUserSettings"> | string | null
+    email?: StringNullableFilter<"YtUserSettings"> | string | null
+    role?: StringNullableFilter<"YtUserSettings"> | string | null
+    emailNotifications?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    pushNotifications?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    weeklyDigest?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    twoFactorEnabled?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    newsletterSubscribed?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    theme?: StringNullableFilter<"YtUserSettings"> | string | null
+    language?: StringNullableFilter<"YtUserSettings"> | string | null
+    autoRefreshInterval?: IntNullableFilter<"YtUserSettings"> | number | null
+    createdAt?: DateTimeNullableFilter<"YtUserSettings"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtUserSettings"> | Date | string | null
+  }
+
+  export type YtUserSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fullName?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    emailNotifications?: SortOrderInput | SortOrder
+    pushNotifications?: SortOrderInput | SortOrder
+    weeklyDigest?: SortOrderInput | SortOrder
+    twoFactorEnabled?: SortOrderInput | SortOrder
+    newsletterSubscribed?: SortOrderInput | SortOrder
+    theme?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    autoRefreshInterval?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+  }
+
+  export type YtUserSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: YtUserSettingsWhereInput | YtUserSettingsWhereInput[]
+    OR?: YtUserSettingsWhereInput[]
+    NOT?: YtUserSettingsWhereInput | YtUserSettingsWhereInput[]
+    fullName?: StringNullableFilter<"YtUserSettings"> | string | null
+    email?: StringNullableFilter<"YtUserSettings"> | string | null
+    role?: StringNullableFilter<"YtUserSettings"> | string | null
+    emailNotifications?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    pushNotifications?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    weeklyDigest?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    twoFactorEnabled?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    newsletterSubscribed?: BoolNullableFilter<"YtUserSettings"> | boolean | null
+    theme?: StringNullableFilter<"YtUserSettings"> | string | null
+    language?: StringNullableFilter<"YtUserSettings"> | string | null
+    autoRefreshInterval?: IntNullableFilter<"YtUserSettings"> | number | null
+    createdAt?: DateTimeNullableFilter<"YtUserSettings"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtUserSettings"> | Date | string | null
+  }, "id" | "userId">
+
+  export type YtUserSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fullName?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    emailNotifications?: SortOrderInput | SortOrder
+    pushNotifications?: SortOrderInput | SortOrder
+    weeklyDigest?: SortOrderInput | SortOrder
+    twoFactorEnabled?: SortOrderInput | SortOrder
+    newsletterSubscribed?: SortOrderInput | SortOrder
+    theme?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    autoRefreshInterval?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    _count?: YtUserSettingsCountOrderByAggregateInput
+    _avg?: YtUserSettingsAvgOrderByAggregateInput
+    _max?: YtUserSettingsMaxOrderByAggregateInput
+    _min?: YtUserSettingsMinOrderByAggregateInput
+    _sum?: YtUserSettingsSumOrderByAggregateInput
+  }
+
+  export type YtUserSettingsScalarWhereWithAggregatesInput = {
+    AND?: YtUserSettingsScalarWhereWithAggregatesInput | YtUserSettingsScalarWhereWithAggregatesInput[]
+    OR?: YtUserSettingsScalarWhereWithAggregatesInput[]
+    NOT?: YtUserSettingsScalarWhereWithAggregatesInput | YtUserSettingsScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"YtUserSettings"> | string
+    userId?: StringWithAggregatesFilter<"YtUserSettings"> | string
+    fullName?: StringNullableWithAggregatesFilter<"YtUserSettings"> | string | null
+    email?: StringNullableWithAggregatesFilter<"YtUserSettings"> | string | null
+    role?: StringNullableWithAggregatesFilter<"YtUserSettings"> | string | null
+    emailNotifications?: BoolNullableWithAggregatesFilter<"YtUserSettings"> | boolean | null
+    pushNotifications?: BoolNullableWithAggregatesFilter<"YtUserSettings"> | boolean | null
+    weeklyDigest?: BoolNullableWithAggregatesFilter<"YtUserSettings"> | boolean | null
+    twoFactorEnabled?: BoolNullableWithAggregatesFilter<"YtUserSettings"> | boolean | null
+    newsletterSubscribed?: BoolNullableWithAggregatesFilter<"YtUserSettings"> | boolean | null
+    theme?: StringNullableWithAggregatesFilter<"YtUserSettings"> | string | null
+    language?: StringNullableWithAggregatesFilter<"YtUserSettings"> | string | null
+    autoRefreshInterval?: IntNullableWithAggregatesFilter<"YtUserSettings"> | number | null
+    createdAt?: DateTimeNullableWithAggregatesFilter<"YtUserSettings"> | Date | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"YtUserSettings"> | Date | string | null
+  }
+
+  export type YtCurationSessionWhereInput = {
+    AND?: YtCurationSessionWhereInput | YtCurationSessionWhereInput[]
+    OR?: YtCurationSessionWhereInput[]
+    NOT?: YtCurationSessionWhereInput | YtCurationSessionWhereInput[]
+    id?: UuidFilter<"YtCurationSession"> | string
+    sessionUuid?: StringFilter<"YtCurationSession"> | string
+    topic?: StringFilter<"YtCurationSession"> | string
+    language?: StringNullableFilter<"YtCurationSession"> | string | null
+    level?: StringNullableFilter<"YtCurationSession"> | string | null
+    targetDurationMin?: IntFilter<"YtCurationSession"> | number
+    includeChannels?: StringNullableFilter<"YtCurationSession"> | string | null
+    excludeChannels?: StringNullableFilter<"YtCurationSession"> | string | null
+    status?: StringFilter<"YtCurationSession"> | string
+    createdAt?: DateTimeNullableFilter<"YtCurationSession"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtCurationSession"> | Date | string | null
+    processedAt?: DateTimeNullableFilter<"YtCurationSession"> | Date | string | null
+    candidates?: YtCurationCandidateListRelationFilter
+  }
+
+  export type YtCurationSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionUuid?: SortOrder
+    topic?: SortOrder
+    language?: SortOrderInput | SortOrder
+    level?: SortOrderInput | SortOrder
+    targetDurationMin?: SortOrder
+    includeChannels?: SortOrderInput | SortOrder
+    excludeChannels?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    candidates?: YtCurationCandidateOrderByRelationAggregateInput
+  }
+
+  export type YtCurationSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    sessionUuid?: string
+    AND?: YtCurationSessionWhereInput | YtCurationSessionWhereInput[]
+    OR?: YtCurationSessionWhereInput[]
+    NOT?: YtCurationSessionWhereInput | YtCurationSessionWhereInput[]
+    topic?: StringFilter<"YtCurationSession"> | string
+    language?: StringNullableFilter<"YtCurationSession"> | string | null
+    level?: StringNullableFilter<"YtCurationSession"> | string | null
+    targetDurationMin?: IntFilter<"YtCurationSession"> | number
+    includeChannels?: StringNullableFilter<"YtCurationSession"> | string | null
+    excludeChannels?: StringNullableFilter<"YtCurationSession"> | string | null
+    status?: StringFilter<"YtCurationSession"> | string
+    createdAt?: DateTimeNullableFilter<"YtCurationSession"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtCurationSession"> | Date | string | null
+    processedAt?: DateTimeNullableFilter<"YtCurationSession"> | Date | string | null
+    candidates?: YtCurationCandidateListRelationFilter
+  }, "id" | "sessionUuid">
+
+  export type YtCurationSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionUuid?: SortOrder
+    topic?: SortOrder
+    language?: SortOrderInput | SortOrder
+    level?: SortOrderInput | SortOrder
+    targetDurationMin?: SortOrder
+    includeChannels?: SortOrderInput | SortOrder
+    excludeChannels?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    _count?: YtCurationSessionCountOrderByAggregateInput
+    _avg?: YtCurationSessionAvgOrderByAggregateInput
+    _max?: YtCurationSessionMaxOrderByAggregateInput
+    _min?: YtCurationSessionMinOrderByAggregateInput
+    _sum?: YtCurationSessionSumOrderByAggregateInput
+  }
+
+  export type YtCurationSessionScalarWhereWithAggregatesInput = {
+    AND?: YtCurationSessionScalarWhereWithAggregatesInput | YtCurationSessionScalarWhereWithAggregatesInput[]
+    OR?: YtCurationSessionScalarWhereWithAggregatesInput[]
+    NOT?: YtCurationSessionScalarWhereWithAggregatesInput | YtCurationSessionScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"YtCurationSession"> | string
+    sessionUuid?: StringWithAggregatesFilter<"YtCurationSession"> | string
+    topic?: StringWithAggregatesFilter<"YtCurationSession"> | string
+    language?: StringNullableWithAggregatesFilter<"YtCurationSession"> | string | null
+    level?: StringNullableWithAggregatesFilter<"YtCurationSession"> | string | null
+    targetDurationMin?: IntWithAggregatesFilter<"YtCurationSession"> | number
+    includeChannels?: StringNullableWithAggregatesFilter<"YtCurationSession"> | string | null
+    excludeChannels?: StringNullableWithAggregatesFilter<"YtCurationSession"> | string | null
+    status?: StringWithAggregatesFilter<"YtCurationSession"> | string
+    createdAt?: DateTimeNullableWithAggregatesFilter<"YtCurationSession"> | Date | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"YtCurationSession"> | Date | string | null
+    processedAt?: DateTimeNullableWithAggregatesFilter<"YtCurationSession"> | Date | string | null
+  }
+
+  export type YtCurationCandidateWhereInput = {
+    AND?: YtCurationCandidateWhereInput | YtCurationCandidateWhereInput[]
+    OR?: YtCurationCandidateWhereInput[]
+    NOT?: YtCurationCandidateWhereInput | YtCurationCandidateWhereInput[]
+    id?: UuidFilter<"YtCurationCandidate"> | string
+    sessionId?: UuidFilter<"YtCurationCandidate"> | string
+    videoId?: StringFilter<"YtCurationCandidate"> | string
+    videoTitle?: StringFilter<"YtCurationCandidate"> | string
+    videoThumbnail?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    channelTitle?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    publishedAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    durationSeconds?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    overallScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    relevanceScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    qualityScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    engagementScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    recommendation?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    roleSuggestion?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    aiSummary?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    selected?: BoolNullableFilter<"YtCurationCandidate"> | boolean | null
+    orderInPlaylist?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    createdAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    session?: XOR<YtCurationSessionScalarRelationFilter, YtCurationSessionWhereInput>
+  }
+
+  export type YtCurationCandidateOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    videoId?: SortOrder
+    videoTitle?: SortOrder
+    videoThumbnail?: SortOrderInput | SortOrder
+    channelTitle?: SortOrderInput | SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    durationSeconds?: SortOrderInput | SortOrder
+    overallScore?: SortOrderInput | SortOrder
+    relevanceScore?: SortOrderInput | SortOrder
+    qualityScore?: SortOrderInput | SortOrder
+    engagementScore?: SortOrderInput | SortOrder
+    recommendation?: SortOrderInput | SortOrder
+    roleSuggestion?: SortOrderInput | SortOrder
+    aiSummary?: SortOrderInput | SortOrder
+    selected?: SortOrderInput | SortOrder
+    orderInPlaylist?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    session?: YtCurationSessionOrderByWithRelationInput
+  }
+
+  export type YtCurationCandidateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: YtCurationCandidateWhereInput | YtCurationCandidateWhereInput[]
+    OR?: YtCurationCandidateWhereInput[]
+    NOT?: YtCurationCandidateWhereInput | YtCurationCandidateWhereInput[]
+    sessionId?: UuidFilter<"YtCurationCandidate"> | string
+    videoId?: StringFilter<"YtCurationCandidate"> | string
+    videoTitle?: StringFilter<"YtCurationCandidate"> | string
+    videoThumbnail?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    channelTitle?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    publishedAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    durationSeconds?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    overallScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    relevanceScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    qualityScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    engagementScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    recommendation?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    roleSuggestion?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    aiSummary?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    selected?: BoolNullableFilter<"YtCurationCandidate"> | boolean | null
+    orderInPlaylist?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    createdAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    session?: XOR<YtCurationSessionScalarRelationFilter, YtCurationSessionWhereInput>
+  }, "id">
+
+  export type YtCurationCandidateOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    videoId?: SortOrder
+    videoTitle?: SortOrder
+    videoThumbnail?: SortOrderInput | SortOrder
+    channelTitle?: SortOrderInput | SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    durationSeconds?: SortOrderInput | SortOrder
+    overallScore?: SortOrderInput | SortOrder
+    relevanceScore?: SortOrderInput | SortOrder
+    qualityScore?: SortOrderInput | SortOrder
+    engagementScore?: SortOrderInput | SortOrder
+    recommendation?: SortOrderInput | SortOrder
+    roleSuggestion?: SortOrderInput | SortOrder
+    aiSummary?: SortOrderInput | SortOrder
+    selected?: SortOrderInput | SortOrder
+    orderInPlaylist?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
+    _count?: YtCurationCandidateCountOrderByAggregateInput
+    _avg?: YtCurationCandidateAvgOrderByAggregateInput
+    _max?: YtCurationCandidateMaxOrderByAggregateInput
+    _min?: YtCurationCandidateMinOrderByAggregateInput
+    _sum?: YtCurationCandidateSumOrderByAggregateInput
+  }
+
+  export type YtCurationCandidateScalarWhereWithAggregatesInput = {
+    AND?: YtCurationCandidateScalarWhereWithAggregatesInput | YtCurationCandidateScalarWhereWithAggregatesInput[]
+    OR?: YtCurationCandidateScalarWhereWithAggregatesInput[]
+    NOT?: YtCurationCandidateScalarWhereWithAggregatesInput | YtCurationCandidateScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"YtCurationCandidate"> | string
+    sessionId?: UuidWithAggregatesFilter<"YtCurationCandidate"> | string
+    videoId?: StringWithAggregatesFilter<"YtCurationCandidate"> | string
+    videoTitle?: StringWithAggregatesFilter<"YtCurationCandidate"> | string
+    videoThumbnail?: StringNullableWithAggregatesFilter<"YtCurationCandidate"> | string | null
+    channelTitle?: StringNullableWithAggregatesFilter<"YtCurationCandidate"> | string | null
+    publishedAt?: DateTimeNullableWithAggregatesFilter<"YtCurationCandidate"> | Date | string | null
+    durationSeconds?: IntNullableWithAggregatesFilter<"YtCurationCandidate"> | number | null
+    overallScore?: IntNullableWithAggregatesFilter<"YtCurationCandidate"> | number | null
+    relevanceScore?: IntNullableWithAggregatesFilter<"YtCurationCandidate"> | number | null
+    qualityScore?: IntNullableWithAggregatesFilter<"YtCurationCandidate"> | number | null
+    engagementScore?: IntNullableWithAggregatesFilter<"YtCurationCandidate"> | number | null
+    recommendation?: StringNullableWithAggregatesFilter<"YtCurationCandidate"> | string | null
+    roleSuggestion?: StringNullableWithAggregatesFilter<"YtCurationCandidate"> | string | null
+    aiSummary?: StringNullableWithAggregatesFilter<"YtCurationCandidate"> | string | null
+    selected?: BoolNullableWithAggregatesFilter<"YtCurationCandidate"> | boolean | null
+    orderInPlaylist?: IntNullableWithAggregatesFilter<"YtCurationCandidate"> | number | null
+    createdAt?: DateTimeNullableWithAggregatesFilter<"YtCurationCandidate"> | Date | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"YtCurationCandidate"> | Date | string | null
+  }
+
   export type UserBadgeWhereInput = {
     AND?: UserBadgeWhereInput | UserBadgeWhereInput[]
     OR?: UserBadgeWhereInput[]
@@ -35587,6 +44677,80 @@ export namespace Prisma {
     identifier?: StringWithAggregatesFilter<"VerificationToken"> | string
     token?: StringWithAggregatesFilter<"VerificationToken"> | string
     expires?: DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
+  }
+
+  export type ProcessingJobWhereInput = {
+    AND?: ProcessingJobWhereInput | ProcessingJobWhereInput[]
+    OR?: ProcessingJobWhereInput[]
+    NOT?: ProcessingJobWhereInput | ProcessingJobWhereInput[]
+    id?: StringFilter<"ProcessingJob"> | string
+    type?: StringFilter<"ProcessingJob"> | string
+    status?: StringFilter<"ProcessingJob"> | string
+    targetId?: StringFilter<"ProcessingJob"> | string
+    payload?: JsonNullableFilter<"ProcessingJob">
+    error?: StringNullableFilter<"ProcessingJob"> | string | null
+    retries?: IntFilter<"ProcessingJob"> | number
+    createdAt?: DateTimeFilter<"ProcessingJob"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessingJob"> | Date | string
+  }
+
+  export type ProcessingJobOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    targetId?: SortOrder
+    payload?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    retries?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessingJobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProcessingJobWhereInput | ProcessingJobWhereInput[]
+    OR?: ProcessingJobWhereInput[]
+    NOT?: ProcessingJobWhereInput | ProcessingJobWhereInput[]
+    type?: StringFilter<"ProcessingJob"> | string
+    status?: StringFilter<"ProcessingJob"> | string
+    targetId?: StringFilter<"ProcessingJob"> | string
+    payload?: JsonNullableFilter<"ProcessingJob">
+    error?: StringNullableFilter<"ProcessingJob"> | string | null
+    retries?: IntFilter<"ProcessingJob"> | number
+    createdAt?: DateTimeFilter<"ProcessingJob"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessingJob"> | Date | string
+  }, "id">
+
+  export type ProcessingJobOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    targetId?: SortOrder
+    payload?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    retries?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProcessingJobCountOrderByAggregateInput
+    _avg?: ProcessingJobAvgOrderByAggregateInput
+    _max?: ProcessingJobMaxOrderByAggregateInput
+    _min?: ProcessingJobMinOrderByAggregateInput
+    _sum?: ProcessingJobSumOrderByAggregateInput
+  }
+
+  export type ProcessingJobScalarWhereWithAggregatesInput = {
+    AND?: ProcessingJobScalarWhereWithAggregatesInput | ProcessingJobScalarWhereWithAggregatesInput[]
+    OR?: ProcessingJobScalarWhereWithAggregatesInput[]
+    NOT?: ProcessingJobScalarWhereWithAggregatesInput | ProcessingJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProcessingJob"> | string
+    type?: StringWithAggregatesFilter<"ProcessingJob"> | string
+    status?: StringWithAggregatesFilter<"ProcessingJob"> | string
+    targetId?: StringWithAggregatesFilter<"ProcessingJob"> | string
+    payload?: JsonNullableWithAggregatesFilter<"ProcessingJob">
+    error?: StringNullableWithAggregatesFilter<"ProcessingJob"> | string | null
+    retries?: IntWithAggregatesFilter<"ProcessingJob"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ProcessingJob"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProcessingJob"> | Date | string
   }
 
   export type AccountCreateInput = {
@@ -36116,6 +45280,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
@@ -36143,6 +45319,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -36168,6 +45356,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
@@ -36195,6 +45395,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -36221,6 +45433,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
   }
 
   export type CourseUpdateManyMutationInput = {
@@ -36241,6 +45465,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CourseUncheckedUpdateManyInput = {
@@ -36262,6 +45498,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CourseSessionCreateInput = {
@@ -36734,6 +45982,12 @@ export namespace Prisma {
     duration?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
     Module: ModuleCreateNestedOneWithoutLessonInput
     Progress?: ProgressCreateNestedManyWithoutLessonInput
   }
@@ -36753,6 +46007,12 @@ export namespace Prisma {
     moduleId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
     Progress?: ProgressUncheckedCreateNestedManyWithoutLessonInput
   }
 
@@ -36770,6 +46030,12 @@ export namespace Prisma {
     duration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
     Module?: ModuleUpdateOneRequiredWithoutLessonNestedInput
     Progress?: ProgressUpdateManyWithoutLessonNestedInput
   }
@@ -36789,6 +46055,12 @@ export namespace Prisma {
     moduleId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
     Progress?: ProgressUncheckedUpdateManyWithoutLessonNestedInput
   }
 
@@ -36807,6 +46079,12 @@ export namespace Prisma {
     moduleId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
   }
 
   export type LessonUpdateManyMutationInput = {
@@ -36823,6 +46101,12 @@ export namespace Prisma {
     duration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type LessonUncheckedUpdateManyInput = {
@@ -36840,6 +46124,12 @@ export namespace Prisma {
     moduleId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModuleCreateInput = {
@@ -37750,6 +47040,807 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type YtPlaylistCreateInput = {
+    id?: string
+    playlistId: string
+    playlistTitle: string
+    playlistUrl: string
+    author?: string | null
+    totalItems?: number | null
+    totalVideos?: number | null
+    status?: string | null
+    quizPrepost?: string | null
+    hasQuizPrepost?: boolean | null
+    quizPrepostCount?: number | null
+    courseTitle?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    metaKeys?: string | null
+    metaDesc?: string | null
+    recommendedNext?: string | null
+    hasCourseMetadata?: boolean | null
+    metadataGeneratedAt?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtPlaylistUncheckedCreateInput = {
+    id?: string
+    playlistId: string
+    playlistTitle: string
+    playlistUrl: string
+    author?: string | null
+    totalItems?: number | null
+    totalVideos?: number | null
+    status?: string | null
+    quizPrepost?: string | null
+    hasQuizPrepost?: boolean | null
+    quizPrepostCount?: number | null
+    courseTitle?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    metaKeys?: string | null
+    metaDesc?: string | null
+    recommendedNext?: string | null
+    hasCourseMetadata?: boolean | null
+    metadataGeneratedAt?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtPlaylistUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    playlistTitle?: StringFieldUpdateOperationsInput | string
+    playlistUrl?: StringFieldUpdateOperationsInput | string
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    totalItems?: NullableIntFieldUpdateOperationsInput | number | null
+    totalVideos?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizPrepost?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepostCount?: NullableIntFieldUpdateOperationsInput | number | null
+    courseTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeys?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCourseMetadata?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    metadataGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    playlistTitle?: StringFieldUpdateOperationsInput | string
+    playlistUrl?: StringFieldUpdateOperationsInput | string
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    totalItems?: NullableIntFieldUpdateOperationsInput | number | null
+    totalVideos?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizPrepost?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepostCount?: NullableIntFieldUpdateOperationsInput | number | null
+    courseTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeys?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCourseMetadata?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    metadataGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistCreateManyInput = {
+    id?: string
+    playlistId: string
+    playlistTitle: string
+    playlistUrl: string
+    author?: string | null
+    totalItems?: number | null
+    totalVideos?: number | null
+    status?: string | null
+    quizPrepost?: string | null
+    hasQuizPrepost?: boolean | null
+    quizPrepostCount?: number | null
+    courseTitle?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    metaKeys?: string | null
+    metaDesc?: string | null
+    recommendedNext?: string | null
+    hasCourseMetadata?: boolean | null
+    metadataGeneratedAt?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtPlaylistUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    playlistTitle?: StringFieldUpdateOperationsInput | string
+    playlistUrl?: StringFieldUpdateOperationsInput | string
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    totalItems?: NullableIntFieldUpdateOperationsInput | number | null
+    totalVideos?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizPrepost?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepostCount?: NullableIntFieldUpdateOperationsInput | number | null
+    courseTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeys?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCourseMetadata?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    metadataGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    playlistTitle?: StringFieldUpdateOperationsInput | string
+    playlistUrl?: StringFieldUpdateOperationsInput | string
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    totalItems?: NullableIntFieldUpdateOperationsInput | number | null
+    totalVideos?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizPrepost?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepostCount?: NullableIntFieldUpdateOperationsInput | number | null
+    courseTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeys?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCourseMetadata?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    metadataGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistItemCreateInput = {
+    id?: string
+    playlistId: string
+    videoId: string
+    videoNo: number
+    videoTitle: string
+    durationStr?: string | null
+    embedUrl?: string | null
+    audioPath?: string | null
+    audioFilePath?: string | null
+    transcript?: string | null
+    hasTranscript?: boolean | null
+    transcriptLength?: number | null
+    wordCount?: number | null
+    summary?: string | null
+    hasSummary?: boolean | null
+    refinedTitle?: string | null
+    hasRefinedTitle?: boolean | null
+    quizPrepost?: string | null
+    quizKnowledgeCheck?: string | null
+    hasQuizKnowledgeCheck?: boolean | null
+    status?: string | null
+    errorMessage?: string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    receivedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtPlaylistItemUncheckedCreateInput = {
+    id?: string
+    playlistId: string
+    videoId: string
+    videoNo: number
+    videoTitle: string
+    durationStr?: string | null
+    embedUrl?: string | null
+    audioPath?: string | null
+    audioFilePath?: string | null
+    transcript?: string | null
+    hasTranscript?: boolean | null
+    transcriptLength?: number | null
+    wordCount?: number | null
+    summary?: string | null
+    hasSummary?: boolean | null
+    refinedTitle?: string | null
+    hasRefinedTitle?: boolean | null
+    quizPrepost?: string | null
+    quizKnowledgeCheck?: string | null
+    hasQuizKnowledgeCheck?: boolean | null
+    status?: string | null
+    errorMessage?: string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    receivedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtPlaylistItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoNo?: IntFieldUpdateOperationsInput | number
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    durationStr?: NullableStringFieldUpdateOperationsInput | string | null
+    embedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioPath?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    hasTranscript?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    transcriptLength?: NullableIntFieldUpdateOperationsInput | number | null
+    wordCount?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasSummary?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    refinedTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    hasRefinedTitle?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    quizKnowledgeCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizKnowledgeCheck?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoNo?: IntFieldUpdateOperationsInput | number
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    durationStr?: NullableStringFieldUpdateOperationsInput | string | null
+    embedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioPath?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    hasTranscript?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    transcriptLength?: NullableIntFieldUpdateOperationsInput | number | null
+    wordCount?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasSummary?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    refinedTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    hasRefinedTitle?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    quizKnowledgeCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizKnowledgeCheck?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistItemCreateManyInput = {
+    id?: string
+    playlistId: string
+    videoId: string
+    videoNo: number
+    videoTitle: string
+    durationStr?: string | null
+    embedUrl?: string | null
+    audioPath?: string | null
+    audioFilePath?: string | null
+    transcript?: string | null
+    hasTranscript?: boolean | null
+    transcriptLength?: number | null
+    wordCount?: number | null
+    summary?: string | null
+    hasSummary?: boolean | null
+    refinedTitle?: string | null
+    hasRefinedTitle?: boolean | null
+    quizPrepost?: string | null
+    quizKnowledgeCheck?: string | null
+    hasQuizKnowledgeCheck?: boolean | null
+    status?: string | null
+    errorMessage?: string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    receivedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtPlaylistItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoNo?: IntFieldUpdateOperationsInput | number
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    durationStr?: NullableStringFieldUpdateOperationsInput | string | null
+    embedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioPath?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    hasTranscript?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    transcriptLength?: NullableIntFieldUpdateOperationsInput | number | null
+    wordCount?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasSummary?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    refinedTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    hasRefinedTitle?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    quizKnowledgeCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizKnowledgeCheck?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtPlaylistItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    playlistId?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoNo?: IntFieldUpdateOperationsInput | number
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    durationStr?: NullableStringFieldUpdateOperationsInput | string | null
+    embedUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioPath?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    hasTranscript?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    transcriptLength?: NullableIntFieldUpdateOperationsInput | number | null
+    wordCount?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasSummary?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    refinedTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    hasRefinedTitle?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    quizPrepost?: NullableStringFieldUpdateOperationsInput | string | null
+    quizKnowledgeCheck?: NullableStringFieldUpdateOperationsInput | string | null
+    hasQuizKnowledgeCheck?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtUserSettingsCreateInput = {
+    id?: string
+    userId: string
+    fullName?: string | null
+    email?: string | null
+    role?: string | null
+    emailNotifications?: boolean | null
+    pushNotifications?: boolean | null
+    weeklyDigest?: boolean | null
+    twoFactorEnabled?: boolean | null
+    newsletterSubscribed?: boolean | null
+    theme?: string | null
+    language?: string | null
+    autoRefreshInterval?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtUserSettingsUncheckedCreateInput = {
+    id?: string
+    userId: string
+    fullName?: string | null
+    email?: string | null
+    role?: string | null
+    emailNotifications?: boolean | null
+    pushNotifications?: boolean | null
+    weeklyDigest?: boolean | null
+    twoFactorEnabled?: boolean | null
+    newsletterSubscribed?: boolean | null
+    theme?: string | null
+    language?: string | null
+    autoRefreshInterval?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtUserSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    emailNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    weeklyDigest?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    newsletterSubscribed?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    autoRefreshInterval?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtUserSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    emailNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    weeklyDigest?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    newsletterSubscribed?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    autoRefreshInterval?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtUserSettingsCreateManyInput = {
+    id?: string
+    userId: string
+    fullName?: string | null
+    email?: string | null
+    role?: string | null
+    emailNotifications?: boolean | null
+    pushNotifications?: boolean | null
+    weeklyDigest?: boolean | null
+    twoFactorEnabled?: boolean | null
+    newsletterSubscribed?: boolean | null
+    theme?: string | null
+    language?: string | null
+    autoRefreshInterval?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtUserSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    emailNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    weeklyDigest?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    newsletterSubscribed?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    autoRefreshInterval?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtUserSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    emailNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    pushNotifications?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    weeklyDigest?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    newsletterSubscribed?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    autoRefreshInterval?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationSessionCreateInput = {
+    id?: string
+    sessionUuid: string
+    topic: string
+    language?: string | null
+    level?: string | null
+    targetDurationMin?: number
+    includeChannels?: string | null
+    excludeChannels?: string | null
+    status?: string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+    candidates?: YtCurationCandidateCreateNestedManyWithoutSessionInput
+  }
+
+  export type YtCurationSessionUncheckedCreateInput = {
+    id?: string
+    sessionUuid: string
+    topic: string
+    language?: string | null
+    level?: string | null
+    targetDurationMin?: number
+    includeChannels?: string | null
+    excludeChannels?: string | null
+    status?: string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+    candidates?: YtCurationCandidateUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type YtCurationSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionUuid?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDurationMin?: IntFieldUpdateOperationsInput | number
+    includeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    excludeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    candidates?: YtCurationCandidateUpdateManyWithoutSessionNestedInput
+  }
+
+  export type YtCurationSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionUuid?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDurationMin?: IntFieldUpdateOperationsInput | number
+    includeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    excludeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    candidates?: YtCurationCandidateUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type YtCurationSessionCreateManyInput = {
+    id?: string
+    sessionUuid: string
+    topic: string
+    language?: string | null
+    level?: string | null
+    targetDurationMin?: number
+    includeChannels?: string | null
+    excludeChannels?: string | null
+    status?: string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtCurationSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionUuid?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDurationMin?: IntFieldUpdateOperationsInput | number
+    includeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    excludeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionUuid?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDurationMin?: IntFieldUpdateOperationsInput | number
+    includeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    excludeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationCandidateCreateInput = {
+    id?: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail?: string | null
+    channelTitle?: string | null
+    publishedAt?: Date | string | null
+    durationSeconds?: number | null
+    overallScore?: number | null
+    relevanceScore?: number | null
+    qualityScore?: number | null
+    engagementScore?: number | null
+    recommendation?: string | null
+    roleSuggestion?: string | null
+    aiSummary?: string | null
+    selected?: boolean | null
+    orderInPlaylist?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    session: YtCurationSessionCreateNestedOneWithoutCandidatesInput
+  }
+
+  export type YtCurationCandidateUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail?: string | null
+    channelTitle?: string | null
+    publishedAt?: Date | string | null
+    durationSeconds?: number | null
+    overallScore?: number | null
+    relevanceScore?: number | null
+    qualityScore?: number | null
+    engagementScore?: number | null
+    recommendation?: string | null
+    roleSuggestion?: string | null
+    aiSummary?: string | null
+    selected?: boolean | null
+    orderInPlaylist?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtCurationCandidateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    session?: YtCurationSessionUpdateOneRequiredWithoutCandidatesNestedInput
+  }
+
+  export type YtCurationCandidateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationCandidateCreateManyInput = {
+    id?: string
+    sessionId: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail?: string | null
+    channelTitle?: string | null
+    publishedAt?: Date | string | null
+    durationSeconds?: number | null
+    overallScore?: number | null
+    relevanceScore?: number | null
+    qualityScore?: number | null
+    engagementScore?: number | null
+    recommendation?: string | null
+    roleSuggestion?: string | null
+    aiSummary?: string | null
+    selected?: boolean | null
+    orderInPlaylist?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtCurationCandidateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationCandidateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type UserBadgeCreateInput = {
     id: string
     earnedAt?: Date | string
@@ -37837,6 +47928,90 @@ export namespace Prisma {
     identifier?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessingJobCreateInput = {
+    id?: string
+    type: string
+    status?: string
+    targetId: string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    retries?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessingJobUncheckedCreateInput = {
+    id?: string
+    type: string
+    status?: string
+    targetId: string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    retries?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessingJobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetId?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    retries?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessingJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetId?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    retries?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessingJobCreateManyInput = {
+    id?: string
+    type: string
+    status?: string
+    targetId: string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    retries?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessingJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetId?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    retries?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessingJobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetId?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    retries?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -38503,6 +48678,17 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type CertificateListRelationFilter = {
     every?: CertificateWhereInput
     some?: CertificateWhereInput
@@ -38572,11 +48758,24 @@ export namespace Prisma {
     instructorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    courseShortDesc?: SortOrder
+    courseDesc?: SortOrder
+    courseLevel?: SortOrder
+    language?: SortOrder
+    requirements?: SortOrder
+    outcomes?: SortOrder
+    recommendedNext?: SortOrder
+    jp?: SortOrder
+    ytPlaylistId?: SortOrder
+    isProcessing?: SortOrder
+    processingStatus?: SortOrder
+    lastProcessedAt?: SortOrder
   }
 
   export type CourseAvgOrderByAggregateInput = {
     capacity?: SortOrder
     duration?: SortOrder
+    jp?: SortOrder
   }
 
   export type CourseMaxOrderByAggregateInput = {
@@ -38597,6 +48796,18 @@ export namespace Prisma {
     instructorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    courseShortDesc?: SortOrder
+    courseDesc?: SortOrder
+    courseLevel?: SortOrder
+    language?: SortOrder
+    requirements?: SortOrder
+    outcomes?: SortOrder
+    recommendedNext?: SortOrder
+    jp?: SortOrder
+    ytPlaylistId?: SortOrder
+    isProcessing?: SortOrder
+    processingStatus?: SortOrder
+    lastProcessedAt?: SortOrder
   }
 
   export type CourseMinOrderByAggregateInput = {
@@ -38617,11 +48828,24 @@ export namespace Prisma {
     instructorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    courseShortDesc?: SortOrder
+    courseDesc?: SortOrder
+    courseLevel?: SortOrder
+    language?: SortOrder
+    requirements?: SortOrder
+    outcomes?: SortOrder
+    recommendedNext?: SortOrder
+    jp?: SortOrder
+    ytPlaylistId?: SortOrder
+    isProcessing?: SortOrder
+    processingStatus?: SortOrder
+    lastProcessedAt?: SortOrder
   }
 
   export type CourseSumOrderByAggregateInput = {
     capacity?: SortOrder
     duration?: SortOrder
+    jp?: SortOrder
   }
 
   export type EnumDeliveryModeWithAggregatesFilter<$PrismaModel = never> = {
@@ -38642,6 +48866,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDifficultyFilter<$PrismaModel>
     _max?: NestedEnumDifficultyFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type EnumSessionTypeFilter<$PrismaModel = never> = {
@@ -39011,6 +49251,12 @@ export namespace Prisma {
     moduleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    ytVideoId?: SortOrder
+    transcript?: SortOrder
+    summary?: SortOrder
+    processingStatus?: SortOrder
+    error?: SortOrder
+    audioFilePath?: SortOrder
   }
 
   export type LessonAvgOrderByAggregateInput = {
@@ -39033,6 +49279,12 @@ export namespace Prisma {
     moduleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    ytVideoId?: SortOrder
+    transcript?: SortOrder
+    summary?: SortOrder
+    processingStatus?: SortOrder
+    error?: SortOrder
+    audioFilePath?: SortOrder
   }
 
   export type LessonMinOrderByAggregateInput = {
@@ -39050,6 +49302,12 @@ export namespace Prisma {
     moduleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    ytVideoId?: SortOrder
+    transcript?: SortOrder
+    summary?: SortOrder
+    processingStatus?: SortOrder
+    error?: SortOrder
+    audioFilePath?: SortOrder
   }
 
   export type LessonSumOrderByAggregateInput = {
@@ -39727,6 +49985,455 @@ export namespace Prisma {
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
+  export type UuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
+  export type YtPlaylistCountOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    playlistTitle?: SortOrder
+    playlistUrl?: SortOrder
+    author?: SortOrder
+    totalItems?: SortOrder
+    totalVideos?: SortOrder
+    status?: SortOrder
+    quizPrepost?: SortOrder
+    hasQuizPrepost?: SortOrder
+    quizPrepostCount?: SortOrder
+    courseTitle?: SortOrder
+    jp?: SortOrder
+    courseShortDesc?: SortOrder
+    courseDesc?: SortOrder
+    courseLevel?: SortOrder
+    language?: SortOrder
+    requirements?: SortOrder
+    outcomes?: SortOrder
+    metaKeys?: SortOrder
+    metaDesc?: SortOrder
+    recommendedNext?: SortOrder
+    hasCourseMetadata?: SortOrder
+    metadataGeneratedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtPlaylistAvgOrderByAggregateInput = {
+    totalItems?: SortOrder
+    totalVideos?: SortOrder
+    quizPrepostCount?: SortOrder
+    jp?: SortOrder
+  }
+
+  export type YtPlaylistMaxOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    playlistTitle?: SortOrder
+    playlistUrl?: SortOrder
+    author?: SortOrder
+    totalItems?: SortOrder
+    totalVideos?: SortOrder
+    status?: SortOrder
+    quizPrepost?: SortOrder
+    hasQuizPrepost?: SortOrder
+    quizPrepostCount?: SortOrder
+    courseTitle?: SortOrder
+    jp?: SortOrder
+    courseShortDesc?: SortOrder
+    courseDesc?: SortOrder
+    courseLevel?: SortOrder
+    language?: SortOrder
+    requirements?: SortOrder
+    outcomes?: SortOrder
+    metaKeys?: SortOrder
+    metaDesc?: SortOrder
+    recommendedNext?: SortOrder
+    hasCourseMetadata?: SortOrder
+    metadataGeneratedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtPlaylistMinOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    playlistTitle?: SortOrder
+    playlistUrl?: SortOrder
+    author?: SortOrder
+    totalItems?: SortOrder
+    totalVideos?: SortOrder
+    status?: SortOrder
+    quizPrepost?: SortOrder
+    hasQuizPrepost?: SortOrder
+    quizPrepostCount?: SortOrder
+    courseTitle?: SortOrder
+    jp?: SortOrder
+    courseShortDesc?: SortOrder
+    courseDesc?: SortOrder
+    courseLevel?: SortOrder
+    language?: SortOrder
+    requirements?: SortOrder
+    outcomes?: SortOrder
+    metaKeys?: SortOrder
+    metaDesc?: SortOrder
+    recommendedNext?: SortOrder
+    hasCourseMetadata?: SortOrder
+    metadataGeneratedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtPlaylistSumOrderByAggregateInput = {
+    totalItems?: SortOrder
+    totalVideos?: SortOrder
+    quizPrepostCount?: SortOrder
+    jp?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type YtPlaylistItemPlaylistIdVideoNoCompoundUniqueInput = {
+    playlistId: string
+    videoNo: number
+  }
+
+  export type YtPlaylistItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    videoId?: SortOrder
+    videoNo?: SortOrder
+    videoTitle?: SortOrder
+    durationStr?: SortOrder
+    embedUrl?: SortOrder
+    audioPath?: SortOrder
+    audioFilePath?: SortOrder
+    transcript?: SortOrder
+    hasTranscript?: SortOrder
+    transcriptLength?: SortOrder
+    wordCount?: SortOrder
+    summary?: SortOrder
+    hasSummary?: SortOrder
+    refinedTitle?: SortOrder
+    hasRefinedTitle?: SortOrder
+    quizPrepost?: SortOrder
+    quizKnowledgeCheck?: SortOrder
+    hasQuizKnowledgeCheck?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    receivedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtPlaylistItemAvgOrderByAggregateInput = {
+    videoNo?: SortOrder
+    transcriptLength?: SortOrder
+    wordCount?: SortOrder
+  }
+
+  export type YtPlaylistItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    videoId?: SortOrder
+    videoNo?: SortOrder
+    videoTitle?: SortOrder
+    durationStr?: SortOrder
+    embedUrl?: SortOrder
+    audioPath?: SortOrder
+    audioFilePath?: SortOrder
+    transcript?: SortOrder
+    hasTranscript?: SortOrder
+    transcriptLength?: SortOrder
+    wordCount?: SortOrder
+    summary?: SortOrder
+    hasSummary?: SortOrder
+    refinedTitle?: SortOrder
+    hasRefinedTitle?: SortOrder
+    quizPrepost?: SortOrder
+    quizKnowledgeCheck?: SortOrder
+    hasQuizKnowledgeCheck?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    receivedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtPlaylistItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    playlistId?: SortOrder
+    videoId?: SortOrder
+    videoNo?: SortOrder
+    videoTitle?: SortOrder
+    durationStr?: SortOrder
+    embedUrl?: SortOrder
+    audioPath?: SortOrder
+    audioFilePath?: SortOrder
+    transcript?: SortOrder
+    hasTranscript?: SortOrder
+    transcriptLength?: SortOrder
+    wordCount?: SortOrder
+    summary?: SortOrder
+    hasSummary?: SortOrder
+    refinedTitle?: SortOrder
+    hasRefinedTitle?: SortOrder
+    quizPrepost?: SortOrder
+    quizKnowledgeCheck?: SortOrder
+    hasQuizKnowledgeCheck?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    receivedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtPlaylistItemSumOrderByAggregateInput = {
+    videoNo?: SortOrder
+    transcriptLength?: SortOrder
+    wordCount?: SortOrder
+  }
+
+  export type YtUserSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    emailNotifications?: SortOrder
+    pushNotifications?: SortOrder
+    weeklyDigest?: SortOrder
+    twoFactorEnabled?: SortOrder
+    newsletterSubscribed?: SortOrder
+    theme?: SortOrder
+    language?: SortOrder
+    autoRefreshInterval?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type YtUserSettingsAvgOrderByAggregateInput = {
+    autoRefreshInterval?: SortOrder
+  }
+
+  export type YtUserSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    emailNotifications?: SortOrder
+    pushNotifications?: SortOrder
+    weeklyDigest?: SortOrder
+    twoFactorEnabled?: SortOrder
+    newsletterSubscribed?: SortOrder
+    theme?: SortOrder
+    language?: SortOrder
+    autoRefreshInterval?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type YtUserSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    emailNotifications?: SortOrder
+    pushNotifications?: SortOrder
+    weeklyDigest?: SortOrder
+    twoFactorEnabled?: SortOrder
+    newsletterSubscribed?: SortOrder
+    theme?: SortOrder
+    language?: SortOrder
+    autoRefreshInterval?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type YtUserSettingsSumOrderByAggregateInput = {
+    autoRefreshInterval?: SortOrder
+  }
+
+  export type YtCurationCandidateListRelationFilter = {
+    every?: YtCurationCandidateWhereInput
+    some?: YtCurationCandidateWhereInput
+    none?: YtCurationCandidateWhereInput
+  }
+
+  export type YtCurationCandidateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type YtCurationSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionUuid?: SortOrder
+    topic?: SortOrder
+    language?: SortOrder
+    level?: SortOrder
+    targetDurationMin?: SortOrder
+    includeChannels?: SortOrder
+    excludeChannels?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtCurationSessionAvgOrderByAggregateInput = {
+    targetDurationMin?: SortOrder
+  }
+
+  export type YtCurationSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionUuid?: SortOrder
+    topic?: SortOrder
+    language?: SortOrder
+    level?: SortOrder
+    targetDurationMin?: SortOrder
+    includeChannels?: SortOrder
+    excludeChannels?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtCurationSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionUuid?: SortOrder
+    topic?: SortOrder
+    language?: SortOrder
+    level?: SortOrder
+    targetDurationMin?: SortOrder
+    includeChannels?: SortOrder
+    excludeChannels?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    processedAt?: SortOrder
+  }
+
+  export type YtCurationSessionSumOrderByAggregateInput = {
+    targetDurationMin?: SortOrder
+  }
+
+  export type YtCurationSessionScalarRelationFilter = {
+    is?: YtCurationSessionWhereInput
+    isNot?: YtCurationSessionWhereInput
+  }
+
+  export type YtCurationCandidateCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    videoId?: SortOrder
+    videoTitle?: SortOrder
+    videoThumbnail?: SortOrder
+    channelTitle?: SortOrder
+    publishedAt?: SortOrder
+    durationSeconds?: SortOrder
+    overallScore?: SortOrder
+    relevanceScore?: SortOrder
+    qualityScore?: SortOrder
+    engagementScore?: SortOrder
+    recommendation?: SortOrder
+    roleSuggestion?: SortOrder
+    aiSummary?: SortOrder
+    selected?: SortOrder
+    orderInPlaylist?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type YtCurationCandidateAvgOrderByAggregateInput = {
+    durationSeconds?: SortOrder
+    overallScore?: SortOrder
+    relevanceScore?: SortOrder
+    qualityScore?: SortOrder
+    engagementScore?: SortOrder
+    orderInPlaylist?: SortOrder
+  }
+
+  export type YtCurationCandidateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    videoId?: SortOrder
+    videoTitle?: SortOrder
+    videoThumbnail?: SortOrder
+    channelTitle?: SortOrder
+    publishedAt?: SortOrder
+    durationSeconds?: SortOrder
+    overallScore?: SortOrder
+    relevanceScore?: SortOrder
+    qualityScore?: SortOrder
+    engagementScore?: SortOrder
+    recommendation?: SortOrder
+    roleSuggestion?: SortOrder
+    aiSummary?: SortOrder
+    selected?: SortOrder
+    orderInPlaylist?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type YtCurationCandidateMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    videoId?: SortOrder
+    videoTitle?: SortOrder
+    videoThumbnail?: SortOrder
+    channelTitle?: SortOrder
+    publishedAt?: SortOrder
+    durationSeconds?: SortOrder
+    overallScore?: SortOrder
+    relevanceScore?: SortOrder
+    qualityScore?: SortOrder
+    engagementScore?: SortOrder
+    recommendation?: SortOrder
+    roleSuggestion?: SortOrder
+    aiSummary?: SortOrder
+    selected?: SortOrder
+    orderInPlaylist?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type YtCurationCandidateSumOrderByAggregateInput = {
+    durationSeconds?: SortOrder
+    overallScore?: SortOrder
+    relevanceScore?: SortOrder
+    qualityScore?: SortOrder
+    engagementScore?: SortOrder
+    orderInPlaylist?: SortOrder
+  }
+
   export type BadgeScalarRelationFilter = {
     is?: BadgeWhereInput
     isNot?: BadgeWhereInput
@@ -39779,6 +50486,48 @@ export namespace Prisma {
     identifier?: SortOrder
     token?: SortOrder
     expires?: SortOrder
+  }
+
+  export type ProcessingJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    targetId?: SortOrder
+    payload?: SortOrder
+    error?: SortOrder
+    retries?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessingJobAvgOrderByAggregateInput = {
+    retries?: SortOrder
+  }
+
+  export type ProcessingJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    targetId?: SortOrder
+    error?: SortOrder
+    retries?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessingJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    targetId?: SortOrder
+    error?: SortOrder
+    retries?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessingJobSumOrderByAggregateInput = {
+    retries?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -40054,6 +50803,14 @@ export namespace Prisma {
   export type CourseUpdatetagsInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type CertificateUpdateManyWithoutCourseNestedInput = {
@@ -41498,6 +52255,62 @@ export namespace Prisma {
     deleteMany?: UserBadgeScalarWhereInput | UserBadgeScalarWhereInput[]
   }
 
+  export type YtCurationCandidateCreateNestedManyWithoutSessionInput = {
+    create?: XOR<YtCurationCandidateCreateWithoutSessionInput, YtCurationCandidateUncheckedCreateWithoutSessionInput> | YtCurationCandidateCreateWithoutSessionInput[] | YtCurationCandidateUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: YtCurationCandidateCreateOrConnectWithoutSessionInput | YtCurationCandidateCreateOrConnectWithoutSessionInput[]
+    createMany?: YtCurationCandidateCreateManySessionInputEnvelope
+    connect?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+  }
+
+  export type YtCurationCandidateUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<YtCurationCandidateCreateWithoutSessionInput, YtCurationCandidateUncheckedCreateWithoutSessionInput> | YtCurationCandidateCreateWithoutSessionInput[] | YtCurationCandidateUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: YtCurationCandidateCreateOrConnectWithoutSessionInput | YtCurationCandidateCreateOrConnectWithoutSessionInput[]
+    createMany?: YtCurationCandidateCreateManySessionInputEnvelope
+    connect?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+  }
+
+  export type YtCurationCandidateUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<YtCurationCandidateCreateWithoutSessionInput, YtCurationCandidateUncheckedCreateWithoutSessionInput> | YtCurationCandidateCreateWithoutSessionInput[] | YtCurationCandidateUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: YtCurationCandidateCreateOrConnectWithoutSessionInput | YtCurationCandidateCreateOrConnectWithoutSessionInput[]
+    upsert?: YtCurationCandidateUpsertWithWhereUniqueWithoutSessionInput | YtCurationCandidateUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: YtCurationCandidateCreateManySessionInputEnvelope
+    set?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    disconnect?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    delete?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    connect?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    update?: YtCurationCandidateUpdateWithWhereUniqueWithoutSessionInput | YtCurationCandidateUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: YtCurationCandidateUpdateManyWithWhereWithoutSessionInput | YtCurationCandidateUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: YtCurationCandidateScalarWhereInput | YtCurationCandidateScalarWhereInput[]
+  }
+
+  export type YtCurationCandidateUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<YtCurationCandidateCreateWithoutSessionInput, YtCurationCandidateUncheckedCreateWithoutSessionInput> | YtCurationCandidateCreateWithoutSessionInput[] | YtCurationCandidateUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: YtCurationCandidateCreateOrConnectWithoutSessionInput | YtCurationCandidateCreateOrConnectWithoutSessionInput[]
+    upsert?: YtCurationCandidateUpsertWithWhereUniqueWithoutSessionInput | YtCurationCandidateUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: YtCurationCandidateCreateManySessionInputEnvelope
+    set?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    disconnect?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    delete?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    connect?: YtCurationCandidateWhereUniqueInput | YtCurationCandidateWhereUniqueInput[]
+    update?: YtCurationCandidateUpdateWithWhereUniqueWithoutSessionInput | YtCurationCandidateUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: YtCurationCandidateUpdateManyWithWhereWithoutSessionInput | YtCurationCandidateUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: YtCurationCandidateScalarWhereInput | YtCurationCandidateScalarWhereInput[]
+  }
+
+  export type YtCurationSessionCreateNestedOneWithoutCandidatesInput = {
+    create?: XOR<YtCurationSessionCreateWithoutCandidatesInput, YtCurationSessionUncheckedCreateWithoutCandidatesInput>
+    connectOrCreate?: YtCurationSessionCreateOrConnectWithoutCandidatesInput
+    connect?: YtCurationSessionWhereUniqueInput
+  }
+
+  export type YtCurationSessionUpdateOneRequiredWithoutCandidatesNestedInput = {
+    create?: XOR<YtCurationSessionCreateWithoutCandidatesInput, YtCurationSessionUncheckedCreateWithoutCandidatesInput>
+    connectOrCreate?: YtCurationSessionCreateOrConnectWithoutCandidatesInput
+    upsert?: YtCurationSessionUpsertWithoutCandidatesInput
+    connect?: YtCurationSessionWhereUniqueInput
+    update?: XOR<XOR<YtCurationSessionUpdateToOneWithWhereWithoutCandidatesInput, YtCurationSessionUpdateWithoutCandidatesInput>, YtCurationSessionUncheckedUpdateWithoutCandidatesInput>
+  }
+
   export type BadgeCreateNestedOneWithoutUserBadgeInput = {
     create?: XOR<BadgeCreateWithoutUserBadgeInput, BadgeUncheckedCreateWithoutUserBadgeInput>
     connectOrCreate?: BadgeCreateOrConnectWithoutUserBadgeInput
@@ -41854,6 +52667,17 @@ export namespace Prisma {
     not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedEnumDeliveryModeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DeliveryMode | EnumDeliveryModeFieldRefInput<$PrismaModel>
     in?: $Enums.DeliveryMode[] | ListEnumDeliveryModeFieldRefInput<$PrismaModel>
@@ -41872,6 +52696,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDifficultyFilter<$PrismaModel>
     _max?: NestedEnumDifficultyFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumSessionTypeFilter<$PrismaModel = never> = {
@@ -42054,6 +52894,31 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
+  }
+
+  export type NestedUuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
+  export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -42650,6 +53515,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
@@ -42676,6 +53553,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
@@ -42787,6 +53676,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
@@ -42813,6 +53714,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
@@ -43463,6 +54376,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
@@ -43489,6 +54414,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
@@ -43591,6 +54528,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
@@ -43617,6 +54566,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
@@ -43641,6 +54602,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
@@ -43667,6 +54640,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
@@ -43778,6 +54763,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
@@ -43804,6 +54801,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
@@ -43905,6 +54914,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
@@ -43931,6 +54952,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -44005,6 +55038,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
@@ -44031,6 +55076,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -44667,6 +55724,12 @@ export namespace Prisma {
     duration?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
     Progress?: ProgressCreateNestedManyWithoutLessonInput
   }
 
@@ -44684,6 +55747,12 @@ export namespace Prisma {
     duration?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
     Progress?: ProgressUncheckedCreateNestedManyWithoutLessonInput
   }
 
@@ -44715,6 +55784,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
@@ -44741,6 +55822,18 @@ export namespace Prisma {
     instructorId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -44830,6 +55923,12 @@ export namespace Prisma {
     moduleId?: StringFilter<"Lesson"> | string
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
+    ytVideoId?: StringNullableFilter<"Lesson"> | string | null
+    transcript?: StringNullableFilter<"Lesson"> | string | null
+    summary?: StringNullableFilter<"Lesson"> | string | null
+    processingStatus?: StringNullableFilter<"Lesson"> | string | null
+    error?: StringNullableFilter<"Lesson"> | string | null
+    audioFilePath?: StringNullableFilter<"Lesson"> | string | null
   }
 
   export type CourseUpsertWithoutModuleInput = {
@@ -44861,6 +55960,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
@@ -44887,6 +55998,18 @@ export namespace Prisma {
     instructorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -45090,6 +56213,12 @@ export namespace Prisma {
     duration?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
     Module: ModuleCreateNestedOneWithoutLessonInput
   }
 
@@ -45108,6 +56237,12 @@ export namespace Prisma {
     moduleId: string
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
   }
 
   export type LessonCreateOrConnectWithoutProgressInput = {
@@ -45211,6 +56346,12 @@ export namespace Prisma {
     duration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
     Module?: ModuleUpdateOneRequiredWithoutLessonNestedInput
   }
 
@@ -45229,6 +56370,12 @@ export namespace Prisma {
     moduleId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUpsertWithoutProgressInput = {
@@ -46322,6 +57469,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
@@ -46347,6 +57506,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -46698,6 +57869,18 @@ export namespace Prisma {
     instructorId?: StringFilter<"Course"> | string
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
+    courseShortDesc?: StringNullableFilter<"Course"> | string | null
+    courseDesc?: StringNullableFilter<"Course"> | string | null
+    courseLevel?: StringNullableFilter<"Course"> | string | null
+    language?: StringNullableFilter<"Course"> | string | null
+    requirements?: StringNullableFilter<"Course"> | string | null
+    outcomes?: StringNullableFilter<"Course"> | string | null
+    recommendedNext?: StringNullableFilter<"Course"> | string | null
+    jp?: DecimalNullableFilter<"Course"> | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: StringNullableFilter<"Course"> | string | null
+    isProcessing?: BoolFilter<"Course"> | boolean
+    processingStatus?: StringNullableFilter<"Course"> | string | null
+    lastProcessedAt?: DateTimeNullableFilter<"Course"> | Date | string | null
   }
 
   export type EnrollmentUpsertWithWhereUniqueWithoutUserInput = {
@@ -46851,6 +58034,175 @@ export namespace Prisma {
   export type UserBadgeUpdateManyWithWhereWithoutUserInput = {
     where: UserBadgeScalarWhereInput
     data: XOR<UserBadgeUpdateManyMutationInput, UserBadgeUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type YtCurationCandidateCreateWithoutSessionInput = {
+    id?: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail?: string | null
+    channelTitle?: string | null
+    publishedAt?: Date | string | null
+    durationSeconds?: number | null
+    overallScore?: number | null
+    relevanceScore?: number | null
+    qualityScore?: number | null
+    engagementScore?: number | null
+    recommendation?: string | null
+    roleSuggestion?: string | null
+    aiSummary?: string | null
+    selected?: boolean | null
+    orderInPlaylist?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtCurationCandidateUncheckedCreateWithoutSessionInput = {
+    id?: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail?: string | null
+    channelTitle?: string | null
+    publishedAt?: Date | string | null
+    durationSeconds?: number | null
+    overallScore?: number | null
+    relevanceScore?: number | null
+    qualityScore?: number | null
+    engagementScore?: number | null
+    recommendation?: string | null
+    roleSuggestion?: string | null
+    aiSummary?: string | null
+    selected?: boolean | null
+    orderInPlaylist?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtCurationCandidateCreateOrConnectWithoutSessionInput = {
+    where: YtCurationCandidateWhereUniqueInput
+    create: XOR<YtCurationCandidateCreateWithoutSessionInput, YtCurationCandidateUncheckedCreateWithoutSessionInput>
+  }
+
+  export type YtCurationCandidateCreateManySessionInputEnvelope = {
+    data: YtCurationCandidateCreateManySessionInput | YtCurationCandidateCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type YtCurationCandidateUpsertWithWhereUniqueWithoutSessionInput = {
+    where: YtCurationCandidateWhereUniqueInput
+    update: XOR<YtCurationCandidateUpdateWithoutSessionInput, YtCurationCandidateUncheckedUpdateWithoutSessionInput>
+    create: XOR<YtCurationCandidateCreateWithoutSessionInput, YtCurationCandidateUncheckedCreateWithoutSessionInput>
+  }
+
+  export type YtCurationCandidateUpdateWithWhereUniqueWithoutSessionInput = {
+    where: YtCurationCandidateWhereUniqueInput
+    data: XOR<YtCurationCandidateUpdateWithoutSessionInput, YtCurationCandidateUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type YtCurationCandidateUpdateManyWithWhereWithoutSessionInput = {
+    where: YtCurationCandidateScalarWhereInput
+    data: XOR<YtCurationCandidateUpdateManyMutationInput, YtCurationCandidateUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type YtCurationCandidateScalarWhereInput = {
+    AND?: YtCurationCandidateScalarWhereInput | YtCurationCandidateScalarWhereInput[]
+    OR?: YtCurationCandidateScalarWhereInput[]
+    NOT?: YtCurationCandidateScalarWhereInput | YtCurationCandidateScalarWhereInput[]
+    id?: UuidFilter<"YtCurationCandidate"> | string
+    sessionId?: UuidFilter<"YtCurationCandidate"> | string
+    videoId?: StringFilter<"YtCurationCandidate"> | string
+    videoTitle?: StringFilter<"YtCurationCandidate"> | string
+    videoThumbnail?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    channelTitle?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    publishedAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    durationSeconds?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    overallScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    relevanceScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    qualityScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    engagementScore?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    recommendation?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    roleSuggestion?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    aiSummary?: StringNullableFilter<"YtCurationCandidate"> | string | null
+    selected?: BoolNullableFilter<"YtCurationCandidate"> | boolean | null
+    orderInPlaylist?: IntNullableFilter<"YtCurationCandidate"> | number | null
+    createdAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"YtCurationCandidate"> | Date | string | null
+  }
+
+  export type YtCurationSessionCreateWithoutCandidatesInput = {
+    id?: string
+    sessionUuid: string
+    topic: string
+    language?: string | null
+    level?: string | null
+    targetDurationMin?: number
+    includeChannels?: string | null
+    excludeChannels?: string | null
+    status?: string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtCurationSessionUncheckedCreateWithoutCandidatesInput = {
+    id?: string
+    sessionUuid: string
+    topic: string
+    language?: string | null
+    level?: string | null
+    targetDurationMin?: number
+    includeChannels?: string | null
+    excludeChannels?: string | null
+    status?: string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    processedAt?: Date | string | null
+  }
+
+  export type YtCurationSessionCreateOrConnectWithoutCandidatesInput = {
+    where: YtCurationSessionWhereUniqueInput
+    create: XOR<YtCurationSessionCreateWithoutCandidatesInput, YtCurationSessionUncheckedCreateWithoutCandidatesInput>
+  }
+
+  export type YtCurationSessionUpsertWithoutCandidatesInput = {
+    update: XOR<YtCurationSessionUpdateWithoutCandidatesInput, YtCurationSessionUncheckedUpdateWithoutCandidatesInput>
+    create: XOR<YtCurationSessionCreateWithoutCandidatesInput, YtCurationSessionUncheckedCreateWithoutCandidatesInput>
+    where?: YtCurationSessionWhereInput
+  }
+
+  export type YtCurationSessionUpdateToOneWithWhereWithoutCandidatesInput = {
+    where?: YtCurationSessionWhereInput
+    data: XOR<YtCurationSessionUpdateWithoutCandidatesInput, YtCurationSessionUncheckedUpdateWithoutCandidatesInput>
+  }
+
+  export type YtCurationSessionUpdateWithoutCandidatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionUuid?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDurationMin?: IntFieldUpdateOperationsInput | number
+    includeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    excludeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationSessionUncheckedUpdateWithoutCandidatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionUuid?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDurationMin?: IntFieldUpdateOperationsInput | number
+    includeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    excludeChannels?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type BadgeCreateWithoutUserBadgeInput = {
@@ -47555,6 +58907,12 @@ export namespace Prisma {
     duration?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
+    ytVideoId?: string | null
+    transcript?: string | null
+    summary?: string | null
+    processingStatus?: string | null
+    error?: string | null
+    audioFilePath?: string | null
   }
 
   export type QuizCreateManyModuleInput = {
@@ -47586,6 +58944,12 @@ export namespace Prisma {
     duration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
     Progress?: ProgressUpdateManyWithoutLessonNestedInput
   }
 
@@ -47603,6 +58967,12 @@ export namespace Prisma {
     duration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
     Progress?: ProgressUncheckedUpdateManyWithoutLessonNestedInput
   }
 
@@ -47620,6 +58990,12 @@ export namespace Prisma {
     duration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ytVideoId?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    audioFilePath?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QuizUpdateWithoutModuleInput = {
@@ -47900,6 +59276,18 @@ export namespace Prisma {
     isFeatured?: boolean
     createdAt?: Date | string
     updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
   }
 
   export type EnrollmentCreateManyUserInput = {
@@ -48110,6 +59498,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
@@ -48135,6 +59535,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -48160,6 +59572,18 @@ export namespace Prisma {
     isFeatured?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type EnrollmentUpdateWithoutUserInput = {
@@ -48383,6 +59807,90 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     badgeId?: StringFieldUpdateOperationsInput | string
     earnedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type YtCurationCandidateCreateManySessionInput = {
+    id?: string
+    videoId: string
+    videoTitle: string
+    videoThumbnail?: string | null
+    channelTitle?: string | null
+    publishedAt?: Date | string | null
+    durationSeconds?: number | null
+    overallScore?: number | null
+    relevanceScore?: number | null
+    qualityScore?: number | null
+    engagementScore?: number | null
+    recommendation?: string | null
+    roleSuggestion?: string | null
+    aiSummary?: string | null
+    selected?: boolean | null
+    orderInPlaylist?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type YtCurationCandidateUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationCandidateUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type YtCurationCandidateUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoTitle?: StringFieldUpdateOperationsInput | string
+    videoThumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    channelTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    overallScore?: NullableIntFieldUpdateOperationsInput | number | null
+    relevanceScore?: NullableIntFieldUpdateOperationsInput | number | null
+    qualityScore?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementScore?: NullableIntFieldUpdateOperationsInput | number | null
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSuggestion?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

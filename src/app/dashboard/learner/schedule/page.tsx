@@ -1,22 +1,69 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar as CalendarIcon, Clock, MapPin, Users, ChevronLeft, ChevronRight, Video } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Calendar as CalendarIcon, Clock, MapPin, ChevronLeft, ChevronRight, Video } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export default function SchedulePage() {
     const [currentMonth, setCurrentMonth] = useState(new Date())
 
-    // Placeholder events
+    // Placeholder events - in production, fetch from database based on user's enrolled courses
     const events = [
-        { date: 18, title: "Webinar Digital Governance", time: "09:00 - 11:00", type: "SYNC_ONLINE" },
-        { date: 20, title: "Workshop Kepemimpinan", time: "13:00 - 16:00", type: "FACE_TO_FACE" },
-        { date: 25, title: "Ujian Sertifikasi", time: "10:00 - 12:00", type: "SYNC_ONLINE" },
+        { date: new Date(2026, 0, 18), title: "Webinar Digital Governance", time: "09:00 - 11:00", type: "SYNC_ONLINE" },
+        { date: new Date(2026, 0, 20), title: "Workshop Kepemimpinan", time: "13:00 - 16:00", type: "FACE_TO_FACE" },
+        { date: new Date(2026, 0, 25), title: "Ujian Sertifikasi", time: "10:00 - 12:00", type: "SYNC_ONLINE" },
     ]
 
     const days = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]
+    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+
+    // Get calendar data for current month
+    const year = currentMonth.getFullYear()
+    const month = currentMonth.getMonth()
+
+    // First day of month (0 = Sunday, 1 = Monday, etc.)
+    const firstDayOfMonth = new Date(year, month, 1).getDay()
+
+    // Number of days in current month
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+    // Today's date for highlighting
+    const today = new Date()
+    const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year
+
+    // Navigate months
+    const prevMonth = () => {
+        setCurrentMonth(new Date(year, month - 1, 1))
+    }
+
+    const nextMonth = () => {
+        setCurrentMonth(new Date(year, month + 1, 1))
+    }
+
+    // Check if date has event
+    const getEventForDay = (day: number) => {
+        return events.find(e =>
+            e.date.getDate() === day &&
+            e.date.getMonth() === month &&
+            e.date.getFullYear() === year
+        )
+    }
+
+    // Generate calendar grid
+    const calendarDays = []
+
+    // Empty cells before first day
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        calendarDays.push(null)
+    }
+
+    // Days of month
+    for (let day = 1; day <= daysInMonth; day++) {
+        calendarDays.push(day)
+    }
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -32,10 +79,26 @@ export default function SchedulePage() {
                 {/* Calendar View */}
                 <Card className="lg:col-span-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl p-6 rounded-3xl">
                     <div className="flex items-center justify-between mb-8 px-2">
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Januari 2026</h2>
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                            {monthNames[month]} {year}
+                        </h2>
                         <div className="flex gap-2">
-                            <Button variant="outline" size="icon" className="h-9 w-9 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"><ChevronLeft className="w-4 h-4" /></Button>
-                            <Button variant="outline" size="icon" className="h-9 w-9 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"><ChevronRight className="w-4 h-4" /></Button>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={prevMonth}
+                                className="h-9 w-9 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={nextMonth}
+                                className="h-9 w-9 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </Button>
                         </div>
                     </div>
 
@@ -48,19 +111,33 @@ export default function SchedulePage() {
                     </div>
 
                     <div className="grid grid-cols-7 gap-2">
-                        {Array(31).fill(0).map((_, i) => {
-                            const day = i + 1
-                            const hasEvent = events.find(e => e.date === day)
+                        {calendarDays.map((day, i) => {
+                            if (day === null) {
+                                return <div key={`empty-${i}`} className="aspect-square" />
+                            }
+
+                            const hasEvent = getEventForDay(day)
+                            const isToday = isCurrentMonth && today.getDate() === day
+
                             return (
                                 <div
                                     key={i}
                                     className={cn(
-                                        "aspect-square rounded-2xl border border-slate-200 dark:border-slate-800/50 flex flex-col items-center justify-center relative cursor-pointer group hover:border-blue-500/50 transition-all",
-                                        day === 17 ? "bg-blue-600 border-none shadow-lg shadow-blue-900/30" : "bg-slate-50 dark:bg-slate-950/30",
-                                        hasEvent && "ring-1 ring-blue-500/30"
+                                        "aspect-square rounded-2xl border flex flex-col items-center justify-center relative cursor-pointer group hover:border-blue-500/50 transition-all",
+                                        isToday
+                                            ? "bg-blue-600 border-none shadow-lg shadow-blue-900/30"
+                                            : "bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800/50",
+                                        hasEvent && !isToday && "ring-1 ring-blue-500/30"
                                     )}
                                 >
-                                    <span className={cn("text-lg font-bold", day === 17 ? "text-white" : "text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white")}>{day}</span>
+                                    <span className={cn(
+                                        "text-lg font-bold",
+                                        isToday
+                                            ? "text-white"
+                                            : "text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
+                                    )}>
+                                        {day}
+                                    </span>
                                     {hasEvent && (
                                         <div className="absolute bottom-2 w-1.5 h-1.5 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50" />
                                     )}
@@ -82,8 +159,12 @@ export default function SchedulePage() {
                             <div key={i} className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-xl group cursor-pointer">
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center">
-                                        <span className="text-[8px] font-black uppercase text-slate-500">Jan</span>
-                                        <span className="text-xl font-bold text-slate-900 dark:text-white leading-none">{event.date}</span>
+                                        <span className="text-[8px] font-black uppercase text-slate-500">
+                                            {monthNames[event.date.getMonth()].substring(0, 3)}
+                                        </span>
+                                        <span className="text-xl font-bold text-slate-900 dark:text-white leading-none">
+                                            {event.date.getDate()}
+                                        </span>
                                     </div>
                                     <div className={cn(
                                         "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
@@ -94,7 +175,9 @@ export default function SchedulePage() {
                                 </div>
                                 <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2 leading-tight">
                                     {event.title}
-                                    <span className="block text-[10px] text-slate-500 mt-1 uppercase tracking-wider">{event.type === "SYNC_ONLINE" ? "Virtual Meeting" : "Pertemuan Tatap Muka"}</span>
+                                    <span className="block text-[10px] text-slate-500 mt-1 uppercase tracking-wider">
+                                        {event.type === "SYNC_ONLINE" ? "Virtual Meeting" : "Pertemuan Tatap Muka"}
+                                    </span>
                                 </h4>
                                 <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-800/50">
                                     <div className="flex items-center gap-2 text-[10px] text-slate-400 font-medium">

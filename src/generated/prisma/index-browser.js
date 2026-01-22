@@ -212,7 +212,19 @@ exports.Prisma.CourseScalarFieldEnum = {
   isFeatured: 'isFeatured',
   instructorId: 'instructorId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  courseShortDesc: 'courseShortDesc',
+  courseDesc: 'courseDesc',
+  courseLevel: 'courseLevel',
+  language: 'language',
+  requirements: 'requirements',
+  outcomes: 'outcomes',
+  recommendedNext: 'recommendedNext',
+  jp: 'jp',
+  ytPlaylistId: 'ytPlaylistId',
+  isProcessing: 'isProcessing',
+  processingStatus: 'processingStatus',
+  lastProcessedAt: 'lastProcessedAt'
 };
 
 exports.Prisma.CourseSessionScalarFieldEnum = {
@@ -293,7 +305,13 @@ exports.Prisma.LessonScalarFieldEnum = {
   duration: 'duration',
   moduleId: 'moduleId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  ytVideoId: 'ytVideoId',
+  transcript: 'transcript',
+  summary: 'summary',
+  processingStatus: 'processingStatus',
+  error: 'error',
+  audioFilePath: 'audioFilePath'
 };
 
 exports.Prisma.ModuleScalarFieldEnum = {
@@ -417,6 +435,120 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.YtPlaylistScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  playlistTitle: 'playlistTitle',
+  playlistUrl: 'playlistUrl',
+  author: 'author',
+  totalItems: 'totalItems',
+  totalVideos: 'totalVideos',
+  status: 'status',
+  quizPrepost: 'quizPrepost',
+  hasQuizPrepost: 'hasQuizPrepost',
+  quizPrepostCount: 'quizPrepostCount',
+  courseTitle: 'courseTitle',
+  jp: 'jp',
+  courseShortDesc: 'courseShortDesc',
+  courseDesc: 'courseDesc',
+  courseLevel: 'courseLevel',
+  language: 'language',
+  requirements: 'requirements',
+  outcomes: 'outcomes',
+  metaKeys: 'metaKeys',
+  metaDesc: 'metaDesc',
+  recommendedNext: 'recommendedNext',
+  hasCourseMetadata: 'hasCourseMetadata',
+  metadataGeneratedAt: 'metadataGeneratedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  processedAt: 'processedAt'
+};
+
+exports.Prisma.YtPlaylistItemScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  videoId: 'videoId',
+  videoNo: 'videoNo',
+  videoTitle: 'videoTitle',
+  durationStr: 'durationStr',
+  embedUrl: 'embedUrl',
+  audioPath: 'audioPath',
+  audioFilePath: 'audioFilePath',
+  transcript: 'transcript',
+  hasTranscript: 'hasTranscript',
+  transcriptLength: 'transcriptLength',
+  wordCount: 'wordCount',
+  summary: 'summary',
+  hasSummary: 'hasSummary',
+  refinedTitle: 'refinedTitle',
+  hasRefinedTitle: 'hasRefinedTitle',
+  quizPrepost: 'quizPrepost',
+  quizKnowledgeCheck: 'quizKnowledgeCheck',
+  hasQuizKnowledgeCheck: 'hasQuizKnowledgeCheck',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  receivedAt: 'receivedAt',
+  processedAt: 'processedAt'
+};
+
+exports.Prisma.YtUserSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fullName: 'fullName',
+  email: 'email',
+  role: 'role',
+  emailNotifications: 'emailNotifications',
+  pushNotifications: 'pushNotifications',
+  weeklyDigest: 'weeklyDigest',
+  twoFactorEnabled: 'twoFactorEnabled',
+  newsletterSubscribed: 'newsletterSubscribed',
+  theme: 'theme',
+  language: 'language',
+  autoRefreshInterval: 'autoRefreshInterval',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.YtCurationSessionScalarFieldEnum = {
+  id: 'id',
+  sessionUuid: 'sessionUuid',
+  topic: 'topic',
+  language: 'language',
+  level: 'level',
+  targetDurationMin: 'targetDurationMin',
+  includeChannels: 'includeChannels',
+  excludeChannels: 'excludeChannels',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  processedAt: 'processedAt'
+};
+
+exports.Prisma.YtCurationCandidateScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  videoId: 'videoId',
+  videoTitle: 'videoTitle',
+  videoThumbnail: 'videoThumbnail',
+  channelTitle: 'channelTitle',
+  publishedAt: 'publishedAt',
+  durationSeconds: 'durationSeconds',
+  overallScore: 'overallScore',
+  relevanceScore: 'relevanceScore',
+  qualityScore: 'qualityScore',
+  engagementScore: 'engagementScore',
+  recommendation: 'recommendation',
+  roleSuggestion: 'roleSuggestion',
+  aiSummary: 'aiSummary',
+  selected: 'selected',
+  orderInPlaylist: 'orderInPlaylist',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserBadgeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -428,6 +560,18 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
   expires: 'expires'
+};
+
+exports.Prisma.ProcessingJobScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  targetId: 'targetId',
+  payload: 'payload',
+  error: 'error',
+  retries: 'retries',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -589,8 +733,14 @@ exports.Prisma.ModelName = {
   Session: 'Session',
   SystemSetting: 'SystemSetting',
   User: 'User',
+  YtPlaylist: 'YtPlaylist',
+  YtPlaylistItem: 'YtPlaylistItem',
+  YtUserSettings: 'YtUserSettings',
+  YtCurationSession: 'YtCurationSession',
+  YtCurationCandidate: 'YtCurationCandidate',
   UserBadge: 'UserBadge',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  ProcessingJob: 'ProcessingJob'
 };
 
 /**

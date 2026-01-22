@@ -10,6 +10,10 @@ import { CreateModuleDialog } from "@/components/courses/create-module-dialog"
 import { CreateLessonDialog } from "@/components/courses/create-lesson-dialog"
 import { CreateQuizDialog } from "@/components/quizzes/create-quiz-dialog"
 import { EditCourseInfoDialog } from "@/components/courses/edit-course-info-dialog"
+import { EditModuleDialog } from "@/components/courses/edit-module-dialog"
+import { EditLessonDialog } from "@/components/courses/edit-lesson-dialog"
+import { PublishToggle } from "@/components/courses/publish-toggle"
+import { ThumbnailManager } from "@/components/courses/thumbnail-manager"
 
 interface EditCoursePageProps {
     params: Promise<{
@@ -51,6 +55,20 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
         redirect("/dashboard/courses")
     }
 
+    // Get YouTube thumbnail if no thumbnail is stored but course has ytPlaylistId
+    let effectiveThumbnail = course.thumbnail
+    if (!effectiveThumbnail && course.ytPlaylistId) {
+        // Get first video from playlist for thumbnail
+        const firstVideo = await prisma.ytPlaylistItem.findFirst({
+            where: { playlistId: course.ytPlaylistId },
+            orderBy: { videoNo: 'asc' },
+            select: { videoId: true }
+        })
+        if (firstVideo) {
+            effectiveThumbnail = `https://i.ytimg.com/vi/${firstVideo.videoId}/maxresdefault.jpg`
+        }
+    }
+
     return (
         <div className="min-h-screen bg-white dark:bg-slate-900 pt-24 pb-20">
             <div className="container max-w-5xl mx-auto px-4">
@@ -64,6 +82,7 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
                         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">{course.title}</h1>
                         <p className="text-slate-500 dark:text-slate-400">Edit kursus dan kelola modul & materi</p>
                     </div>
+                    <PublishToggle courseId={course.id} isPublished={course.isPublished} />
                 </div>
 
                 <div className="space-y-6">
@@ -94,6 +113,14 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {/* Thumbnail Manager */}
+                    <ThumbnailManager
+                        courseId={course.id}
+                        courseTitle={course.title}
+                        courseDescription={course.description}
+                        currentThumbnail={effectiveThumbnail}
+                    />
 
                     {/* Modules */}
                     <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
@@ -129,9 +156,7 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <Button variant="outline" size="sm" className="border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300">
-                                                    Edit
-                                                </Button>
+                                                <EditModuleDialog module={module} />
                                             </div>
                                             <div className="ml-11 space-y-2">
                                                 {module.Lesson.map((lesson) => (
@@ -140,7 +165,10 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
                                                             <span className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-600" />
                                                             {lesson.title}
                                                         </div>
-                                                        <span className="text-xs text-slate-500">{lesson.contentType}</span>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-xs text-slate-500">{lesson.contentType}</span>
+                                                            <EditLessonDialog lesson={lesson} />
+                                                        </div>
                                                     </div>
                                                 ))}
                                                 <CreateLessonDialog

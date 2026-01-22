@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { awardPoints, updateActivityStreak } from "./gamification"
+import { sendStatementAsync, buildActor, buildActivity, buildResult } from "@/lib/xapi"
+import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 /**
  * Mark a lesson as completed
@@ -16,7 +18,7 @@ export async function markLessonComplete(lessonId: string) {
 
     try {
         // Check if already completed
-        const existing = await prisma.lessonProgress.findUnique({
+        const existing = await prisma.progress.findUnique({
             where: {
                 userId_lessonId: {
                     userId: session.user.id,
@@ -29,8 +31,14 @@ export async function markLessonComplete(lessonId: string) {
             return { success: true, message: "Already completed" }
         }
 
+        // Get lesson and course info for xAPI
+        const lesson = await prisma.lesson.findUnique({
+            where: { id: lessonId },
+            include: { Module: { include: { Course: { select: { slug: true, title: true } } } } }
+        })
+
         // Mark as complete
-        await prisma.lessonProgress.upsert({
+        await prisma.progress.upsert({
             where: {
                 userId_lessonId: {
                     userId: session.user.id,
@@ -38,20 +46,38 @@ export async function markLessonComplete(lessonId: string) {
                 },
             },
             update: {
+                isCompleted: true,
                 completedAt: new Date(),
-                lastAccessedAt: new Date(),
+                updatedAt: new Date(),
             },
             create: {
+                id: crypto.randomUUID(),
                 userId: session.user.id,
                 lessonId,
+                isCompleted: true,
                 completedAt: new Date(),
-                lastAccessedAt: new Date(),
+                updatedAt: new Date(),
             },
         })
 
         // Gamification: Award points and update streak
         await awardPoints(session.user.id, "LESSON_COMPLETE")
         await updateActivityStreak(session.user.id)
+
+        // Send xAPI statement for lesson completion
+        if (lesson) {
+            sendStatementAsync({
+                actor: buildActor(session.user.email || '', session.user.name),
+                verb: VERBS.completed,
+                object: buildActivity(
+                    `${PLATFORM_IRI}/courses/${lesson.Module.Course.slug}/lessons/${lessonId}`,
+                    ACTIVITY_TYPES.lesson,
+                    lesson.title,
+                    `Lesson in ${lesson.Module.Course.title}`
+                ),
+                result: buildResult({ completion: true })
+            })
+        }
 
         revalidatePath(`/courses/[slug]/learn`, "page")
         return { success: true }
@@ -74,7 +100,7 @@ export async function updateLessonProgress(
     }
 
     try {
-        await prisma.lessonProgress.upsert({
+        await prisma.progress.upsert({
             where: {
                 userId_lessonId: {
                     userId: session.user.id,
@@ -82,12 +108,13 @@ export async function updateLessonProgress(
                 },
             },
             update: {
-                lastAccessedAt: progressData.lastAccessedAt || new Date(),
+                updatedAt: progressData.lastAccessedAt || new Date(),
             },
             create: {
+                id: crypto.randomUUID(),
                 userId: session.user.id,
                 lessonId,
-                lastAccessedAt: progressData.lastAccessedAt || new Date(),
+                updatedAt: progressData.lastAccessedAt || new Date(),
             },
         })
 

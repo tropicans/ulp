@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { CourseSidebar } from "@/components/learning/course-sidebar"
+import { MobileSidebar } from "@/components/learning/mobile-sidebar"
 import { LessonViewer } from "@/components/learning/lesson-viewer"
 import { QuizResult } from "@/components/quizzes/quiz-result"
 import { getAttemptResult } from "@/lib/actions/quizzes"
@@ -69,6 +70,27 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         redirect(`/courses/${slug}`)
     }
 
+    // Fetch refined titles and durations from yt_playlist_items for lessons with ytVideoId
+    const allLessonsWithYtId = course.Module.flatMap(m => m.Lesson.filter(l => l.ytVideoId))
+    const ytVideoIds = allLessonsWithYtId.map(l => l.ytVideoId).filter((id): id is string => !!id)
+
+    const ytItems = ytVideoIds.length > 0 ? await prisma.ytPlaylistItem.findMany({
+        where: { videoId: { in: ytVideoIds } },
+        select: { videoId: true, refinedTitle: true, durationStr: true }
+    }) : []
+
+    // Create maps of videoId -> refinedTitle and videoId -> durationStr
+    const refinedTitleMap: Record<string, string> = {}
+    const durationMap: Record<string, string> = {}
+    ytItems.forEach(item => {
+        if (item.refinedTitle) {
+            refinedTitleMap[item.videoId] = item.refinedTitle
+        }
+        if (item.durationStr) {
+            durationMap[item.videoId] = item.durationStr
+        }
+    })
+
     // Calculate overall progress for sidebar
     const completedLessons = course.Module.flatMap(m =>
         m.Lesson.filter(l => l.Progress && l.Progress.length > 0 && !!l.Progress[0].completedAt).map(l => l.id)
@@ -78,6 +100,7 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         completedLessons,
         sessions: course.CourseSession,
         deliveryMode: course.deliveryMode,
+        refinedTitleMap,
     }
 
     const currentLessonId = resolvedSearchParams.lesson
@@ -86,13 +109,10 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
 
     let currentLesson = null
     let currentQuiz = null
-    let attemptData = null
+    let attemptData: Awaited<ReturnType<typeof getAttemptResult>> = null
 
     if (attemptId) {
-        const result = await getAttemptResult(attemptId)
-        if (result && 'attempt' in result && result.attempt) {
-            attemptData = result.attempt
-        }
+        attemptData = await getAttemptResult(attemptId)
     }
 
     if (currentQuizId) {
@@ -109,8 +129,48 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         }
     }
 
-    // Default to first lesson
-    if (!currentLesson && !currentQuiz && course.Module[0]?.Lesson[0]) {
+    // Find PRETEST and POSTTEST
+    let pretestQuiz = null
+    let posttestQuiz = null
+    let pretestCompleted = false
+    let allLessonsCompleted = false
+
+    for (const module of course.Module) {
+        const pretest = module.Quiz.find(q => q.type === 'PRETEST')
+        if (pretest) pretestQuiz = pretest
+
+        const posttest = module.Quiz.find(q => q.type === 'POSTTEST')
+        if (posttest) posttestQuiz = posttest
+    }
+
+    // Check if user completed pretest
+    if (pretestQuiz) {
+        const pretestAttempt = await prisma.quizAttempt.findFirst({
+            where: {
+                quizId: pretestQuiz.id,
+                userId: session.user.id,
+                submittedAt: { not: null }
+            }
+        })
+        pretestCompleted = !!pretestAttempt
+    }
+
+    // Check if all lessons are completed
+    const totalLessons = course.Module.flatMap(m => m.Lesson).length
+    allLessonsCompleted = completedLessons.length === totalLessons && totalLessons > 0
+
+    // ENFORCE PRETEST: If pretest exists and not completed, force user to pretest
+    if (pretestQuiz && !pretestCompleted && !currentQuizId && !attemptId) {
+        currentQuiz = pretestQuiz
+        currentLesson = null
+    }
+    // SHOW POSTTEST: If all lessons completed and posttest exists, show posttest
+    else if (allLessonsCompleted && posttestQuiz && !currentLessonId && !currentQuizId && !attemptId) {
+        currentQuiz = posttestQuiz
+        currentLesson = null
+    }
+    // Default to first lesson (only if pretest is completed or doesn't exist)
+    else if (!currentLesson && !currentQuiz && course.Module[0]?.Lesson[0]) {
         currentLesson = course.Module[0].Lesson[0]
     }
 
@@ -134,30 +194,79 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
 
     const isCompleted = currentLesson ? currentLesson.Progress?.[0]?.completedAt : false
 
+    // Flatten all lessons to calculate next lesson
+    const allLessons = course.Module.flatMap(m => m.Lesson)
+    const currentLessonIndex = currentLesson ? allLessons.findIndex(l => l.id === currentLesson.id) : -1
+    const nextLesson = currentLessonIndex >= 0 && currentLessonIndex < allLessons.length - 1
+        ? allLessons[currentLessonIndex + 1]
+        : null
+
+    // Fetch knowledge check and summary from yt_playlist_items if lesson has ytVideoId
+    let knowledgeCheck = null
+    let videoSummary: string | null = null
+    if (currentLesson?.ytVideoId) {
+        const ytItem = await prisma.ytPlaylistItem.findFirst({
+            where: { videoId: currentLesson.ytVideoId },
+            select: { quizKnowledgeCheck: true, summary: true }
+        })
+        if (ytItem?.quizKnowledgeCheck) {
+            try {
+                knowledgeCheck = JSON.parse(ytItem.quizKnowledgeCheck)
+            } catch (e) {
+                console.error('Failed to parse knowledge check:', e)
+            }
+        }
+        if (ytItem?.summary) {
+            videoSummary = ytItem.summary
+        }
+    }
+
+    // Check quiz attempts if viewing a quiz
+    let attemptCount = 0
+    let hasExceededAttempts = false
+    let remainingAttempts = 0
+
+    if (currentQuiz) {
+        attemptCount = await prisma.quizAttempt.count({
+            where: {
+                quizId: currentQuiz.id,
+                userId: session.user.id
+            }
+        })
+        hasExceededAttempts = attemptCount >= currentQuiz.maxAttempts
+        remainingAttempts = currentQuiz.maxAttempts - attemptCount
+    }
+
     return (
         <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex flex-col">
             {/* Header */}
-            <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 px-4 md:px-6 flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <header className="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 px-4 md:px-6 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    {/* Mobile Hamburger Menu */}
+                    <MobileSidebar
+                        course={course}
+                        modules={course.Module as any}
+                        currentLessonId={currentLesson?.id}
+                        currentQuizId={currentQuiz?.id}
+                        progress={sidebarProgress}
+                    />
+
                     <Button asChild variant="ghost" size="sm" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
                         <Link href={`/courses/${slug}`}>
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Kembali
+                            <ArrowLeft className="w-4 h-4 mr-1" />
+                            <span className="hidden sm:inline">Kembali</span>
                         </Link>
                     </Button>
-                    <div className="hidden sm:block">
+                    <div className="hidden md:block border-l border-slate-200 dark:border-slate-700 pl-3">
                         <h1 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">{course.title}</h1>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-none mt-1">
-                            Instruktur: {course.User.name}
-                        </p>
                     </div>
                 </div>
             </header>
 
             {/* Main Layout */}
             <div className="flex flex-1 overflow-hidden">
-                {/* Desktop Sidebar */}
-                <aside className="w-80 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hidden lg:block overflow-y-auto">
+                {/* Desktop Sidebar - reduced width */}
+                <aside className="w-64 xl:w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hidden lg:block overflow-y-auto flex-shrink-0">
                     <CourseSidebar
                         course={course}
                         modules={course.Module as any}
@@ -167,9 +276,9 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
                     />
                 </aside>
 
-                {/* Content Area */}
+                {/* Content Area - increased max width */}
                 <main className="flex-1 overflow-y-auto">
-                    <div className="container max-w-4xl mx-auto px-4 py-8">
+                    <div className="max-w-5xl mx-auto px-4 lg:px-8 py-6">
                         {attemptData ? (
                             <QuizResult
                                 attempt={attemptData}
@@ -178,6 +287,25 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
                             />
                         ) : currentQuiz ? (
                             <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                {/* Error Message if max attempts */}
+                                {hasExceededAttempts && (
+                                    <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-900/20 border-2 border-red-500/30">
+                                        <div className="flex items-start gap-4">
+                                            <div className="p-2 rounded-lg bg-red-500/20">
+                                                <FileQuestion className="w-6 h-6 text-red-600 dark:text-red-400" />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-red-900 dark:text-red-100 mb-2">
+                                                    Batas Percobaan Tercapai
+                                                </h3>
+                                                <p className="text-sm text-red-700 dark:text-red-300">
+                                                    Anda telah menggunakan semua {currentQuiz.maxAttempts} percobaan untuk {currentQuiz.type === 'PRETEST' ? 'pretest' : 'posttest'} ini.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center shadow-2xl relative overflow-hidden">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-3xl -mr-16 -mt-16 rounded-full" />
                                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 blur-3xl -ml-16 -mb-16 rounded-full" />
@@ -204,22 +332,40 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
                                         </div>
                                     </div>
 
-                                    <Button size="lg" className="h-14 w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-purple-900/20 transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
-                                        <Link href={`/courses/${slug}/quizzes/${currentQuiz.id}/take`}>
-                                            Mulai Kerjakan Sekarang
-                                        </Link>
-                                    </Button>
+                                    {hasExceededAttempts ? (
+                                        <Button size="lg" className="h-14 w-full bg-slate-300 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-bold rounded-2xl cursor-not-allowed" disabled>
+                                            Batas Percobaan Tercapai
+                                        </Button>
+                                    ) : (
+                                        <Button size="lg" className="h-14 w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-purple-900/20 transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
+                                            <Link href={`/courses/${slug}/quizzes/${currentQuiz.id}/take`}>
+                                                Mulai Kerjakan Sekarang
+                                            </Link>
+                                        </Button>
+                                    )}
                                 </div>
 
                                 <div className="flex items-center gap-3 p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-blue-400 text-sm">
                                     <BookOpen className="w-5 h-5 flex-shrink-0" />
-                                    <p>Anda dapat mengulang kuis ini hingga <strong>{currentQuiz.maxAttempts} kali</strong>.</p>
+                                    <p>
+                                        {hasExceededAttempts
+                                            ? `Anda telah menggunakan semua percobaan (${currentQuiz.maxAttempts}x).`
+                                            : `Sisa percobaan: ${remainingAttempts}x dari ${currentQuiz.maxAttempts}x total.`
+                                        }
+                                    </p>
                                 </div>
                             </div>
                         ) : (
                             <LessonViewer
+                                key={currentLesson?.id || 'lesson'}
                                 lesson={currentLesson as any}
                                 isCompleted={!!isCompleted}
+                                knowledgeCheck={knowledgeCheck}
+                                videoSummary={videoSummary}
+                                videoDuration={currentLesson?.ytVideoId ? durationMap[currentLesson.ytVideoId] : null}
+                                refinedTitle={currentLesson?.ytVideoId ? refinedTitleMap[currentLesson.ytVideoId] : null}
+                                nextLessonId={nextLesson?.id || null}
+                                courseSlug={slug}
                             />
                         )}
                     </div>

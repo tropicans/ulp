@@ -1,0 +1,35 @@
+=== Courses with ytPlaylistId ===
+
+1. Angkie Yudistia  | Impactful Sociopreneurship
+   Playlist ID: PLLkAkU_XmXbS2o2AJkL4NdEmFp4zttaGc
+
+2. Harri Firmansyah | Passion at Work
+   Playlist ID: PLLkAkU_XmXbTIHPx8UiHG-2U9jq2CfcYX
+
+3. Grok Image dan Video Generator
+   Playlist ID: PLL69wRvN8X0ugWs2N6plYx_XhX4Tt1Ley
+
+4. Jiwa Korsa Aparatur Sipil Negara Kementerian Sekretariat Negara
+   Playlist ID: PLLkAkU_XmXbQTutTfZymYOtszMYoShbvp
+
+5. Setneg Serial Lecture | Andien Aisyah | Gaya Hidup Sehat & Berkelanjutan
+   Playlist ID: PLLkAkU_XmXbSxf8I538WDtpQlnoehBrXv
+
+6. The role of paradigms in research design
+   Playlist ID: PLLkAkU_XmXbTpnZwOA63NH_5CK26pvpS1
+
+7. Tara de Thouars  | Managing Work-Life Balance
+   Playlist ID: PLLkAkU_XmXbSASwitfcU8CMvO6F1tHGIq
+
+8. Sabrang M.D.P. / Noe Letto  | Unleash Your Creativity
+   Playlist ID: PLLkAkU_XmXbSOjuPL2X1ltHr5WlrFjpqD
+
+9. nas sendiri
+   Playlist ID: PLdnJRYgyrrOdObKZe6UmUoIas2Xk4IDl2
+
+10. Curated: Prompt Engineering
+   Playlist ID: curation-565fb60f-aa8b-41a4-9168-77c978664f3e
+
+
+Playlist IDs for SQL query:
+'PLLkAkU_XmXbS2o2AJkL4NdEmFp4zttaGc', 'PLLkAkU_XmXbTIHPx8UiHG-2U9jq2CfcYX', 'PLL69wRvN8X0ugWs2N6plYx_XhX4Tt1Ley', 'PLLkAkU_XmXbQTutTfZymYOtszMYoShbvp', 'PLLkAkU_XmXbSxf8I538WDtpQlnoehBrXv', 'PLLkAkU_XmXbTpnZwOA63NH_5CK26pvpS1', 'PLLkAkU_XmXbSASwitfcU8CMvO6F1tHGIq', 'PLLkAkU_XmXbSOjuPL2X1ltHr5WlrFjpqD', 'PLdnJRYgyrrOdObKZe6UmUoIas2Xk4IDl2', 'curation-565fb60f-aa8b-41a4-9168-77c978664f3e'

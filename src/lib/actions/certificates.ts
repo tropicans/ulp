@@ -5,6 +5,9 @@ import { auth } from "@/lib/auth"
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 import { revalidatePath } from "next/cache"
 import QRCode from "qrcode"
+import { sendStatementAsync, buildActor, buildActivity } from "@/lib/xapi"
+import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
+import { XAPIStatement } from "@/lib/xapi/types"
 
 /**
  * Generate a certificate for a user completing a course
@@ -70,6 +73,38 @@ export async function generateCourseCertificate(courseId: string) {
             }
         })
 
+        // 3. Send xAPI statement for certificate earned
+        if (session.user.email) {
+            const statement: XAPIStatement = {
+                actor: buildActor(session.user.email, session.user.name),
+                verb: VERBS.earned,
+                object: buildActivity(
+                    `${PLATFORM_IRI}/certificates/${certificate.id}`,
+                    ACTIVITY_TYPES.certificate,
+                    `Certificate: ${course.title}`
+                ),
+                result: {
+                    completion: true,
+                    extensions: {
+                        "https://titian.setneg.go.id/xapi/extensions/certificate-no": certificateNo,
+                        "https://titian.setneg.go.id/xapi/extensions/verification-code": verificationCode
+                    }
+                },
+                context: {
+                    contextActivities: {
+                        parent: [{
+                            id: `${PLATFORM_IRI}/courses/${course.slug}`,
+                            definition: {
+                                type: ACTIVITY_TYPES.course,
+                                name: { id: course.title }
+                            }
+                        }]
+                    }
+                }
+            }
+            sendStatementAsync(statement)
+        }
+
         return { success: true, certificateId: certificate.id }
     } catch (error) {
         console.error("Error generating certificate:", error)
@@ -130,8 +165,9 @@ export async function downloadCertificatePDF(certificateId: string) {
         })
 
         // Student Name
-        const nameWidth = helveticaBold.widthOfTextAtSize(cert.User.name.toUpperCase(), 36)
-        page.drawText(cert.User.name.toUpperCase(), {
+        const userName = cert.User.name || "Peserta"
+        const nameWidth = helveticaBold.widthOfTextAtSize(userName.toUpperCase(), 36)
+        page.drawText(userName.toUpperCase(), {
             x: width / 2 - nameWidth / 2,
             y: height - 210,
             size: 36,
@@ -189,7 +225,7 @@ export async function downloadCertificatePDF(certificateId: string) {
             size: 12,
             font: helveticaBold,
         })
-        page.drawText(cert.Course.User.name, {
+        page.drawText(cert.Course.User.name || "Instruktur", {
             x: 100,
             y: 55,
             size: 12,

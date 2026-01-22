@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/navigation/theme-toggle";
 
 interface NavigationItem {
     label: string;
@@ -96,11 +97,14 @@ export function PulseFitHero({
                         <button
                             key={index}
                             onClick={item.onClick}
-                            className="flex flex-row items-center gap-1 font-sans text-base font-normal text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
+                            className="relative flex flex-row items-center gap-1 font-sans text-base font-normal text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all group"
                         >
-                            {item.label}
+                            <span className="relative">
+                                {item.label}
+                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300" />
+                            </span>
                             {item.hasDropdown && (
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="group-hover:translate-y-0.5 transition-transform">
                                     <path
                                         d="M4 6L8 10L12 6"
                                         stroke="currentColor"
@@ -114,15 +118,18 @@ export function PulseFitHero({
                     ))}
                 </nav>
 
-                {/* CTA Button */}
-                {ctaButton && (
-                    <button
-                        onClick={ctaButton.onClick}
-                        className="px-6 py-3 rounded-full font-sans text-base font-medium text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm hover:scale-105 transition-all"
-                    >
-                        {ctaButton.label}
-                    </button>
-                )}
+                {/* Theme Toggle & CTA Button */}
+                <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    {ctaButton && (
+                        <button
+                            onClick={ctaButton.onClick}
+                            className="px-6 py-3 rounded-full font-sans text-base font-medium text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm hover:scale-105 transition-all"
+                        >
+                            {ctaButton.label}
+                        </button>
+                    )}
+                </div>
             </motion.header>
 
             {/* Main Content */}
@@ -230,69 +237,43 @@ export function PulseFitHero({
                 </div>
             )}
 
-            {/* Program Cards Carousel */}
+            {/* Program Cards Carousel - Pure CSS for smooth performance */}
             {programs.length > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, y: 100 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                    className="relative z-10 w-full overflow-hidden"
-                    style={{
-                        paddingTop: "60px",
-                        paddingBottom: "60px",
-                    }}
+                <div
+                    className="relative z-10 w-full overflow-hidden py-16"
                 >
                     {/* Gradient Overlays */}
                     <div
-                        className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-[150px] bg-gradient-to-r from-background to-transparent"
+                        className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-[150px] bg-gradient-to-r from-white dark:from-slate-950 to-transparent"
                     />
                     <div
-                        className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-[150px] bg-gradient-to-l from-background to-transparent"
+                        className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-[150px] bg-gradient-to-l from-white dark:from-slate-950 to-transparent"
                     />
 
-                    {/* Scrolling Container */}
-                    <motion.div
-                        className="flex items-center"
-                        animate={{
-                            x: [0, -((programs.length * 380) / 2)],
-                        }}
-                        transition={{
-                            x: {
-                                repeat: Infinity,
-                                repeatType: "loop",
-                                duration: programs.length * 3,
-                                ease: "linear",
-                            },
-                        }}
+                    {/* Scrolling Container - Pure CSS animation */}
+                    <div
+                        className="flex items-center gap-6 pl-6 animate-marquee"
                         style={{
-                            gap: "24px",
-                            paddingLeft: "24px",
+                            width: "fit-content",
                         }}
                     >
                         {/* Duplicate programs for seamless loop */}
                         {[...programs, ...programs].map((program, index) => (
-                            <motion.div
+                            <div
                                 key={index}
-                                whileHover={{ scale: 1.05, y: -10 }}
-                                transition={{ duration: 0.3 }}
                                 onClick={program.onClick}
-                                className="flex-shrink-0 cursor-pointer relative overflow-hidden"
+                                className="flex-shrink-0 cursor-pointer relative overflow-hidden rounded-3xl shadow-2xl hover:scale-105 hover:-translate-y-2 transition-transform duration-300 ease-out"
                                 style={{
                                     width: "356px",
                                     height: "480px",
-                                    borderRadius: "24px",
-                                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
                                 }}
                             >
                                 {/* Image */}
                                 <img
                                     src={program.image}
                                     alt={program.title}
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "cover",
-                                    }}
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
                                 />
 
                                 {/* Gradient Overlay */}
@@ -302,6 +283,7 @@ export function PulseFitHero({
                                         background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%)",
                                     }}
                                 />
+
 
                                 {/* Text Content */}
                                 <div
@@ -336,10 +318,10 @@ export function PulseFitHero({
                                         {program.title}
                                     </h3>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             )}
         </section>
     );

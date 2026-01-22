@@ -104,30 +104,47 @@ model Certificate {
 }
 
 model Course {
-  id            String          @id
-  title         String
-  slug          String          @unique
-  description   String
-  thumbnail     String?
-  deliveryMode  DeliveryMode    @default(ASYNC_ONLINE)
-  difficulty    Difficulty      @default(BEGINNER)
-  category      String?
-  tags          String[]
-  capacity      Int?
-  duration      Int?
-  startDate     DateTime?
-  endDate       DateTime?
-  isPublished   Boolean         @default(false)
-  isFeatured    Boolean         @default(false)
-  instructorId  String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  id           String       @id
+  title        String
+  slug         String       @unique
+  description  String
+  thumbnail    String?
+  deliveryMode DeliveryMode @default(ASYNC_ONLINE)
+  difficulty   Difficulty   @default(BEGINNER)
+  category     String?
+  tags         String[]
+  capacity     Int?
+  duration     Int?
+  startDate    DateTime?
+  endDate      DateTime?
+  isPublished  Boolean      @default(false)
+  isFeatured   Boolean      @default(false)
+  instructorId String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime
+
+  // Course Metadata Fields
+  courseShortDesc String?  @map("course_short_desc")
+  courseDesc      String?  @map("course_desc")
+  courseLevel     String?  @default("Beginner") @map("course_level")
+  language        String?  @default("Bahasa Indonesia")
+  requirements    String?
+  outcomes        String?
+  recommendedNext String?  @map("recommended_next")
+  jp              Decimal? @db.Decimal(8, 2)
+
   Certificate   Certificate[]
   User          User            @relation(fields: [instructorId], references: [id])
   CourseSession CourseSession[]
   Enrollment    Enrollment[]
   Forum         Forum[]
   Module        Module[]
+
+  // YouTube Integration Fields
+  ytPlaylistId     String?   @unique
+  isProcessing     Boolean   @default(false)
+  processingStatus String? // 'pending', 'processing', 'completed', 'failed'
+  lastProcessedAt  DateTime?
 
   @@index([deliveryMode])
   @@index([instructorId])
@@ -240,6 +257,14 @@ model Lesson {
   updatedAt   DateTime
   Module      Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   Progress    Progress[]
+
+  // YouTube Integration Fields
+  ytVideoId        String?
+  transcript       String?
+  summary          String?
+  processingStatus String? // 'pending', 'processing', 'completed', 'failed'
+  error            String?
+  audioFilePath    String? // Internal path to extracted audio
 
   @@index([moduleId])
 }
@@ -415,6 +440,134 @@ model User {
   @@index([unitKerja])
 }
 
+model YtPlaylist {
+  id                  String    @id @default(uuid()) @db.Uuid
+  playlistId          String    @unique @map("playlist_id")
+  playlistTitle       String    @map("playlist_title")
+  playlistUrl         String    @unique @map("playlist_url")
+  author              String?
+  totalItems          Int?      @default(0) @map("total_items")
+  totalVideos         Int?      @default(0) @map("total_videos")
+  status              String?   @default("processing")
+  quizPrepost         String?   @map("quiz_prepost")
+  hasQuizPrepost      Boolean?  @default(false) @map("has_quiz_prepost")
+  quizPrepostCount    Int?      @default(0) @map("quiz_prepost_count")
+  courseTitle         String?   @map("course_title")
+  jp                  Decimal?  @db.Decimal(8, 2)
+  courseShortDesc     String?   @map("course_short_desc") @db.VarChar(500)
+  courseDesc          String?   @map("course_desc")
+  courseLevel         String?   @default("Beginner") @map("course_level") @db.VarChar(20)
+  language            String?   @default("Bahasa Indonesia")
+  requirements        String?
+  outcomes            String?
+  metaKeys            String?   @map("meta_keys") @db.VarChar(300)
+  metaDesc            String?   @map("meta_desc") @db.VarChar(160)
+  recommendedNext     String?   @map("recommended_next_courses")
+  hasCourseMetadata   Boolean?  @default(false) @map("has_course_metadata")
+  metadataGeneratedAt DateTime? @map("metadata_generated_at") @db.Timestamptz
+  createdAt           DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime? @default(now()) @map("updated_at") @db.Timestamptz
+  processedAt         DateTime? @map("processed_at") @db.Timestamptz
+
+  @@map("yt_playlists")
+}
+
+model YtPlaylistItem {
+  id                    String    @id @default(uuid()) @db.Uuid
+  playlistId            String    @map("playlist_id")
+  videoId               String    @map("video_id")
+  videoNo               Int       @map("video_no")
+  videoTitle            String    @map("video_title")
+  durationStr           String?   @map("duration_str")
+  embedUrl              String?   @map("embed_url")
+  audioPath             String?   @map("audio_path")
+  audioFilePath         String?   @map("audio_file_path")
+  transcript            String?
+  hasTranscript         Boolean?  @default(false) @map("has_transcript")
+  transcriptLength      Int?      @map("transcript_length")
+  wordCount             Int?      @map("word_count")
+  summary               String?
+  hasSummary            Boolean?  @default(false) @map("has_summary")
+  refinedTitle          String?   @map("refined_title")
+  hasRefinedTitle       Boolean?  @default(false) @map("has_refined_title")
+  quizPrepost           String?   @map("quiz_prepost")
+  quizKnowledgeCheck    String?   @map("quiz_knowledge_check")
+  hasQuizKnowledgeCheck Boolean?  @default(false) @map("has_quiz_knowledge_check")
+  status                String?   @default("pending")
+  errorMessage          String?   @map("error_message")
+  createdAt             DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime? @default(now()) @map("updated_at") @db.Timestamptz
+  receivedAt            DateTime? @map("received_at") @db.Timestamptz
+  processedAt           DateTime? @map("processed_at") @db.Timestamptz
+
+  @@unique([playlistId, videoNo])
+  @@map("yt_playlist_items")
+}
+
+model YtUserSettings {
+  id                   String    @id @default(uuid()) @db.Uuid
+  userId               String    @unique @map("user_id")
+  fullName             String?   @map("full_name")
+  email                String?
+  role                 String?   @default("user")
+  emailNotifications   Boolean?  @default(true) @map("email_notifications")
+  pushNotifications    Boolean?  @default(false) @map("push_notifications")
+  weeklyDigest         Boolean?  @default(false) @map("weekly_digest")
+  twoFactorEnabled     Boolean?  @default(false) @map("two_factor_enabled")
+  newsletterSubscribed Boolean?  @default(true) @map("newsletter_subscribed")
+  theme                String?   @default("light")
+  language             String?   @default("en")
+  autoRefreshInterval  Int?      @default(10000) @map("auto_refresh_interval")
+  createdAt            DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime? @default(now()) @map("updated_at") @db.Timestamptz
+
+  @@map("user_settings")
+}
+
+model YtCurationSession {
+  id                String                @id @default(uuid()) @db.Uuid
+  sessionUuid       String                @unique @map("session_uuid")
+  topic             String
+  language          String?               @default("Bahasa Indonesia")
+  level             String?               @default("All levels")
+  targetDurationMin Int                   @default(60) @map("target_duration_min")
+  includeChannels   String?               @map("include_channels")
+  excludeChannels   String?               @map("exclude_channels")
+  status            String                @default("searching")
+  createdAt         DateTime?             @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime?             @default(now()) @map("updated_at") @db.Timestamptz
+  processedAt       DateTime?             @map("processed_at") @db.Timestamptz
+  candidates        YtCurationCandidate[]
+
+  @@map("yt_curation_sessions")
+}
+
+model YtCurationCandidate {
+  id              String    @id @default(uuid()) @db.Uuid
+  sessionId       String    @map("session_id") @db.Uuid
+  videoId         String    @map("video_id")
+  videoTitle      String    @map("video_title")
+  videoThumbnail  String?   @map("video_thumbnail")
+  channelTitle    String?   @map("channel_title")
+  publishedAt     DateTime? @map("published_at") @db.Timestamptz
+  durationSeconds Int?      @map("duration_seconds")
+  overallScore    Int?      @default(0) @map("overall_score")
+  relevanceScore  Int?      @default(0) @map("relevance_score")
+  qualityScore    Int?      @default(0) @map("quality_score")
+  engagementScore Int?      @default(0) @map("engagement_score")
+  recommendation  String?   @default("maybe")
+  roleSuggestion  String?   @map("role_suggestion")
+  aiSummary       String?   @map("ai_summary")
+  selected        Boolean?  @default(false)
+  orderInPlaylist Int?      @map("order_in_playlist")
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime? @default(now()) @map("updated_at") @db.Timestamptz
+
+  session YtCurationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("yt_curation_candidates")
+}
+
 model UserBadge {
   id       String   @id
   userId   String
@@ -432,6 +585,21 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model ProcessingJob {
+  id        String   @id @default(cuid())
+  type      String // 'YOUTUBE_IMPORT', 'TRANSCRIPTION', 'CONTENT_GEN'
+  status    String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  targetId  String // CourseId or LessonId
+  payload   Json?
+  error     String?
+  retries   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([targetId])
 }
 
 enum AttendanceMethod {

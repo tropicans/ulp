@@ -26,6 +26,7 @@ import {
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { deliveryModeConfig } from "@/lib/utils/delivery-modes"
+import { DeliveryMode } from "@/generated/prisma"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { SessionInfoCard } from "@/components/sessions/session-info-card"
@@ -157,7 +158,7 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                         <motion.div variants={item} className="space-y-6">
                             <div className="flex flex-wrap gap-3">
                                 <Badge className="bg-blue-600/10 text-blue-400 border-blue-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest">
-                                    {deliveryModeConfig[course.deliveryMode].label}
+                                    {deliveryModeConfig[course.deliveryMode as DeliveryMode].label}
                                 </Badge>
                                 <Badge className="bg-purple-600/10 text-purple-400 border-purple-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest">
                                     {course.category || "Professional Development"}
@@ -167,7 +168,7 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                 {course.title}
                             </h1>
                             <p className="text-xl text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                                {course.description}
+                                {course.courseShortDesc || course.description}
                             </p>
                         </motion.div>
 
@@ -175,7 +176,7 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                         <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {[
                                 { label: "Kesulitan", value: course.difficulty, icon: BarChart, color: "text-blue-500" },
-                                { label: "Penyampaian", value: deliveryModeConfig[course.deliveryMode].label, icon: Calendar, color: "text-purple-500" },
+                                { label: "Penyampaian", value: deliveryModeConfig[course.deliveryMode as DeliveryMode].label, icon: Calendar, color: "text-purple-500" },
                                 { label: "Estimasi", value: `${course.duration || "--"} Jam`, icon: Clock, color: "text-green-500" },
                                 { label: "Peserta", value: "Aktif", icon: Users, color: "text-yellow-500" },
                             ].map((stat) => (
@@ -189,6 +190,90 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                     </div>
                                 </div>
                             ))}
+                        </motion.div>
+
+                        {/* About This Course */}
+                        <motion.div variants={item} className="space-y-6">
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-purple-600/20 text-purple-400">
+                                    <FileText className="w-6 h-6" />
+                                </div>
+                                Tentang Kursus Ini
+                            </h2>
+
+                            {/* Full Description */}
+                            {course.courseDesc && (
+                                <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
+                                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-3">Deskripsi Lengkap</h3>
+                                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                                        {course.courseDesc}
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="grid md:grid-cols-2 gap-4">
+                                {/* Requirements */}
+                                {course.requirements && (
+                                    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <CheckCircle2 className="w-5 h-5 text-amber-500" />
+                                            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Persyaratan</h3>
+                                        </div>
+                                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                                            {course.requirements}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Learning Outcomes */}
+                                {course.outcomes && (
+                                    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <CheckCircle className="w-5 h-5 text-green-500" />
+                                            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Hasil Pembelajaran</h3>
+                                        </div>
+                                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                                            {course.outcomes}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Additional Info Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                {/* Language */}
+                                <div className="p-4 rounded-xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Bahasa</p>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{course.language || 'Bahasa Indonesia'}</p>
+                                </div>
+
+                                {/* Course Level */}
+                                <div className="p-4 rounded-xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Tingkat</p>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{course.courseLevel || 'Beginner'}</p>
+                                </div>
+
+                                {/* JP Hours */}
+                                {course.jp && (
+                                    <div className="p-4 rounded-xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Jam Pembelajaran</p>
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{course.jp} JP</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Recommended Next Courses */}
+                            {course.recommendedNext && (
+                                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-200 dark:border-purple-500/20">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <ChevronRight className="w-5 h-5 text-purple-500" />
+                                        <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Kursus Rekomendasi Selanjutnya</h3>
+                                    </div>
+                                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                        {course.recommendedNext}
+                                    </p>
+                                </div>
+                            )}
                         </motion.div>
 
                         {/* Curriculum */}

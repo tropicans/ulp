@@ -29,7 +29,7 @@ export default function ProfilePage() {
     useEffect(() => {
         // Check if user logged in via OAuth (no NIP and has Google image)
         if (session?.user) {
-            setIsOAuthUser(!session.user.nip && session.user.image?.includes('googleusercontent.com'))
+            setIsOAuthUser(!session.user.nip && (session.user.image?.includes('googleusercontent.com') || false))
         }
     }, [session])
 
@@ -106,11 +106,11 @@ export default function ProfilePage() {
 
                         <div className="w-full pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-center gap-6">
                             <div className="text-center">
-                                <p className="text-lg font-black text-slate-900 dark:text-white">{session.user.points || 0}</p>
+                                <p className="text-lg font-black text-slate-900 dark:text-white">{(session.user as any).points || 0}</p>
                                 <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Points</p>
                             </div>
                             <div className="text-center">
-                                <p className="text-lg font-black text-slate-900 dark:text-white">{session.user.level || 1}</p>
+                                <p className="text-lg font-black text-slate-900 dark:text-white">{(session.user as any).level || 1}</p>
                                 <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Level</p>
                             </div>
                         </div>
@@ -235,7 +235,7 @@ export default function ProfilePage() {
                                             <Input
                                                 id="jabatan"
                                                 name="jabatan"
-                                                defaultValue={session.user.jabatan || ""}
+                                                defaultValue={(session.user as any).jabatan || ""}
                                                 className="bg-slate-100 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:border-blue-500"
                                             />
                                         </div>
@@ -246,7 +246,7 @@ export default function ProfilePage() {
                                             <Input
                                                 id="pangkat"
                                                 name="pangkat"
-                                                defaultValue={session.user.pangkat || ""}
+                                                defaultValue={(session.user as any).pangkat || ""}
                                                 className="bg-slate-100 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:border-blue-500"
                                             />
                                         </div>

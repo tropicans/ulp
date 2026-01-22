@@ -30,7 +30,7 @@ export default async function QuizTakePage({ params }: QuizTakePageProps) {
     if (!quiz) notFound()
 
     // Verify enrollment
-    const enrollment = await prisma.courseEnrollment.findUnique({
+    const enrollment = await prisma.enrollment.findUnique({
         where: {
             userId_courseId: {
                 userId: session.user.id,
@@ -56,16 +56,16 @@ export default async function QuizTakePage({ params }: QuizTakePageProps) {
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 flex flex-col">
-            <header className="h-16 bg-slate-900 border-b border-slate-800 sticky top-0 z-20 px-4 md:px-6 flex items-center gap-4">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
+            <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 px-4 md:px-6 flex items-center gap-4">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
                         <GraduationCap className="w-5 h-5 text-white" />
                     </div>
-                    <span className="font-bold text-white hidden sm:inline-block">LXP ASN</span>
+                    <span className="font-bold text-slate-900 dark:text-white hidden sm:inline-block">TITIAN</span>
                 </div>
-                <div className="h-4 w-[1px] bg-slate-800 mx-2 hidden sm:block" />
-                <span className="text-sm text-slate-400 font-medium truncate">
+                <div className="h-4 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
+                <span className="text-sm text-slate-600 dark:text-slate-400 font-medium truncate">
                     Mengerjakan: {quiz.title}
                 </span>
             </header>

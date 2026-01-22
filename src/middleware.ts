@@ -11,7 +11,8 @@ export async function middleware(request: NextRequest) {
         pathname.startsWith("/login/") ||
         pathname.startsWith("/api/auth") ||
         pathname.startsWith("/courses") ||
-        pathname.startsWith("/verify")
+        pathname.startsWith("/verify") ||
+        /\.(.*)$/.test(pathname) // Allow all files with extensions (static assets)
 
     // Get token from JWT
     const token = await getToken({
@@ -53,8 +54,9 @@ export const config = {
          * - api (API routes)
          * - _next/static (static files)
          * - _next/image (image optimization files)
+         * - logo.png, logo.svg, etc (root assets)
          * - favicon.ico (favicon file)
          */
-        "/((?!api|_next/static|_next/image|favicon.ico).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
     ],
 }

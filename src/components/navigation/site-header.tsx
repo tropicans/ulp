@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link"
-import { GraduationCap } from "lucide-react"
 import { UserNav } from "@/components/dashboard/user-nav"
 import type { Role } from "@/generated/prisma"
 import { motion } from "framer-motion"
@@ -75,12 +74,18 @@ export function SiteHeader() {
                     <motion.div
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.9 }}
-                        className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20"
+                        className="flex items-center justify-center w-10 h-10"
                     >
-                        <GraduationCap className="w-5 h-5 text-white" />
+                        <img
+                            src="/logo.png"
+                            alt="TITIAN Logo"
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                        />
                     </motion.div>
                     <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white">
-                        LXP ASN
+                        TITIAN
                     </span>
                 </Link>
 

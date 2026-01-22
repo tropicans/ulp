@@ -140,7 +140,7 @@ Sesi: ${data.sessionTitle}
 Jangan lupa hadir tepat waktu ya! 
 Semangat belajar! 🚀
 
-_LXP ASN_`,
+_TITIAN_`,
 
     enrollmentConfirmation: (data: {
         userName: string
@@ -157,7 +157,7 @@ Silakan akses dashboard untuk melihat materi pembelajaran.
 
 Selamat belajar! 🚀
 
-_LXP ASN_`,
+_TITIAN_`,
 
     certificateReady: (data: {
         userName: string
@@ -174,7 +174,7 @@ ${data.certificateUrl}
 
 Terus semangat belajar! 🚀
 
-_LXP ASN_`,
+_TITIAN_`,
 
     deadlineReminder: (data: {
         userName: string
@@ -191,5 +191,5 @@ _LXP ASN_`,
 
 Segera selesaikan tugas Anda!
 
-_LXP ASN_`,
+_TITIAN_`,
 }

@@ -13,20 +13,16 @@ export async function getInstructorStudents() {
     }
 
     try {
-        // Find all courses by this instructor
-        const instructorCourses = await prisma.course.findMany({
-            where: { instructorId: session.user.id },
-            select: { id: true, title: true }
-        })
-
-        const courseIds = instructorCourses.map(c => c.id)
-
-        // Find all enrollments for these courses
+        // Single optimized query instead of N+1
         const enrollments = await prisma.enrollment.findMany({
             where: {
-                courseId: { in: courseIds }
+                Course: {
+                    instructorId: session.user.id
+                }
             },
-            include: {
+            select: {
+                enrolledAt: true,
+                progressPercent: true,
                 User: {
                     select: {
                         id: true,
@@ -39,6 +35,7 @@ export async function getInstructorStudents() {
                 },
                 Course: {
                     select: {
+                        id: true,
                         title: true
                     }
                 }
@@ -46,7 +43,7 @@ export async function getInstructorStudents() {
             orderBy: { enrolledAt: "desc" }
         })
 
-        // Group by user to show aggregate stats if needed
+        // Group by user to show aggregate stats
         const studentsMap = new Map()
         enrollments.forEach(en => {
             const studentId = en.User.id
@@ -57,9 +54,10 @@ export async function getInstructorStudents() {
                 })
             }
             studentsMap.get(studentId).courses.push({
+                courseId: en.Course.id,
                 courseTitle: en.Course.title,
                 enrolledAt: en.enrolledAt,
-                progress: 0 // Placeholder, calculation needed
+                progress: en.progressPercent
             })
         })
 

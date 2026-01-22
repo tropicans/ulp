@@ -122,20 +122,36 @@ export async function getAuditLogs(limit = 50) {
     }
 
     try {
+        // If admin unit, first get user IDs in their unit
+        let whereClause = {}
+        if (session.user.role === "ADMIN_UNIT" && session.user.unitKerja) {
+            const usersInUnit = await prisma.user.findMany({
+                where: { unitKerja: session.user.unitKerja },
+                select: { id: true }
+            })
+            whereClause = { userId: { in: usersInUnit.map(u => u.id) } }
+        }
+
         const logs = await prisma.auditLog.findMany({
-            where: session.user.role === "ADMIN_UNIT" ? {
-                User: { unitKerja: session.user.unitKerja }
-            } : {},
-            include: {
-                User: {
-                    select: { name: true, email: true }
-                }
-            },
+            where: whereClause,
             orderBy: { createdAt: "desc" },
             take: limit
         })
 
-        return { logs }
+        // Manually fetch user info for each log
+        const userIds = [...new Set(logs.map(l => l.userId).filter(Boolean))]
+        const users = await prisma.user.findMany({
+            where: { id: { in: userIds as string[] } },
+            select: { id: true, name: true, email: true }
+        })
+        const userMap = new Map(users.map(u => [u.id, u]))
+
+        const logsWithUser = logs.map(log => ({
+            ...log,
+            User: log.userId ? userMap.get(log.userId) || { name: 'Unknown', email: '' } : { name: 'System', email: '' }
+        }))
+
+        return { logs: logsWithUser }
     } catch (error) {
         return { error: "Failed to fetch logs" }
     }
