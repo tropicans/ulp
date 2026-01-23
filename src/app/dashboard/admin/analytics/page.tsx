@@ -46,7 +46,7 @@ export default function AdminAnalyticsPage() {
     }
 
     const { stats, popularCourses, trend } = data || {
-        stats: { learners: 0, completions: 0, points: 0, courses: 0, growth: '+0%' },
+        stats: { learners: 0, enrollments: 0, completions: 0, points: 0, courses: 0, completionRate: 0, growth: '+0%', completionGrowth: '+0%' },
         popularCourses: [],
         trend: []
     }
@@ -87,29 +87,34 @@ export default function AdminAnalyticsPage() {
             </div>
 
             {/* Matrix HUD */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
                 {[
                     { label: "Total Learners", value: stats.learners.toLocaleString(), change: stats.growth, color: "text-blue-500", icon: Users },
-                    { label: "Completions", value: stats.completions.toLocaleString(), change: stats.growth, color: "text-green-500", icon: Zap },
+                    { label: "Total Enrollments", value: (stats.enrollments || 0).toLocaleString(), change: stats.growth, color: "text-cyan-500", icon: TrendingUp },
+                    { label: "Completions", value: (stats.completions || 0).toLocaleString(), change: stats.completionGrowth || stats.growth, color: "text-green-500", icon: Zap, subtitle: stats.completionRate ? `${stats.completionRate}% completion rate` : null },
                     { label: "Total Courses", value: stats.courses.toLocaleString(), change: "+0%", color: "text-orange-500", icon: BookOpen },
                     { label: "Points Awarded", value: (stats.points / 1000).toFixed(1) + "K", change: stats.growth, color: "text-purple-500", icon: TrendingUp },
                 ].map((stat, i) => (
                     <Card key={i} className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all cursor-default">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-slate-500/5 dark:bg-white/5 blur-3xl rounded-full -mr-8 -mt-8 group-hover:bg-slate-500/10 dark:group-hover:bg-white/10 transition-all" />
-                        <CardContent className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className={cn("p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800", stat.color)}>
-                                    <stat.icon className="w-5 h-5" />
+                        <CardContent className="p-5">
+                            <div className="flex items-center justify-between mb-3">
+                                <div className={cn("p-2 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800", stat.color)}>
+                                    <stat.icon className="w-4 h-4" />
                                 </div>
                                 <span className={cn(
-                                    "flex items-center text-[10px] font-black uppercase tracking-widest",
-                                    stat.change.startsWith("+") ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                                    "flex items-center text-[9px] font-black uppercase tracking-widest",
+                                    stat.change.startsWith("+") && stat.change !== "+0%" ? "text-green-600 dark:text-green-400" :
+                                        stat.change.startsWith("-") ? "text-red-600 dark:text-red-400" : "text-slate-400"
                                 )}>
-                                    {stat.change} <ArrowUpRight className="w-3 h-3 ml-0.5" />
+                                    {stat.change}
+                                    {stat.change.startsWith("+") && stat.change !== "+0%" && <ArrowUpRight className="w-3 h-3 ml-0.5" />}
+                                    {stat.change.startsWith("-") && <ArrowDownRight className="w-3 h-3 ml-0.5" />}
                                 </span>
                             </div>
-                            <h4 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{stat.label}</h4>
-                            <p className="text-3xl font-black text-slate-900 dark:text-white">{stat.value}</p>
+                            <h4 className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">{stat.label}</h4>
+                            <p className="text-2xl font-black text-slate-900 dark:text-white">{stat.value}</p>
+                            {stat.subtitle && <p className="text-[10px] text-slate-400 mt-1">{stat.subtitle}</p>}
                         </CardContent>
                     </Card>
                 ))}

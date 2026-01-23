@@ -6,6 +6,14 @@ import { revalidatePath } from "next/cache"
 import { validateToken } from "@/lib/utils/qr-tokens"
 import { isWithinRadius, calculateDistance } from "@/lib/utils/geolocation"
 import { awardPoints, updateActivityStreak } from "./gamification"
+import {
+    queueStatement,
+    recordActivity,
+    buildActor,
+    buildActivity
+} from "@/lib/xapi"
+import { genIdempotencyKey } from "@/lib/xapi/utils"
+import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 /**
  * Check in with QR code
@@ -79,6 +87,50 @@ export async function checkInWithQR(sessionId: string, token: string) {
         })
 
         revalidatePath(`/dashboard/sessions/${sessionId}`)
+
+        // xAPI and Journey tracking
+        const sessionWithCourse = await prisma.courseSession.findUnique({
+            where: { id: sessionId },
+            include: { Course: { select: { title: true, slug: true } } }
+        })
+
+        if (sessionWithCourse) {
+            queueStatement(
+                {
+                    actor: buildActor(session.user.email || '', session.user.name),
+                    verb: VERBS.attended,
+                    object: buildActivity(
+                        `${PLATFORM_IRI}/sessions/${sessionId}`,
+                        ACTIVITY_TYPES.meeting,
+                        sessionWithCourse.title,
+                        `Attendance for ${sessionWithCourse.Course.title}`
+                    ),
+                    context: {
+                        contextActivities: {
+                            parent: [{
+                                id: `${PLATFORM_IRI}/courses/${sessionWithCourse.Course.slug}`,
+                                definition: { type: ACTIVITY_TYPES.course }
+                            }]
+                        },
+                        extensions: {
+                            "https://titian.setneg.go.id/xapi/extensions/attendance-method": "QR_CODE",
+                            "https://titian.setneg.go.id/xapi/extensions/attendance-status": status
+                        }
+                    }
+                },
+                genIdempotencyKey("attendance", session.user.id, sessionId)
+            )
+
+            recordActivity(
+                session.user.id,
+                "ATTENDANCE",
+                sessionId,
+                sessionWithCourse.title,
+                sessionWithCourse.courseId,
+                { status, method: "QR_CODE" }
+            )
+        }
+
         return {
             success: true,
             attendance,
@@ -179,6 +231,52 @@ export async function checkInWithGPS(
         })
 
         revalidatePath(`/dashboard/sessions/${sessionId}`)
+
+        // xAPI and Journey tracking
+        const sessionWithCourse = await prisma.courseSession.findUnique({
+            where: { id: sessionId },
+            include: { Course: { select: { title: true, slug: true } } }
+        })
+
+        if (sessionWithCourse) {
+            queueStatement(
+                {
+                    actor: buildActor(session.user.email || '', session.user.name),
+                    verb: VERBS.attended,
+                    object: buildActivity(
+                        `${PLATFORM_IRI}/sessions/${sessionId}`,
+                        ACTIVITY_TYPES.meeting,
+                        sessionWithCourse.title,
+                        `Attendance for ${sessionWithCourse.Course.title}`
+                    ),
+                    context: {
+                        contextActivities: {
+                            parent: [{
+                                id: `${PLATFORM_IRI}/courses/${sessionWithCourse.Course.slug}`,
+                                definition: { type: ACTIVITY_TYPES.course }
+                            }]
+                        },
+                        extensions: {
+                            "https://titian.setneg.go.id/xapi/extensions/attendance-method": "GPS",
+                            "https://titian.setneg.go.id/xapi/extensions/attendance-status": status,
+                            "https://titian.setneg.go.id/xapi/extensions/latitude": latitude,
+                            "https://titian.setneg.go.id/xapi/extensions/longitude": longitude
+                        }
+                    }
+                },
+                genIdempotencyKey("attendance", session.user.id, sessionId)
+            )
+
+            recordActivity(
+                session.user.id,
+                "ATTENDANCE",
+                sessionId,
+                sessionWithCourse.title,
+                sessionWithCourse.courseId,
+                { status, method: "GPS" }
+            )
+        }
+
         return {
             success: true,
             attendance,
@@ -248,6 +346,50 @@ export async function checkInManual(sessionId: string, userId: string) {
         })
 
         revalidatePath(`/dashboard/sessions/${sessionId}`)
+
+        // xAPI and Journey tracking
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { name: true, email: true }
+        })
+
+        if (user && courseSession) {
+            queueStatement(
+                {
+                    actor: buildActor(user.email || '', user.name),
+                    verb: VERBS.attended,
+                    object: buildActivity(
+                        `${PLATFORM_IRI}/sessions/${sessionId}`,
+                        ACTIVITY_TYPES.meeting,
+                        courseSession.title,
+                        `Attendance for ${courseSession.Course.title}`
+                    ),
+                    context: {
+                        contextActivities: {
+                            parent: [{
+                                id: `${PLATFORM_IRI}/courses/${courseSession.Course.slug}`,
+                                definition: { type: ACTIVITY_TYPES.course }
+                            }]
+                        },
+                        extensions: {
+                            "https://titian.setneg.go.id/xapi/extensions/attendance-method": "MANUAL",
+                            "https://titian.setneg.go.id/xapi/extensions/attendance-status": "PRESENT"
+                        }
+                    }
+                },
+                genIdempotencyKey("attendance", userId, sessionId)
+            )
+
+            recordActivity(
+                userId,
+                "ATTENDANCE",
+                sessionId,
+                courseSession.title,
+                courseSession.courseId,
+                { status: "PRESENT", method: "MANUAL" }
+            )
+        }
+
         return { success: true, attendance }
     } catch (error) {
         console.error("Error manual check-in:", error)

@@ -14,12 +14,14 @@ import {
     PlayCircle,
     Flame,
     Zap,
-    LayoutDashboard
+    LayoutDashboard,
+    History
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { getUserGamificationStats } from "@/lib/actions/gamification"
-import { getUserEnrollments } from "@/lib/actions/courses"
+import { getUserEnrollments, getUserCreatedCourses } from "@/lib/actions/courses"
 import { BadgeGrid } from "@/components/dashboard/badge-grid"
+import { PlusCircle } from "lucide-react"
 import { Leaderboard } from "@/components/dashboard/leaderboard"
 import { Progress } from "@/components/ui/progress"
 import { CertificateButton } from "@/components/dashboard/certificate-button"
@@ -42,12 +44,13 @@ export default function LearnerDashboard() {
             setIsLoading(true)
             try {
                 // Fetch stats from server action
-                const [statsResult, enrollmentsResult] = await Promise.all([
+                const [statsResult, enrollmentsResult, customCoursesResult] = await Promise.all([
                     getUserGamificationStats(),
                     getUserEnrollments(),
+                    getUserCreatedCourses(),
                 ])
                 if (!("error" in statsResult)) {
-                    setGameStats(statsResult)
+                    setGameStats({ ...statsResult, customCourses: customCoursesResult })
                 }
                 setEnrollments(enrollmentsResult)
             } catch (err) {
@@ -113,9 +116,17 @@ export default function LearnerDashboard() {
                     <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
                         Selamat datang, {user?.name?.split(' ')[0]}! 👋
                     </h1>
-                    <p className="text-slate-400 font-medium">
-                        Siap untuk meningkatkan kompetensi Anda hari ini?
-                    </p>
+                    <div className="flex flex-wrap items-center gap-4">
+                        <p className="text-slate-400 font-medium">
+                            Siap untuk meningkatkan kompetensi Anda hari ini?
+                        </p>
+                        <Button asChild size="sm" variant="outline" className="h-8 rounded-full border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold text-[10px] uppercase tracking-wider hover:bg-blue-600 hover:text-white transition-all">
+                            <Link href="/dashboard/learner/journey">
+                                <History className="w-3 h-3 mr-1.5" />
+                                Lihat Jejak Belajar
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
                 <div className="hidden md:block text-right">
                     <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Unit Kerja</p>
@@ -262,11 +273,49 @@ export default function LearnerDashboard() {
                                             Belum ada kursus aktif. Jelajahi katalog sekarang untuk memulai pembelajaran.
                                         </p>
                                         <Button asChild className="bg-blue-600 hover:bg-blue-500 text-white font-black px-10 py-6 rounded-2xl shadow-xl shadow-blue-600/20 transition-all">
-                                            <Link href="/courses">Jelajahi Katalog</Link>
+                                            <Link href="/dashboard/learner/library">Eksplorasi Ala Carte</Link>
                                         </Button>
                                     </div>
                                 )}
                             </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    {/* Custom Courses (Playlists) */}
+                    <motion.div variants={item}>
+                        <Card glass className="border-slate-200 dark:border-white/5 bg-indigo-50/20 dark:bg-indigo-900/10 mb-6 rounded-3xl overflow-hidden shadow-2xl shadow-indigo-500/5">
+                            <div className="p-8">
+                                <div className="flex items-center justify-between mb-8">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 rounded-xl bg-indigo-600/10 text-indigo-500">
+                                            <PlusCircle className="w-5 h-5" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Menu Belajar Ala Carte Saya</h3>
+                                    </div>
+                                    <Button asChild variant="ghost" size="sm" className="text-indigo-500 font-bold hover:bg-indigo-500/10 rounded-xl">
+                                        <Link href="/dashboard/learner/library">Tambah Ala Carte +</Link>
+                                    </Button>
+                                </div>
+                                {gameStats.customCourses?.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {gameStats.customCourses.map((course: any) => (
+                                            <Link key={course.id} href={`/courses/${course.slug}`}>
+                                                <div className="p-5 rounded-2xl border border-indigo-200/50 dark:border-indigo-900/50 bg-white dark:bg-slate-950/50 hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all group">
+                                                    <h4 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 transition-colors uppercase text-[10px] tracking-widest">{course.title}</h4>
+                                                    <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{course._count.Module > 0 ? "Siap Dipelajari" : "Draft"}</p>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="py-10 text-center text-slate-500 bg-white/30 dark:bg-slate-950/30 rounded-2xl border border-dashed border-indigo-200 dark:border-indigo-900">
+                                        <p className="text-sm font-medium mb-6">Anda belum memiliki playlist materi.</p>
+                                        <Button asChild variant="outline" className="rounded-xl border-indigo-200 text-indigo-500 font-bold hover:bg-indigo-500 hover:text-white px-8">
+                                            <Link href="/dashboard/learner/library">Eksplorasi Ala Carte</Link>
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
                         </Card>
                     </motion.div>
                 </motion.div>

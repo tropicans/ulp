@@ -1,0 +1,690 @@
+{
+  "name": "YouTube Curation - Search and Score",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "youtube-curation-search-score",
+        "options": {}
+      },
+      "id": "ee3a99ee-8f9e-448f-a728-98469e6b4172",
+      "name": "Webhook - Curation Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -432
+      ],
+      "webhookId": "youtube-curation-search-score"
+    },
+    {
+      "parameters": {
+        "jsCode": "const req = $input.first().json;\nconst body = req.body || {};\nconst s = body.sessionData || {};\n\nconst sessionId = body.sessionId ?? s.id;\nif (!sessionId) throw new Error(\"Missing sessionId\");\n\nconst topic = (s.topic || \"\").trim();\nif (!topic) throw new Error(\"Missing sessionData.topic\");\n\nconst language = (s.language || \"id\").trim();\nconst level = (s.level ?? \"pemula\"); // default kalau null\nconst targetDurationMin = s.target_duration_min ?? 60;\n\nconst includeChannels = Array.isArray(s.include_channels) ? s.include_channels : [];\nconst excludeChannels = Array.isArray(s.exclude_channels) ? s.exclude_channels : [];\n\nconst searchQuery =\n  (s.search_query && String(s.search_query).trim())\n    ? String(s.search_query).trim()\n    : `${topic} tutorial ${language} ${level}`.trim();\n\nreturn [{\n  json: {\n    sessionId,\n    session_uuid: s.session_uuid || null,\n    topic,\n    language,\n    level,\n    target_duration_min: targetDurationMin,\n    include_channels: includeChannels,\n    exclude_channels: excludeChannels,\n    search_query: searchQuery,\n    ts: body.timestamp || new Date().toISOString()\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        -432
+      ],
+      "id": "2c384e4f-a2f7-4c63-b5d4-c041b20ce7db",
+      "name": "Normalize Input"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": true,\n  \"status\": \"accepted\",\n  \"sessionId\": \"={{$json.sessionId}}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -192,
+        -432
+      ],
+      "id": "d88e9d0c-f592-4232-9b82-4894f2c70b87",
+      "name": "Respond 202"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update yt_curation_sessions\nset status = 'searching',\n    updated_at = now()\nwhere id = $1;\n",
+        "options": {
+          "queryReplacement": "=$1 = ={{$json.sessionId}}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        32,
+        -432
+      ],
+      "id": "0bfa7de8-f2b3-491d-8115-9606e90547b0",
+      "name": "DB: Session -> searching",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/youtube/v3/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet"
+            },
+            {
+              "name": "type",
+              "value": "video"
+            },
+            {
+              "name": "q",
+              "value": "={{ $('Respond 202').item.json.search_query }}"
+            },
+            {
+              "name": "maxResults",
+              "value": "25"
+            },
+            {
+              "name": "safeSearch",
+              "value": "strict"
+            },
+            {
+              "name": "relevanceLanguage",
+              "value": "={{ $('Respond 202').item.json.language }}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyAloZgJAzu-2H6pxvbr2mhAyNpTMaKxkLI"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        256,
+        -432
+      ],
+      "id": "4f088859-9f5c-483a-ad02-2eedf0ac5c2a",
+      "name": "YT: Search"
+    },
+    {
+      "parameters": {
+        "jsCode": "const root = $input.first().json;\nconst items = root.items || [];\n\nconst sessionId = $('Normalize Input').item.json.sessionId;\n\nconst videoIds = items\n  .map(x => x?.id?.videoId)\n  .filter(Boolean);\n\n// dedupe + limit (safety)\nconst uniq = [...new Set(videoIds)].slice(0, 30);\n\n// output: 1 item per videoId\nreturn uniq.map(id => ({\n  json: {\n    sessionId,\n    videoId: id,\n  }\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        -432
+      ],
+      "id": "141af5c0-82b9-40c2-85c2-54245620b88e",
+      "name": "Explode Search Results"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update yt_curation_sessions\nset total_candidates = $2,\n    status = 'scoring',\n    updated_at = now()\nwhere id = $1;\n",
+        "options": {
+          "queryReplacement": "=$1 = ={{$('Normalize Input').item.json.sessionId}}\n$2 = ={{$items('Explode Search Results').length}}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        704,
+        -368
+      ],
+      "id": "1128ef48-f545-49f8-8e3e-a0166b79cc98",
+      "name": "DB: Session total_candidates",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 25,
+        "options": {}
+      },
+      "id": "d772dfe7-0b09-4210-98b0-e4a07415df06",
+      "name": "Batch Video IDs",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1152,
+        -432
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const batch = $input.all().map(i => i.json.videoId).filter(Boolean);\nconst sessionId = $input.first().json.sessionId;\n\nreturn [{\n  json: {\n    sessionId,\n    ids: batch.join(','),\n    batchCount: batch.length\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        -624
+      ],
+      "id": "c67ea2ab-4a04-4a71-b5b6-69c05a6c4996",
+      "name": "Join IDs"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/youtube/v3/videos",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet,contentDetails,statistics"
+            },
+            {
+              "name": "id",
+              "value": "={{$json.ids}}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyAloZgJAzu-2H6pxvbr2mhAyNpTMaKxkLI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "745c7213-0cb8-4869-9409-1739eca863d7",
+      "name": "YT: Videos Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1600,
+        -624
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse ISO8601 duration PT#H#M#S to seconds\nfunction iso8601ToSeconds(iso) {\n  if (!iso) return null;\n  const m = iso.match(/PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?/);\n  if (!m) return null;\n  const h = parseInt(m[1] || \"0\", 10);\n  const min = parseInt(m[2] || \"0\", 10);\n  const s = parseInt(m[3] || \"0\", 10);\n  return h * 3600 + min * 60 + s;\n}\n\nconst root = $input.first().json;          // OK karena mode = Run Once for All Items\nconst videos = root.items || [];\n\nconst norm = $items('Normalize Input')[0].json;\nconst sessionId = norm.sessionId;\nconst topic = norm.topic;\nconst language = norm.language;\nconst level = norm.level;\n\nconst excludeChannels = norm.exclude_channels || [];\nconst includeChannels = norm.include_channels || [];\n\nconst MIN_SECONDS = 240;   // 4 menit\nconst MAX_SECONDS = 7200;  // 2 jam\nconst MIN_VIEWS = 500;     // baseline\n\nfunction isExcluded(channelTitle) {\n  if (!channelTitle) return false;\n  return excludeChannels.some(x => String(x).toLowerCase() === String(channelTitle).toLowerCase());\n}\nfunction isIncluded(channelTitle) {\n  if (!includeChannels.length) return true; // no constraint\n  if (!channelTitle) return false;\n  return includeChannels.some(x => String(x).toLowerCase() === String(channelTitle).toLowerCase());\n}\n\nconst out = [];\n\nfor (const v of videos) {\n  const videoId = v?.id;\n  const sn = v?.snippet || {};\n  const st = v?.statistics || {};\n  const cd = v?.contentDetails || {};\n\n  const durationSeconds = iso8601ToSeconds(cd.duration);\n  const viewCount = st.viewCount ? Number(st.viewCount) : 0;\n  const likeCount = st.likeCount ? Number(st.likeCount) : null;\n\n  const channelTitle = sn.channelTitle || null;\n  if (isExcluded(channelTitle)) continue;\n  if (!isIncluded(channelTitle)) continue;\n\n  if (!durationSeconds || durationSeconds < MIN_SECONDS || durationSeconds > MAX_SECONDS) continue;\n  if (viewCount < MIN_VIEWS) continue;\n\n  out.push({\n    json: {\n      sessionId,\n      topic,\n      language,\n      level,\n\n      video_id: videoId,\n      video_title: sn.title || null,\n      video_url: videoId ? `https://www.youtube.com/watch?v=${videoId}` : null,\n      channel_title: channelTitle,\n      channel_id: sn.channelId || null,\n      description: sn.description || null,\n      published_at: sn.publishedAt || null,\n\n      duration_seconds: durationSeconds,\n      view_count: viewCount,\n      like_count: likeCount\n    }\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1824,
+        -624
+      ],
+      "id": "caf71da9-0020-4695-95da-a60009bfb78b",
+      "name": "Prepare & Filter Candidates"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        928,
+        -432
+      ],
+      "id": "7894e0fc-b911-4adc-aa6d-9e37f6a95a57",
+      "name": "Merge: Keep Video Items"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.2,
+          "numPredict": 800
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        -144
+      ],
+      "id": "467c6ffb-efb6-43e1-bdad-88ef50a2b89b",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Evaluate the following YouTube video for inclusion in a structured learning course.\n\nTOPIC: {{$json.topic}}\nLANGUAGE: {{$json.language}}\nLEVEL: {{$json.level}}\n\nVIDEO DATA:\n- title: {{$json.video_title}}\n- channel: {{$json.channel_title}}\n- duration_seconds: {{$json.duration_seconds}}\n- view_count: {{$json.view_count}}\n- published_at: {{$json.published_at}}\n- description: {{$json.description}}\n\nReturn ONLY valid JSON with this schema:\n{\n  \"relevance_score\": 0-100,\n  \"level_fit_score\": 0-100,\n  \"pedagogy_score\": 0-100,\n  \"technical_score\": 0-100,\n  \"engagement_score\": 0-100,\n  \"overall_score\": 0-100,\n  \"recommendation\": \"include\" | \"maybe\" | \"exclude\",\n  \"role_suggestion\": \"intro\" | \"theory\" | \"example\" | \"case\" | \"recap\",\n  \"key_topics\": [\"...\"],\n  \"prerequisites\": [\"...\"],\n  \"ai_summary\": \"...\",\n  \"ai_notes\": \"short objective reasons\"\n}\n\nRules:\n- recommendation MUST match overall_score\n- Penalize if language mismatches\n- Penalize if duration too short or too long for the level\n",
+        "options": {
+          "systemMessage": "You are a Video Learning Curator and Instructional Designer.\n\nIMPORTANT:\n- Output MUST be valid JSON only\n- Do NOT include markdown\n- Do NOT include explanations\n- Do NOT wrap in code block\n- JSON must be directly parsable\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2048,
+        -496
+      ],
+      "id": "2a676afa-7dbd-46ef-9fd3-6ee831346943",
+      "name": "AI: Score Video (Agent)"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2400,
+        -624
+      ],
+      "id": "75daf64a-df30-417c-985e-b4672c072328",
+      "name": "Merge: Candidate + AI"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function safeParse(maybeJson) {\n  if (maybeJson === null || maybeJson === undefined) return null;\n\n  if (typeof maybeJson === 'object') return maybeJson;\n\n  if (typeof maybeJson === 'string') {\n    const s = maybeJson.trim();\n    if (!s) return null;\n\n    // try direct JSON parse\n    try { return JSON.parse(s); } catch (e) {}\n\n    // try to extract first {...} block\n    const start = s.indexOf('{');\n    const end = s.lastIndexOf('}');\n    if (start !== -1 && end !== -1 && end > start) {\n      const sliced = s.slice(start, end + 1);\n      try { return JSON.parse(sliced); } catch (e) {}\n    }\n  }\n\n  return null;\n}\n\nfunction toArray(value) {\n  if (Array.isArray(value)) return value.filter(v => v != null).map(String);\n\n  if (typeof value === 'string') {\n    const s = value.trim();\n    if (!s) return [];\n\n    // JSON array string?\n    if (s[0] === '[' && s[s.length - 1] === ']') {\n      try {\n        const parsed = JSON.parse(s);\n        if (Array.isArray(parsed)) return parsed.filter(v => v != null).map(String);\n      } catch (e) {}\n    }\n\n    return [s];\n  }\n\n  return [];\n}\n\nconst j = $json;\n\n// ganti ini kalau field AI kamu bukan \"output\"\nconst parsed = safeParse(j.output) || {};\n\nreturn {\n  ...j,\n\n  relevance_score: parsed.relevance_score ?? null,\n  level_fit_score: parsed.level_fit_score ?? null,\n  pedagogy_score: parsed.pedagogy_score ?? null,\n  technical_score: parsed.technical_score ?? null,\n  engagement_score: parsed.engagement_score ?? null,\n  overall_score: parsed.overall_score ?? null,\n\n  recommendation: parsed.recommendation ?? null,\n  role_suggestion: parsed.role_suggestion ?? null,\n\n  key_topics: toArray(parsed.key_topics),\n  prerequisites: toArray(parsed.prerequisites),\n\n  ai_summary: parsed.ai_summary ?? null,\n  ai_notes: parsed.ai_notes ?? null,\n\n  _ai_parse_ok: Object.keys(parsed).length > 0\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2624,
+        -624
+      ],
+      "id": "cf4fc05e-e1d3-46ab-94d7-1c583a156a79",
+      "name": "Parse AI JSON"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO yt_curation_candidates (\n  session_id,\n  video_id,\n  video_title,\n  video_url,\n  channel_title,\n  duration_seconds,\n  published_at,\n  relevance_score,\n  level_fit_score,\n  pedagogy_score,\n  technical_score,\n  engagement_score,\n  overall_score,\n  recommendation,\n  role_suggestion,\n  key_topics,\n  prerequisites,\n  ai_summary,\n  ai_notes\n)\nVALUES (\n  $1::bigint,                       -- session_id\n  $2::text,                         -- video_id\n  $3::text,                         -- video_title\n  $4::text,                         -- video_url\n  $5::text,                         -- channel_title\n  NULLIF($6::text, '')::int,        -- duration_seconds\n  NULLIF($7::text, '')::timestamptz,-- published_at\n  NULLIF($8::text, '')::int,        -- relevance_score\n  NULLIF($9::text, '')::int,        -- level_fit_score\n  NULLIF($10::text, '')::int,       -- pedagogy_score\n  NULLIF($11::text, '')::int,       -- technical_score\n  NULLIF($12::text, '')::int,       -- engagement_score\n  NULLIF($13::text, '')::int,       -- overall_score\n  $14::text,                        -- recommendation\n  $15::text,                        -- role_suggestion\n  COALESCE(NULLIF($16::text, ''), '[]')::jsonb, -- key_topics (Ambil dari _json)\n  COALESCE(NULLIF($17::text, ''), '[]')::jsonb, -- prerequisites (Ambil dari _json)\n  $18::text,                        -- ai_summary\n  $19::text                         -- ai_notes\n)\nON CONFLICT (session_id, video_id)\nDO UPDATE SET\n  video_title = EXCLUDED.video_title,\n  video_url = EXCLUDED.video_url,\n  channel_title = EXCLUDED.channel_title,\n  duration_seconds = EXCLUDED.duration_seconds,\n  published_at = EXCLUDED.published_at,\n  relevance_score = EXCLUDED.relevance_score,\n  level_fit_score = EXCLUDED.level_fit_score,\n  pedagogy_score = EXCLUDED.pedagogy_score,\n  technical_score = EXCLUDED.technical_score,\n  engagement_score = EXCLUDED.engagement_score,\n  overall_score = EXCLUDED.overall_score,\n  recommendation = EXCLUDED.recommendation,\n  role_suggestion = EXCLUDED.role_suggestion,\n  key_topics = EXCLUDED.key_topics,\n  prerequisites = EXCLUDED.prerequisites,\n  ai_summary = EXCLUDED.ai_summary,\n  ai_notes = EXCLUDED.ai_notes;",
+        "options": {
+          "queryReplacement": "={{\n  [\n    $json.sessionId,\n    $json.video_id,\n    $json.video_title,\n    $json.video_url,\n    $json.channel_title,\n    $json.duration_seconds,\n    $json.published_at,\n    $json.relevance_score,\n    $json.level_fit_score,\n    $json.pedagogy_score,\n    $json.technical_score,\n    $json.engagement_score,\n    $json.overall_score,\n    $json.recommendation,\n    $json.role_suggestion,\n    $json.key_topics_json,\n    $json.prerequisites_json,\n    $json.ai_summary,\n    $json.ai_notes\n  ]\n}}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3072,
+        -624
+      ],
+      "id": "b3659a2c-9240-433d-8392-1022b6edd9e5",
+      "name": "DB: Upsert Candidates",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE yt_curation_sessions\nSET status = 'ready',\n    updated_at = NOW()\nWHERE id = $1;",
+        "options": {
+          "queryReplacement": "={{ [ $json.sessionId ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1376,
+        -352
+      ],
+      "id": "83ad9406-6ab0-43b5-9555-1c29faa5176a",
+      "name": "DB: Session -> completed",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function toJsonArray(value) {\n  if (Array.isArray(value)) return value.filter(v => v !== null && v !== undefined).map(String);\n\n  if (typeof value === 'string') {\n    const s = value.trim();\n    if (s.startsWith('[') && s.endsWith(']')) {\n      try {\n        const parsed = JSON.parse(s);\n        if (Array.isArray(parsed)) return parsed.filter(v => v !== null && v !== undefined).map(String);\n      } catch (e) {}\n    }\n    if (s.length) return [s];\n  }\n\n  return [];\n}\n\nreturn items.map((it) => {\n  const j = it.json;\n\n  const keyTopics = toJsonArray(j.key_topics);\n  const prereq = toJsonArray(j.prerequisites);\n\n  return {\n    json: {\n      ...j,\n      key_topics_json: JSON.stringify(keyTopics),\n      prerequisites_json: JSON.stringify(prereq),\n    },\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2848,
+        -624
+      ],
+      "id": "adbfd2f7-267c-47fb-94b7-2a17739253d4",
+      "name": "Normalize Arrays for DB"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n  session_id,\n  video_id,\n  video_title,\n  video_url,\n  channel_title,\n  duration_seconds,\n  published_at,\n  overall_score,\n  recommendation,\n  role_suggestion,\n  key_topics,\n  prerequisites,\n  ai_summary,\n  ai_notes\nfrom yt_curation_candidates\nwhere session_id = $1::bigint\n  and recommendation in ('include','maybe')\norder by\n  (case recommendation when 'include' then 2 when 'maybe' then 1 else 0 end) desc,\n  overall_score desc nulls last\nlimit coalesce(nullif($2::text,'')::int, 30);\n",
+        "options": {
+          "queryReplacement": "=$1 = {{ $items(\"Normalize Arrays for DB\")[0].json.sessionId }}\n$2 = {{ $json.limit ?? 30 }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3296,
+        -624
+      ],
+      "id": "45419016-64f1-45ea-ab12-cbba93f4515e",
+      "name": "DB: Select Top Candidates",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (Run Once for All Items)\nconst itemsIn = $input.all();\nif (!itemsIn.length) return [];\n\nconst sessionId = itemsIn[0].json.session_id ?? itemsIn[0].json.sessionId;\n\nconst videos = itemsIn.map((it, idx) => ({\n  no: idx + 1,\n  video_id: it.json.video_id,\n  video_title: it.json.video_title,\n  video_url: it.json.video_url,\n  channel_title: it.json.channel_title,\n  duration_seconds: it.json.duration_seconds,\n  published_at: it.json.published_at,\n  overall_score: it.json.overall_score,\n  recommendation: it.json.recommendation,\n  role_suggestion: it.json.role_suggestion,\n  key_topics: it.json.key_topics ?? [],\n  prerequisites: it.json.prerequisites ?? [],\n  ai_summary: it.json.ai_summary ?? null,\n  ai_notes: it.json.ai_notes ?? null,\n}));\n\nreturn [{\n  json: {\n    sessionId,\n    videos,\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        -464
+      ],
+      "id": "96fbc990-75fb-4286-ba49-86422ce3b98b",
+      "name": "Build Course Draft JSON"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -208
+      ],
+      "id": "e2068a2a-5414-4cc3-a320-907ff5d70b5f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lWi2aWKAH1mYrY4C",
+          "name": "Google Gemini(PaLM) Api account gaharubir juga"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Curation Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Respond 202",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond 202": {
+      "main": [
+        [
+          {
+            "node": "DB: Session -> searching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DB: Session -> searching": {
+      "main": [
+        [
+          {
+            "node": "YT: Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT: Search": {
+      "main": [
+        [
+          {
+            "node": "Explode Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explode Search Results": {
+      "main": [
+        [
+          {
+            "node": "DB: Session total_candidates",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge: Keep Video Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DB: Session total_candidates": {
+      "main": [
+        [
+          {
+            "node": "Merge: Keep Video Items",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Batch Video IDs": {
+      "main": [
+        [
+          {
+            "node": "DB: Session -> completed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Join IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Join IDs": {
+      "main": [
+        [
+          {
+            "node": "YT: Videos Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT: Videos Details": {
+      "main": [
+        [
+          {
+            "node": "Prepare & Filter Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare & Filter Candidates": {
+      "main": [
+        [
+          {
+            "node": "AI: Score Video (Agent)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge: Candidate + AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge: Keep Video Items": {
+      "main": [
+        [
+          {
+            "node": "Batch Video IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI: Score Video (Agent)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Score Video (Agent)": {
+      "main": [
+        [
+          {
+            "node": "Merge: Candidate + AI",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge: Candidate + AI": {
+      "main": [
+        [
+          {
+            "node": "Parse AI JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI JSON": {
+      "main": [
+        [
+          {
+            "node": "Normalize Arrays for DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DB: Upsert Candidates": {
+      "main": [
+        [
+          {
+            "node": "DB: Select Top Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Arrays for DB": {
+      "main": [
+        [
+          {
+            "node": "DB: Upsert Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DB: Select Top Candidates": {
+      "main": [
+        [
+          {
+            "node": "Build Course Draft JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Course Draft JSON": {
+      "main": [
+        [
+          {
+            "node": "Batch Video IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Jakarta",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "27b36721-542b-4c02-bbe4-cd94c4b6283d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "56ecd34583d6d088500224d5288a64b25c469c36d46ca03f053c15f57c990d1a"
+  },
+  "id": "cYbx0ohoXiZUG5nf",
+  "tags": []
+}

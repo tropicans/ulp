@@ -138,7 +138,10 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                         {/* Multiple Choice / True False */}
                         {(currentQuestion.type === "MULTIPLE_CHOICE" || currentQuestion.type === "TRUE_FALSE") && (
                             <div className="space-y-3">
-                                {currentQuestion.options?.map((choice: string, idx: number) => {
+                                {(Array.isArray(currentQuestion.options)
+                                    ? currentQuestion.options
+                                    : currentQuestion.options?.choices || []
+                                ).map((choice: string, idx: number) => {
                                     const isSelected = answers[currentQuestion.id] === idx
                                     return (
                                         <button

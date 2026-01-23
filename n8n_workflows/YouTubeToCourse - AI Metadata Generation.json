@@ -1,0 +1,1483 @@
+{
+  "name": "YouTubeToCourse - AI Metadata Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "course-metadata-generation",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ed3e32e7-ca11-41bc-a0dc-da835ae92c3d",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -2688,
+        1968
+      ],
+      "webhookId": "fb3ce9e3-ff4b-4a79-93e8-3e81262a1086",
+      "notes": "Receives: playlistId, playlistTitle, totalVideos, language, videoSummaries, allVideoTitles"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"message\": \"Workflow was started\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -1792,
+        2864
+      ],
+      "id": "3f22495c-5626-4cfc-8300-dd23f44104a6",
+      "name": "Respond 202 - Accepted"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7489ae5e-f2dd-4982-87c7-ece6e514bee6",
+              "name": "playlistId",
+              "value": "={{ $json.body.playlistId }}",
+              "type": "string"
+            },
+            {
+              "id": "4a81a82e-1625-4f03-9b9a-d5aced82050c",
+              "name": "playlistTitle",
+              "value": "={{ $json.body.playlistTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "e7576c94-74fe-4337-9cc7-2b84a6a36c56",
+              "name": "totalVideos",
+              "value": "={{ $json.body.totalVideos }}",
+              "type": "number"
+            },
+            {
+              "id": "456cb702-587b-40eb-bb4a-baf664e1cf4f",
+              "name": "language",
+              "value": "={{ $json.body.language }}",
+              "type": "string"
+            },
+            {
+              "id": "5f8e7baf-6473-4931-b893-fc4d3e44c0c9",
+              "name": "videoSummaries",
+              "value": "={{ $json.body.videoSummaries }}",
+              "type": "string"
+            },
+            {
+              "id": "1327c541-8fe8-4f3f-a4e0-b54197091973",
+              "name": "allVideoTitles",
+              "value": "={{ $json.body.allVideoTitles }}",
+              "type": "string"
+            },
+            {
+              "id": "5b2aa4ba-0221-4c9f-9960-1ce183df6e9f",
+              "name": "totalDurationSeconds",
+              "value": "={{ $json.body.totalDurationSeconds }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1568,
+        2864
+      ],
+      "id": "f415f7d8-1cdd-4d4c-a5bb-51572313416b",
+      "name": "Prepare Data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate the best professional course title based on the following content.\nIgnore any existing playlist title if it is empty.\n\nContext / Video Summaries:\n{{$json.videoSummaries}}\n\nAll Video Titles:\n{{$json.allVideoTitles}}\n\nGunakan bahasa: {{$json.language}}.",
+        "options": {
+          "systemMessage": "=You generate clean, concise, professional course titles.\nLanguage must match: {{$json.language}}.\nRespond with ONLY the title.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1344,
+        1120
+      ],
+      "id": "bc8b108e-8bdb-4dc7-a981-7fb39515c54c",
+      "name": "Generate Course Title"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Buatkan short description yang menarik untuk kursus online ini (maksimal 250 karakter).\n\nJudul Kursus: {{ $node[\"Generate Course Title\"].json.output }}\n\nRingkasan Materi Video:\n{{ $json.videoSummaries }}\n\nInstruksi:\n- Fokus pada manfaat praktis yang didapat siswa.\n- Gunakan bahasa yang persuasif (copywriting).\n- Gunakan bahasa: {{ $json.language }}.\n- Output hanya berupa satu paragraf teks pendek.",
+        "options": {
+          "systemMessage": "=You generate short, punchy, single-paragraph course blurbs (max 250 characters). Respond with text only.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        -464
+      ],
+      "id": "f4c48c29-0476-4061-8bbe-705cb6b530f8",
+      "name": "Generate Short Description"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a comprehensive and engaging full course description for the course titled:\n\"{{ $node[\"Generate Course Title\"].json.output }}\"\n\nBased on the detailed video contents below:\n{{ $json.videoSummaries }}\n\nAnd the topic list:\n{{ $json.allVideoTitles }}\n\nInstruksi:\n1. Mulai dengan \"Hook\" yang kuat (mengapa kursus ini penting).\n2. Jelaskan apa saja yang akan dipelajari secara mendalam (berdasarkan ringkasan video).\n3. Sebutkan siapa yang cocok mengambil kursus ini.\n4. Gunakan nada bahasa yang profesional, edukatif, namun persuasif (copywriting untuk LMS).\n5. Gunakan format paragraf yang rapi (3-4 paragraf).\n6. Gunakan bahasa: {{ $json.language }}.",
+        "options": {
+          "systemMessage": "=You write full course descriptions for LMS platforms.\nStructured, clear, 3–5 sentences.\nRespond with paragraphs only.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        -64
+      ],
+      "id": "e18d8187-8f19-4f60-96d1-1e36209955ae",
+      "name": "Generate Full Description"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the difficulty level of this course based on the content depth.\n\nCourse Title: {{ $node[\"Generate Course Title\"].json.output }}\n\nContent Summaries:\n{{ $json.videoSummaries }}\n\nTask:\nClassify the course into exactly one of these categories: Beginner, Intermediate, or Advanced.\n\nResponse format: Just the single word (e.g., \"Intermediate\").",
+        "options": {
+          "systemMessage": "=You classify course difficulty into:\nBeginner, Intermediate, or Advanced.\nReturn only the level.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        336
+      ],
+      "id": "f5361ea6-08e1-4911-9fbc-d4080a44cfe6",
+      "name": "Determine Course Level"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=List 3–5 prerequisites (tools, knowledge, or skills) required before taking this course.\n\nBased on Course Title: {{ $node[\"Generate Course Title\"].json.output }}\nAnd Content Details: {{ $json.videoSummaries }}\n\nOutput format: JSON array of strings.\nExample: [\"Basic understanding of JavaScript\", \"Laptop with 8GB RAM\"]\n\nGunakan bahasa: {{ $json.language }}.",
+        "options": {
+          "systemMessage": "=You list course prerequisites.\nOutput as a JSON array of strings."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        736
+      ],
+      "id": "a8ff2f78-48fe-4a34-9d0d-6b2cfbecb902",
+      "name": "Generate Requirements"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.4,
+          "numPredict": 256,
+          "format": "json"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        960
+      ],
+      "id": "ac115212-fb05-485d-ae53-a585477310d3",
+      "name": "Ollama Chat Model4",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate 5–8 measurable Learning Outcomes for this course. Use Bloom's Taxonomy verbs (e.g., Analyze, Create, Evaluate).\n\nCourse Title: {{ $node[\"Generate Course Title\"].json.output }}\n\nContent Covered:\n{{ $json.videoSummaries }}\n\nInstruksi:\n- Fokus pada kemampuan praktis.\n- Format output wajib: JSON array of strings.\n- Contoh: [\"Memahami dasar Python\", \"Membuat aplikasi web sederhana\"]\n- Gunakan bahasa: {{ $json.language }}.",
+        "options": {
+          "systemMessage": "=You generate measurable learning outcomes.\nFormat: JSON array of strings.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        1232
+      ],
+      "id": "2972d905-ce83-4ac3-91e2-53df2c49e9a9",
+      "name": "Generate Learning Outcomes"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.4,
+          "numPredict": 384,
+          "format": "json"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        1456
+      ],
+      "id": "52567f6c-35db-47c9-bb2e-9c6c724ac951",
+      "name": "Ollama Chat Model5",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate 10 high-traffic SEO keywords relevant to this course content.\n\nContext:\n- Course Title: {{ $node[\"Generate Course Title\"].json.output }}\n- Topics: {{ $json.allVideoTitles }}\n- Content: {{ $json.videoSummaries }}\n\nOutput format: JSON array of strings (e.g., [\"keyword 1\", \"keyword 2\"]).\nGunakan bahasa: {{ $json.language }}.",
+        "options": {
+          "systemMessage": "=You generate SEO keywords.\nReturn array only. No description.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        1632
+      ],
+      "id": "1e3f858a-830f-4818-8fae-9baaddea0c40",
+      "name": "Generate SEO Keywords"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.4,
+          "numPredict": 128,
+          "format": "json"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        1856
+      ],
+      "id": "21deb85e-a4ac-4480-a8e3-3b220fb202ad",
+      "name": "Ollama Chat Model6",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a compelling SEO Meta Description (under 160 characters) for this course page.\n\nCourse Title: {{ $node[\"Generate Course Title\"].json.output }}\nContent Summary: {{ $json.videoSummaries }}\n\nInstruksi:\n- Pastikan mengandung kata kunci utama dari judul.\n- Harus menarik orang untuk klik (high CTR).\n- Gunakan bahasa: {{ $json.language }}.\n- Output hanya teks polosan.",
+        "options": {
+          "systemMessage": "=You generate SEO descriptions under 160 characters.\nReturn plain text only.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        2032
+      ],
+      "id": "3eb87d6c-896a-4217-a166-12b8984c1059",
+      "name": "Generate SEO Description"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.4,
+          "numPredict": 64,
+          "format": "default"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        2256
+      ],
+      "id": "9cfc2446-8765-4877-bf89-b9aa43720a2f",
+      "name": "Ollama Chat Model7",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Based on the completion of the course titled:\n\"{{ $node[\"Generate Course Title\"].json.output }}\"\n\nAnd covering these topics:\n{{ $json.videoSummaries }}\n\nRecommend 3–5 follow-up topics or advanced courses the learner should take next to further their skills.\n\nOutput format: JSON array of strings.\nGunakan bahasa: {{ $json.language }}.",
+        "options": {
+          "systemMessage": "=You generate recommended follow-up courses.\nOutput as array of strings.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        2544
+      ],
+      "id": "b3864a85-90ee-4497-8bc9-efc3949d60d6",
+      "name": "Generate Recommended Next Courses"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.5,
+          "numPredict": 192,
+          "format": "json"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        2768
+      ],
+      "id": "c3953c22-0fa3-4365-8947-e3d45badcb06",
+      "name": "Ollama Chat Model8",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mengambil data dari input node ini\nconst input = $input.first().json;\n\n// --- PERBAIKAN LOGIKA PENGAMBILAN DATA ---\n// Cek di dua tempat dengan aman menggunakan '?.'\n// 1. input.totalDurationSeconds (Jika dari Prepare Data / Set Node)\n// 2. input.body.totalDurationSeconds (Jika dari Webhook langsung)\nlet totalSeconds = input.totalDurationSeconds || input.body?.totalDurationSeconds || 0;\n\n// --- FALLBACK JIKA DATA 0 / KOSONG ---\nif (!totalSeconds) {\n  // Cek totalVideos dengan cara yang sama amannya\n  const totalVideos = input.totalVideos || input.body?.totalVideos || 0;\n  \n  // Estimasi kasar: 1 video = 10 menit (600 detik)\n  totalSeconds = totalVideos * 600; \n}\n\n// --- HITUNG JAM PELAJARAN (JP) ---\n// Konversi ke Menit\nconst totalMinutes = Math.ceil(totalSeconds / 60);\n\n// Hitung JP (1 JP = 45 Menit)\nconst jp = Math.ceil(totalMinutes / 45);\n\nreturn [{\n  json: {\n    JP: Math.max(1, jp), // Minimal 1 JP\n    totalMinutes: totalMinutes,\n    totalSeconds: totalSeconds\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1280,
+        2816
+      ],
+      "id": "9b08e69c-fae8-4ed6-be85-af0fabd56f93",
+      "name": "Generate JP (Jam Pelajaran)"
+    },
+    {
+      "parameters": {
+        "numberInputs": 10
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -640,
+        1088
+      ],
+      "id": "b6961dc9-7464-406f-9099-35242c3e5b9a",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Jalankan sekali untuk SEMUA item\nconst items = $input.all();\n\n// --- HELPER 1: Pembersih JSON Super Kuat ---\nfunction parseAIOutput(raw) {\n  if (typeof raw !== 'string') return raw;\n  \n  // 1. Bersihkan Markdown (```json ... ```)\n  let clean = raw.replace(/```json|```/g, '').trim();\n  \n  // 2. Coba Parse Langsung\n  try { return JSON.parse(clean); } catch (e) {}\n\n  // 3. Coba cari pola Array [...] atau Object {...} di teks sampah\n  const arrayMatch = clean.match(/\\[[\\s\\S]*\\]/);\n  if (arrayMatch) {\n    try { return JSON.parse(arrayMatch[0]); } catch (e) {}\n  }\n  \n  const objectMatch = clean.match(/\\{[\\s\\S]*\\}/);\n  if (objectMatch) {\n    try { return JSON.parse(objectMatch[0]); } catch (e) {}\n  }\n\n  return clean; // Nyerah, kembalikan string aslinya\n}\n\n// --- HELPER 2: Ekstraktor Array Pintar (Fuzzy Finder) ---\n// Mencari array di mana saja (di root, di properti objek, atau dari string list)\nfunction extractArray(rawInput) {\n  if (!rawInput) return [];\n  \n  let data = parseAIOutput(rawInput);\n\n  // KASUS A: Langsung Array\n  if (Array.isArray(data)) return data;\n\n  // KASUS B: Objek { \"key\": [...] } -> Cari value yang berupa Array\n  if (typeof data === 'object' && data !== null) {\n    // Cek apakah ada properti yang isinya array?\n    const values = Object.values(data);\n    const foundArray = values.find(v => Array.isArray(v));\n    if (foundArray) return foundArray;\n    \n    // Cek apakah ada properti string yang sebenarnya array tersembunyi?\n    // Contoh: { \"keywords\": \"[\\\"A\\\", \\\"B\\\"]\" }\n    const foundStringArray = values.find(v => typeof v === 'string' && v.trim().startsWith('['));\n    if (foundStringArray) {\n      try { return JSON.parse(foundStringArray); } catch(e) {}\n    }\n  }\n\n  // KASUS C: String List Manual (Fallback terakhir)\n  // Jika AI bandel kasih output: \"- Poin 1 \\n - Poin 2\"\n  if (typeof data === 'string') {\n    if (data.includes('\\n')) {\n      return data.split('\\n')\n        .map(line => line.replace(/^[\\d-.*•\\s]+/, '').trim()) // Hapus bullet/angka\n        .filter(line => line.length > 3); // Hapus baris kosong/pendek\n    }\n    // Kalau cuma satu kata/kalimat tanpa enter, jadikan array tunggal\n    if (data.length > 3) return [data];\n  }\n\n  return [];\n}\n\n// --- HELPER 3: Ekstraktor String Pintar ---\nfunction extractString(rawInput) {\n  if (!rawInput) return '';\n  let data = parseAIOutput(rawInput);\n\n  if (typeof data === 'string') return data.replace(/^\"|\"$/g, ''); // Hapus quote berlebih\n  \n  // Kalau objek, ambil value string terpanjang (biasanya itu deskripsinya)\n  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {\n    const values = Object.values(data);\n    // Cari value string yang panjang\n    const foundString = values.find(v => typeof v === 'string' && v.length > 10);\n    if (foundString) return foundString;\n    // Kalau gak ketemu, ambil key pertama\n    return Object.keys(data)[0] || '';\n  }\n  \n  return String(data);\n}\n\n// ==================================================\n// MAIN MAPPING LOGIC\n// ==================================================\n\n// 1. COURSE TITLE (Index 0)\nconst courseTitle = extractString(items[0]?.json?.output);\n\n// 2. SHORT DESC (Index 1)\nconst courseShortDescription = extractString(items[1]?.json?.output);\n\n// 3. FULL DESC (Index 2)\nconst courseDescription = extractString(items[2]?.json?.output);\n\n// 4. LEVEL (Index 3)\nconst courseLevel = extractString(items[3]?.json?.output).replace(/[\"{}]/g, '').trim();\n\n// 5. PREREQUISITES (Index 4) -> Wajib Array\nconst prerequisites = extractArray(items[4]?.json?.output);\n\n// 6. JP (Index 5)\nconst jp = items[5]?.json?.JP || 0;\n\n// 7. LEARNING OUTCOMES (Index 6) -> Wajib Array\n// Helper extractArray akan otomatis mencari array apapun di dalam output node ini\nconst learningOutcomes = extractArray(items[6]?.json?.output);\n\n// 8. SEO KEYWORDS (Index 7) -> Wajib Array\nconst keywords = extractArray(items[7]?.json?.output);\n\n// 9. SEO DESCRIPTION (Index 8)\nconst seoDescription = extractString(items[8]?.json?.output);\n\n// 10. RECOMMENDED COURSES (Index 9) -> Wajib Array\nconst recommendedNextCourses = extractArray(items[9]?.json?.output);\n\n// --- BASE METADATA ---\nfunction safeGetNodeJson(nodeName) {\n  try {\n    const data = $node[nodeName].json;\n    if (data && Object.keys(data).length > 0) return data;\n  } catch (e) {}\n  return null;\n}\n\nconst base = safeGetNodeJson(\"Compile video summaries\") || safeGetNodeJson(\"Prepare Data\");\n\nreturn [{\n  json: {\n    playlistId: base?.playlistId || 'UNKNOWN',\n    language: base?.language || 'id',\n    courseTitle,\n    courseShortDescription,\n    courseDescription,\n    courseLevel,\n    prerequisites,\n    learningOutcomes,     // <-- Sudah diperbaiki dengan Fuzzy Logic\n    keywords,             // <-- Sudah diperbaiki\n    seoDescription,\n    recommendedNextCourses, // <-- Sudah diperbaiki\n    jp,\n  },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        1216
+      ],
+      "id": "5df0e46d-b697-4236-b69a-9bc604af44b1",
+      "name": "Combine Final Metadata"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.4,
+          "numPredict": 128,
+          "format": "default"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        -240
+      ],
+      "id": "a5ea18c4-dbf6-4892-8d06-71665f718b41",
+      "name": "Ollama Generate Short Description",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.4,
+          "numPredict": 512,
+          "format": "default"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        160
+      ],
+      "id": "d506d80c-d91a-474d-af7c-727c0ebcabe1",
+      "name": "Ollama Generate Full Description",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f73ac002-198d-46d8-b71c-fc23a7b60f92",
+              "name": "playlist_id",
+              "value": "={{ $json.playlistId }}",
+              "type": "string"
+            },
+            {
+              "id": "564f4151-21cf-4646-8cc3-188715221e8b",
+              "name": "course_title",
+              "value": "={{ $json.courseTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "d29856b8-174b-4061-9475-35b5674a23ee",
+              "name": "course_short_desc",
+              "value": "={{ $json.courseShortDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "59bc2939-1f74-487d-8d30-764d4d883108",
+              "name": "course_desc",
+              "value": "={{ $json.courseDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "6f1118b5-bba7-4df6-8dac-75e864943223",
+              "name": "requirements",
+              "value": "={{ $json.prerequisites }}",
+              "type": "array"
+            },
+            {
+              "id": "4be9f867-51db-4b8e-876e-2374dfd17099",
+              "name": "outcomes",
+              "value": "={{ $json.learningOutcomes }}",
+              "type": "array"
+            },
+            {
+              "id": "642b8b25-288c-45f9-b8c7-f6956a4945fc",
+              "name": "meta_keys",
+              "value": "={{ $json.keywords }}",
+              "type": "array"
+            },
+            {
+              "id": "d96c8586-9d28-48cb-afb5-4699ab688f70",
+              "name": "meta_desc",
+              "value": "={{ $json.seoDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "1dcc0a5e-ed0c-44a7-a5df-9043424b9e22",
+              "name": "course_level",
+              "value": "={{ $json.courseLevel }}",
+              "type": "string"
+            },
+            {
+              "id": "fc2889d3-149c-40d4-85bd-d588262b0cac",
+              "name": "recommended_next_courses",
+              "value": "={{ $json.recommendedNextCourses }}",
+              "type": "array"
+            },
+            {
+              "id": "1c990574-189f-4bd0-9bc4-307282a1f5d3",
+              "name": "language",
+              "value": "={{ $json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "688ed8b6-135b-42e7-b176-4d96e18f56f3",
+              "name": "jp",
+              "value": "={{ $json.jp }}",
+              "type": "number"
+            },
+            {
+              "id": "11675cbc-79be-4447-b348-e572b88f8cbf",
+              "name": "status",
+              "value": "completed",
+              "type": "string"
+            },
+            {
+              "id": "c9b9c235-c7c9-4847-8b26-93c8e7c2c570",
+              "name": "updated_at",
+              "value": "={{ new Date().toISOString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        1216
+      ],
+      "id": "5bdc537f-2c08-4bad-b9e6-8149ea120ec6",
+      "name": "Combine Final Metadata1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlists",
+          "mode": "list",
+          "cachedResultName": "yt_playlists"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "playlist_id": "={{ $json.playlist_id }}",
+            "course_title": "={{ $json.course_title }}",
+            "course_short_desc": "={{ $json.course_short_desc }}",
+            "course_desc": "={{ $json.course_desc }}",
+            "requirements": "={{ $json.requirements }}",
+            "outcomes": "={{ $json.outcomes }}",
+            "meta_keys": "={{ $json.meta_keys }}",
+            "meta_desc": "={{ $json.meta_desc }}",
+            "status": "={{ $json.status }}",
+            "updated_at": "={{ $json.updated_at }}",
+            "recommended_next_courses": "={{ $json.recommended_next_courses }}",
+            "language": "={{ $json.language }}",
+            "jp": "={{ $json.jp }}",
+            "course_level": "={{ $json.course_level }}"
+          },
+          "matchingColumns": [
+            "playlist_id"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "playlist_title",
+              "displayName": "playlist_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "playlist_url",
+              "displayName": "playlist_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "total_videos",
+              "displayName": "total_videos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "course_title",
+              "displayName": "course_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "course_short_desc",
+              "displayName": "course_short_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "course_desc",
+              "displayName": "course_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requirements",
+              "displayName": "requirements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "outcomes",
+              "displayName": "outcomes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "meta_keys",
+              "displayName": "meta_keys",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "meta_desc",
+              "displayName": "meta_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quiz_prepost",
+              "displayName": "quiz_prepost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_quiz_prepost",
+              "displayName": "has_quiz_prepost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quiz_prepost_count",
+              "displayName": "quiz_prepost_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "author",
+              "displayName": "author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "course_level",
+              "displayName": "course_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recommended_next_courses",
+              "displayName": "recommended_next_courses",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "language",
+              "displayName": "language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "jp",
+              "displayName": "jp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        32,
+        1216
+      ],
+      "id": "2402e0ce-68cb-4884-bde2-fe63e4f72acb",
+      "name": "Update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://youtubetocourse:8789/api/callback",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  playlist_id: $json.playlist_id,\n  course_title: $json.course_title,\n  course_short_desc: $json.course_short_desc,\n  course_desc: $json.course_desc,\n  course_level: $json.course_level,\n  language: $json.language,\n  requirements: $json.requirements ?? [],\n  outcomes: $json.outcomes ?? [],\n  meta_keys: $json.meta_keys ?? [],\n  meta_desc: $json.meta_desc,\n  author: $json.author ?? null,\n  source: $json.source ?? 'n8n-workflow',\n  status: 'completed',\n}) }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        256,
+        1216
+      ],
+      "id": "ae92408a-b80e-43bf-a0ae-5d5e922067eb",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f7c74b1e-f334-4284-9823-aefd72104d92",
+              "leftValue": "={{ $json.body.source }}",
+              "rightValue": "youtubetocourse-auto-trigger",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2464,
+        1968
+      ],
+      "id": "48eaba8f-35c9-4a14-b07b-f29ca4e730cb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Check if production is complete\nSELECT \n  p.playlist_id,\n  p.total_videos,\n  COUNT(i.video_no) as processed_videos,\n  COUNT(CASE WHEN i.transcript IS NOT NULL AND i.summary IS NOT NULL AND i.quiz_knowledge_check IS NOT NULL THEN 1 END) as completed_videos,\n  p.quiz_prepost IS NOT NULL as has_prepost\nFROM yt_playlists p\nLEFT JOIN yt_playlist_items i ON p.playlist_id = i.playlist_id\nWHERE p.playlist_id = '{{$json.body.playlist_id}}'\nGROUP BY p.playlist_id, p.total_videos, p.quiz_prepost;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2240,
+        1184
+      ],
+      "id": "a0aaad37-fabe-4351-8a31-efb22c7f75ac",
+      "name": "Check Production Status",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "prod-complete-check",
+              "leftValue": "={{ $json.total_videos === $json.completed_videos && $json.has_prepost === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2016,
+        1120
+      ],
+      "id": "ffbb4417-1568-4f96-9fed-fe80667eaddf",
+      "name": "Production Complete?"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1792,
+        2672
+      ],
+      "id": "f25a2457-12d6-4c4b-91f1-2fc831909eb0",
+      "name": "Wait 30s",
+      "webhookId": "wait-production-webhook"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    pi.playlist_id,\n    pi.video_no,\n    pi.video_title,\n    pi.has_transcript,\n    pi.transcript,\n    pi.has_summary,\n    pi.summary,\n    p.playlist_title,\n    COUNT(*) OVER () as total_videos\n  FROM yt_playlist_items pi\n  JOIN yt_playlists p ON pi.playlist_id = p.playlist_id\n  WHERE pi.playlist_id = '{{$json.body.playlist_id}}'\n  ORDER BY pi.video_no;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1792,
+        1072
+      ],
+      "id": "0f46b53c-5ae3-408c-88df-15ffec77b1eb",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Deteksi bentuk data dari node sebelumnya\n// Kalau items[0].json adalah array -> pakai itu\n// Kalau tidak, berarti setiap item adalah 1 video -> gabung semua items\nlet videos;\n\nif (Array.isArray(items[0].json)) {\n  videos = items[0].json;\n} else {\n  videos = items.map(i => i.json);\n}\n\n// Video pertama (buat ambil info playlist)\nconst first = videos[0] ?? {};\n\n// === Silakan sesuaikan 2 baris ini sesuai kebutuhanmu ===\n\n// Kalau kamu sudah punya playlist_id di data, ganti jadi first.playlist_id\nconst playlistId = first.playlist_id ?? 'test-webhook-001';\n\n// Kalau judul playlist mau kamu override manual, ganti string-nya\nconst playlistTitle = first.playlist_title ?? 'JavaScript untuk Pemula';\n\n// Total video: pakai field dari data kalau ada, kalau tidak pakai panjang array\nconst totalVideos = Number(first.total_videos ?? videos.length ?? 0);\n\n// Bahasa: saat ini hardcode, karena tidak ada field language di input\nconst language = 'Bahasa Indonesia';\n\n// Susun kalimat ringkasan per video\n// Di sini aku buat pola simple: \"Video 1: <judul>. Video 2: <judul>.\"\n// Kalau mau pakai summary penuh, tinggal ganti di map()\nconst videoSummaries = videos\n  .map(v => {\n    // Coba ambil bagian pendek dari summary\n    if (v.summary) {\n      // Misal ambil kalimat pertama saja\n      const firstSentence = v.summary.split('. ')[0].trim();\n      return `Video ${v.video_no}: ${firstSentence}.`;\n    }\n    // Fallback ke judul kalau tidak ada summary\n    return `Video ${v.video_no}: ${v.refined_title}.`;\n  })\n  .join(' ');\n\n// Gabungkan semua judul video\nconst allVideoTitles = videos\n  .map(v => v.refined_title)\n  .join(', ');\n\n// Hasil akhir yang kamu mau\nconst result = {\n  playlistId,\n  playlistTitle,\n  totalVideos,\n  language,\n  videoSummaries,\n  allVideoTitles,\n};\n\n// Code node harus return array of items dengan properti json\nreturn [\n  {\n    json: result,\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1568,
+        1072
+      ],
+      "id": "9cda77a1-907f-4c6b-978e-98980c57d80c",
+      "name": "Compile video summaries"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.5,
+          "numPredict": 64,
+          "format": "default"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        1344
+      ],
+      "id": "a5b2c3df-d652-4ae4-b512-ff2d8c70fe18",
+      "name": "Ollama Generate Course Title",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.3,
+          "numPredict": 32,
+          "format": "default"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        560
+      ],
+      "id": "7efec9d6-3ff7-4924-8c4f-949b57d60c5d",
+      "name": "Ollama Determine Course Level",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond 202 - Accepted": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Course Title",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate JP (Jam Pelajaran)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Course Title": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Short Description",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Full Description",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Determine Course Level",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Requirements",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Learning Outcomes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate SEO Keywords",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate SEO Description",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Recommended Next Courses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Requirements",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Learning Outcomes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate SEO Keywords",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate SEO Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Recommended Next Courses",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Learning Outcomes": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Generate Requirements": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Combine Final Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Short Description": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Generate Full Description": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Determine Course Level": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Generate JP (Jam Pelajaran)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Generate SEO Keywords": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "Generate SEO Description": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 8
+          }
+        ]
+      ]
+    },
+    "Generate Recommended Next Courses": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 9
+          }
+        ]
+      ]
+    },
+    "Ollama Generate Short Description": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Short Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Generate Full Description": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Full Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Final Metadata": {
+      "main": [
+        [
+          {
+            "node": "Combine Final Metadata1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Final Metadata1": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update rows in a table": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Check Production Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 202 - Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Production Status": {
+      "main": [
+        [
+          {
+            "node": "Production Complete?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Production Complete?": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [
+          {
+            "node": "Check Production Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Compile video summaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile video summaries": {
+      "main": [
+        [
+          {
+            "node": "Generate Course Title",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate JP (Jam Pelajaran)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Generate Course Title": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Course Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Determine Course Level": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Determine Course Level",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f3cdbeb-409e-429e-b967-cb0a824df69e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "56ecd34583d6d088500224d5288a64b25c469c36d46ca03f053c15f57c990d1a"
+  },
+  "id": "TvJDKxiBiBruCmah",
+  "tags": []
+}

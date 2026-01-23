@@ -246,17 +246,25 @@ export async function getPlatformAnalytics(timeframe: 'REALTIME' | 'DAILY' | 'MO
         // Calculate date ranges based on timeframe
         const now = new Date()
         const startDate = new Date()
+        const prevStartDate = new Date()
+        const prevEndDate = new Date()
 
         if (timeframe === 'REALTIME') {
             startDate.setHours(now.getHours() - 24)
+            prevEndDate.setHours(now.getHours() - 24)
+            prevStartDate.setHours(now.getHours() - 48)
         } else if (timeframe === 'DAILY') {
             startDate.setDate(now.getDate() - 7)
+            prevEndDate.setDate(now.getDate() - 7)
+            prevStartDate.setDate(now.getDate() - 14)
         } else {
             startDate.setMonth(now.getMonth() - 6)
+            prevEndDate.setMonth(now.getMonth() - 6)
+            prevStartDate.setMonth(now.getMonth() - 12)
         }
 
-        // 1. HUD Stats
-        const [learnerCount, completionCount, pointsSum, coursesCount] = await Promise.all([
+        // 1. HUD Stats - Current Period
+        const [learnerCount, totalEnrollments, completionCount, pointsSum, coursesCount] = await Promise.all([
             prisma.user.count({
                 where: {
                     role: "LEARNER",
@@ -265,7 +273,14 @@ export async function getPlatformAnalytics(timeframe: 'REALTIME' | 'DAILY' | 'MO
             }),
             prisma.enrollment.count({
                 where: {
+                    enrolledAt: { gte: startDate },
+                    ...(!isSuper && { User: { unitKerja } })
+                }
+            }),
+            prisma.enrollment.count({
+                where: {
                     status: "COMPLETED",
+                    completedAt: { gte: startDate },
                     ...(!isSuper && { User: { unitKerja } })
                 }
             }),
@@ -281,7 +296,32 @@ export async function getPlatformAnalytics(timeframe: 'REALTIME' | 'DAILY' | 'MO
             })
         ])
 
-        // 2. Trending (Popular) Courses
+        // 2. Previous Period Stats for Growth Calculation
+        const [prevEnrollments, prevCompletions] = await Promise.all([
+            prisma.enrollment.count({
+                where: {
+                    enrolledAt: { gte: prevStartDate, lt: prevEndDate },
+                    ...(!isSuper && { User: { unitKerja } })
+                }
+            }),
+            prisma.enrollment.count({
+                where: {
+                    status: "COMPLETED",
+                    completedAt: { gte: prevStartDate, lt: prevEndDate },
+                    ...(!isSuper && { User: { unitKerja } })
+                }
+            })
+        ])
+
+        // Calculate real growth percentages
+        const enrollmentGrowth = prevEnrollments > 0
+            ? (((totalEnrollments - prevEnrollments) / prevEnrollments) * 100).toFixed(1)
+            : totalEnrollments > 0 ? '100' : '0'
+        const completionGrowth = prevCompletions > 0
+            ? (((completionCount - prevCompletions) / prevCompletions) * 100).toFixed(1)
+            : completionCount > 0 ? '100' : '0'
+
+        // 3. Trending (Popular) Courses with real enrollment counts
         const popularCourses = await prisma.course.findMany({
             where: !isSuper ? { User: { unitKerja } } : {},
             include: {
@@ -294,10 +334,10 @@ export async function getPlatformAnalytics(timeframe: 'REALTIME' | 'DAILY' | 'MO
                     _count: "desc"
                 }
             },
-            take: 4
+            take: 5
         })
 
-        // 3. Activity Trend Data
+        // 4. Real Activity Trend Data (Progress records)
         const recentActivity = await prisma.progress.findMany({
             where: {
                 createdAt: { gte: startDate },
@@ -306,7 +346,7 @@ export async function getPlatformAnalytics(timeframe: 'REALTIME' | 'DAILY' | 'MO
             select: { createdAt: true }
         })
 
-        // Generate trend buckets
+        // Generate trend buckets with REAL data (no random)
         const trend: number[] = []
         const bucketCount = timeframe === 'MONTHLY' ? 6 : (timeframe === 'DAILY' ? 7 : 12)
 
@@ -326,23 +366,25 @@ export async function getPlatformAnalytics(timeframe: 'REALTIME' | 'DAILY' | 'MO
                 d.setMonth(now.getMonth() - (bucketCount - 1 - i))
                 count = recentActivity.filter(a => a.createdAt.getMonth() === d.getMonth()).length
             }
-            // Add a base minimum for visual weight and a multiplier for drama
-            trend.push((count * 15) + (Math.random() * 5) + 5)
+            // Scale for visual representation but keep real proportions
+            trend.push(Math.max(count * 10, 5))
         }
 
-        const growthMap = {
-            REALTIME: '+2.4%',
-            DAILY: '+12.8%',
-            MONTHLY: '+45.2%'
-        }
+        // Calculate completion rate
+        const completionRate = totalEnrollments > 0
+            ? ((completionCount / totalEnrollments) * 100).toFixed(1)
+            : '0'
 
         return {
             stats: {
                 learners: learnerCount,
+                enrollments: totalEnrollments,
                 completions: completionCount,
                 points: pointsSum._sum.points || 0,
                 courses: coursesCount,
-                growth: growthMap[timeframe]
+                completionRate: parseFloat(completionRate),
+                growth: enrollmentGrowth.startsWith('-') ? enrollmentGrowth + '%' : '+' + enrollmentGrowth + '%',
+                completionGrowth: completionGrowth.startsWith('-') ? completionGrowth + '%' : '+' + completionGrowth + '%'
             },
             popularCourses: popularCourses.map(c => ({
                 id: c.id,

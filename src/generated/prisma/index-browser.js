@@ -194,6 +194,17 @@ exports.Prisma.CertificateScalarFieldEnum = {
   isValid: 'isValid'
 };
 
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  icon: 'icon',
+  description: 'description',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CourseScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -203,6 +214,7 @@ exports.Prisma.CourseScalarFieldEnum = {
   deliveryMode: 'deliveryMode',
   difficulty: 'difficulty',
   category: 'category',
+  categoryId: 'categoryId',
   tags: 'tags',
   capacity: 'capacity',
   duration: 'duration',
@@ -382,6 +394,7 @@ exports.Prisma.QuizScalarFieldEnum = {
   timeLimit: 'timeLimit',
   maxAttempts: 'maxAttempts',
   shuffleQuestions: 'shuffleQuestions',
+  shuffleOptions: 'shuffleOptions',
   showCorrectAnswers: 'showCorrectAnswers',
   isAIGenerated: 'isAIGenerated',
   createdAt: 'createdAt',
@@ -421,6 +434,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   image: 'image',
   emailVerified: 'emailVerified',
+  phoneVerified: 'phoneVerified',
   unitKerja: 'unitKerja',
   phone: 'phone',
   jabatan: 'jabatan',
@@ -433,6 +447,15 @@ exports.Prisma.UserScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserVerificationOTPScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.YtPlaylistScalarFieldEnum = {
@@ -572,6 +595,28 @@ exports.Prisma.ProcessingJobScalarFieldEnum = {
   retries: 'retries',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.XapiOutboxScalarFieldEnum = {
+  id: 'id',
+  idempotencyKey: 'idempotencyKey',
+  statement: 'statement',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  processedAt: 'processedAt'
+};
+
+exports.Prisma.LearnerActivityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  courseId: 'courseId',
+  activityType: 'activityType',
+  entityId: 'entityId',
+  entityTitle: 'entityTitle',
+  metadata: 'metadata',
+  occurredAt: 'occurredAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -716,6 +761,7 @@ exports.Prisma.ModelName = {
   AuditLog: 'AuditLog',
   Badge: 'Badge',
   Certificate: 'Certificate',
+  Category: 'Category',
   Course: 'Course',
   CourseSession: 'CourseSession',
   Enrollment: 'Enrollment',
@@ -733,6 +779,7 @@ exports.Prisma.ModelName = {
   Session: 'Session',
   SystemSetting: 'SystemSetting',
   User: 'User',
+  UserVerificationOTP: 'UserVerificationOTP',
   YtPlaylist: 'YtPlaylist',
   YtPlaylistItem: 'YtPlaylistItem',
   YtUserSettings: 'YtUserSettings',
@@ -740,7 +787,9 @@ exports.Prisma.ModelName = {
   YtCurationCandidate: 'YtCurationCandidate',
   UserBadge: 'UserBadge',
   VerificationToken: 'VerificationToken',
-  ProcessingJob: 'ProcessingJob'
+  ProcessingJob: 'ProcessingJob',
+  XapiOutbox: 'XapiOutbox',
+  LearnerActivity: 'LearnerActivity'
 };
 
 /**

@@ -1,0 +1,3052 @@
+{
+  "name": "YouTubeToCourse - Production",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "youtube-to-course",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -4880,
+        768
+      ],
+      "id": "cc9211b3-8ec6-42b8-9ebe-fe7c02eeb2b2",
+      "name": "Webhook",
+      "webhookId": "2237a6b8-968a-4b5c-a1d6-4aff3dd28226"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse webhook payload and create playlist + items rows\nfunction parseDurationToSeconds(s) {\n  if (typeof s !== 'string') return null;\n  const parts = s.split(':').map(Number);\n  if (parts.some(Number.isNaN)) return null;\n  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];\n  if (parts.length === 2) return parts[0]*60 + parts[1];\n  const n = Number(s);\n  return Number.isNaN(n) ? null : n;\n}\n\nconst nowIso = new Date().toISOString();\nconst inputs = await $input.all();\nlet root = inputs?.[0]?.json;\nif (Array.isArray(root)) root = root[0];\nlet payload = root?.body;\nif (typeof payload === 'string') {\n  try { payload = JSON.parse(payload); } catch {}\n}\n\nif (!payload || !payload.playlist || !Array.isArray(payload.items)) {\n  throw new Error('Invalid payload structure');\n}\n\nconst { source, playlist, items } = payload;\n\nconst out = [{\n  json: {\n    target_table: 'yt_playlists',\n    source: source ?? null,\n    playlist_id: playlist.id ?? null,\n    playlist_title: playlist.title ?? null,\n    playlist_url: playlist.url ?? null,\n    playlist_author: playlist.author ?? null,\n    playlist_total: Number(playlist.total ?? 0),\n    received_at: nowIso,\n  }\n}];\n\nfor (const v of items) {\n  const durationStr = v['Durasi'] ?? null;\n  out.push({\n    json: {\n      target_table: 'yt_playlist_items',\n      source: source ?? null,\n      playlist_id: playlist.id ?? null,\n      video_no: Number(v['No'] ?? null),\n      video_title: v['Judul Video'] ?? null,\n      duration_str: durationStr,\n      duration_seconds: parseDurationToSeconds(durationStr),\n      embed_url: v['Alamat Embed'] ?? null,\n      video_id: v['videoId'] ?? null,\n      audio_path: v['audioPath'] ?? null,\n      audio_file_path: v['audioFilePath'] ?? null,\n      status: (v['Status'] ?? null) || null,\n      received_at: nowIso,\n\n      // ✅ NEW: langsung inject dari payload\n      transcript: v.transcript ?? null,\n      summary: v.summary ?? null,\n      quiz_knowledge_check: v.quiz_knowledge_check ?? null,\n\n      has_transcript: !!(v.transcript && v.transcript.trim().length),\n      has_summary: !!(v.summary && v.summary.trim().length),\n      has_quiz_knowledge_check: !!(v.quiz_knowledge_check && v.quiz_knowledge_check.trim().length)\n    }\n  });\n}\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4656,
+        768
+      ],
+      "id": "ed9a240a-30d6-49c4-9dae-cad9853d38e3",
+      "name": "Parse Payload"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.target_table}}",
+                    "rightValue": "yt_playlists",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f2399184-0169-44d2-aaa0-2ae4b4f3cc00"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.target_table}}",
+                    "rightValue": "yt_playlist_items",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c234a2df-179d-489f-a85d-f3578e8a66ac"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -4432,
+        768
+      ],
+      "id": "ac269bca-b122-4731-82ce-d9571e0c98f9",
+      "name": "Route by Table"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlists",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "playlist_id": "={{ $json.playlist_id }}",
+            "playlist_title": "={{ $json.playlist_title }}",
+            "playlist_url": "={{ $json.playlist_url }}",
+            "total_videos": "={{ $json.playlist_total }}",
+            "source": "={{ $json.source }}",
+            "created_at": "={{ $json.received_at }}"
+          },
+          "matchingColumns": [
+            "playlist_id"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "playlist_title",
+              "displayName": "playlist_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "playlist_url",
+              "displayName": "playlist_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "total_videos",
+              "displayName": "total_videos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "course_title",
+              "displayName": "course_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "course_short_desc",
+              "displayName": "course_short_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "course_desc",
+              "displayName": "course_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "requirements",
+              "displayName": "requirements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "outcomes",
+              "displayName": "outcomes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "meta_keys",
+              "displayName": "meta_keys",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "meta_desc",
+              "displayName": "meta_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "quiz_prepost",
+              "displayName": "quiz_prepost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3312,
+        352
+      ],
+      "id": "f3e50e6b-7b60-4abc-9884-aaeaab3feced",
+      "name": "Upsert Playlist",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Get items that need processing (missing transcript OR summary OR KC)\nSELECT \n  video_no,\n  video_id,\n  video_title,\n  duration_str,\n  duration_seconds,\n  embed_url,\n  audio_path,\n  audio_file_path,\n  transcript,\n  summary,\n  refined_title,\n  quiz_knowledge_check,\n  playlist_id,\n  CASE \n    WHEN transcript IS NULL OR transcript = '' THEN true\n    ELSE false\n  END as needs_transcript,\n  CASE \n    WHEN summary IS NULL OR summary = '' THEN true\n    ELSE false\n  END as needs_summary,\n  CASE \n    WHEN quiz_knowledge_check IS NULL OR quiz_knowledge_check = '' THEN true\n    ELSE false\n  END as needs_kc\nFROM public.yt_playlist_items\nWHERE playlist_id = '{{$json.playlist_id}}'\n  AND (\n    transcript IS NULL OR transcript = '' OR\n    summary IS NULL OR summary = '' OR\n    quiz_knowledge_check IS NULL OR quiz_knowledge_check = ''\n  )\nORDER BY video_no;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3760,
+        1040
+      ],
+      "id": "2dc476d1-f7fc-42d1-ace8-05c764c5d885",
+      "name": "Get Incomplete Items",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.video_no }}",
+              "rightValue": "",
+              "operator": {
+                "type": "any",
+                "operation": "exists"
+              },
+              "id": "a50d59d1-3cd4-4a6e-9872-635fd1ac349e"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3536,
+        1040
+      ],
+      "id": "49cafb57-45a9-4901-883c-21d7eadad938",
+      "name": "Has Incomplete Items?"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3312,
+        1152
+      ],
+      "id": "178f3373-10ff-4370-bbfc-4d9ecf7b5d15",
+      "name": "Loop Incomplete Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.needs_transcript }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              },
+              "id": "21f88eb0-e0f2-4950-a066-c6efb583d1cc"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3088,
+        1200
+      ],
+      "id": "4b653986-8693-4153-866b-c8f8c58ee803",
+      "name": "Needs Transcript?"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.audio_file_path }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -2864,
+        1312
+      ],
+      "id": "5cc39809-9ef8-4264-89a3-f49dfe703b99",
+      "name": "Read Audio File"
+    },
+    {
+      "parameters": {
+        "amount": "={{ Math.floor(Math.random() * 16) + 30 }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2640,
+        1312
+      ],
+      "id": "5e3fd6e2-f222-496e-8715-b20572208abe",
+      "name": "Wait Before Transcribe",
+      "webhookId": "transcribe-wait-webhook"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "operation": "speechToText",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        -2416,
+        1312
+      ],
+      "id": "8d5b9e8e-750c-4f16-9075-7f9294500780",
+      "name": "Transcribe Audio",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "4bulejH8NnQu9hx8",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge original data with transcript\nconst transcriptData = $input.first().json;\n\n// Get original data from previous node \"Loop Incomplete Items\"\nlet originalData = {};\ntry {\n  originalData = $('Loop Incomplete Items').first().json;\n} catch {\n  // Fallback: try to get from current item\n  originalData = transcriptData;\n}\n\n// Merge transcript with original video data\nreturn [{\n  json: {\n    ...originalData,\n    text: transcriptData.text || '',\n    transcript: transcriptData.text || '',\n    transcript_generated: true,\n    playlist_id: originalData.playlist_id,\n    video_no: originalData.video_no\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2192,
+        1312
+      ],
+      "id": "e89403e7-5c62-4eab-8534-4bf573c17b2e",
+      "name": "Format Transcript Data"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlist_items",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "transcript": "={{ $json.text }}",
+            "playlist_id": "={{ $json.playlist_id }}",
+            "video_no": "={{ $json.video_no }}",
+            "transcript_length": "={{ $json.text ? $json.text.length : 0 }}",
+            "word_count": "={{ $json.text ? $json.text.split(/\\s+/).filter(w => w.length > 0).length : 0 }}",
+            "has_transcript": "={{ !!$json.text && $json.text.trim().length > 0 }}"
+          },
+          "matchingColumns": [
+            "playlist_id",
+            "video_no"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_no",
+              "displayName": "video_no",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video_title",
+              "displayName": "video_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_str",
+              "displayName": "duration_str",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_seconds",
+              "displayName": "duration_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embed_url",
+              "displayName": "embed_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "refined_title",
+              "displayName": "refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quiz_knowledge_check",
+              "displayName": "quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_transcript",
+              "displayName": "has_transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "has_summary",
+              "displayName": "has_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_refined_title",
+              "displayName": "has_refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_quiz_knowledge_check",
+              "displayName": "has_quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript_length",
+              "displayName": "transcript_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "word_count",
+              "displayName": "word_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1968,
+        1312
+      ],
+      "id": "3502af3f-6dbd-484a-afeb-47de77e6627e",
+      "name": "Save Transcript",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.needs_summary }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              },
+              "id": "bb7deca9-238a-4064-b13c-c1b73ee013e9"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1744,
+        1200
+      ],
+      "id": "74c98387-b262-45b5-b233-6afd65445063",
+      "name": "Needs Summary?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Kamu adalah expert dalam membuat ringkasan video dalam Bahasa Indonesia. Tugas kamu adalah membuat ringkasan yang padat, jelas, dan informatif.\n\nJANGAN menulis proses berpikir atau reasoning. Langsung berikan ringkasan saja.\n\nJUDUL VIDEO: {{ $json.video_title }}\n\nTRANSKRIP:\n{{ $json.text || $json.transcript }}\n\nINSTRUKSI:\n1. Buat ringkasan dalam SATU paragraf panjang (150-200 kata)\n2. WAJIB mulai dengan \"Video ini membahas tentang\"\n3. Jelaskan poin-poin utama dari transkrip\n4. Gunakan Bahasa Indonesia yang baik dan benar\n5. Fokus pada isi, bukan proses berpikir\n6. Jangan gunakan tag XML seperti <think> atau sejenisnya\n\nLangsung tulis ringkasan di bawah ini:\n\nVideo ini membahas tentang",
+        "options": {
+          "systemMessage": "=You are an expert at creating concise video summaries in Indonesian language.\n\nCRITICAL RULES:\n1. Always start with \"Video ini membahas tentang\"\n2. Write in one paragraph\n3. DO NOT include thinking process or reasoning\n4. DO NOT use XML tags like <think>, <reasoning>, etc\n5. Write directly in Indonesian\n6. Maximum 200 words\n7. Be concise and informative\n\nOutput ONLY the summary, nothing else."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1520,
+        1248
+      ],
+      "id": "c52028f6-82fd-42b9-a489-0bdbc0fb56b7",
+      "name": "Generate Summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// EXTRACT SUMMARY & PRESERVE ALL FIELDS\n// ==========================================\n\nconst item = $input.first().json;\n\nconsole.log('=== Full Input Data ===');\nconsole.log('Available keys:', Object.keys(item));\nconsole.log('Full item:', JSON.stringify(item, null, 2));\n\n// Extract summary from various possible fields\nlet rawSummary = item.output || item.text || item.response || item.message?.content || '';\n\n// Also check nested structures\nif (!rawSummary && item.candidates && item.candidates[0]) {\n  const candidate = item.candidates[0];\n  if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {\n    rawSummary = candidate.content.parts[0].text;\n  }\n}\n\nconsole.log('Raw summary extracted:', rawSummary?.substring(0, 100));\n\n// Remove <think> tags and content\nrawSummary = rawSummary.replace(/<think>[\\s\\S]*?<\\/think>/gi, '');\n\n// Remove other XML-like tags\nrawSummary = rawSummary.replace(/<\\/?[^>]+(>|$)/g, '');\n\n// Clean up whitespace\nrawSummary = rawSummary.trim();\n\n// Find the actual summary (starts with \"Video ini membahas\")\nlet summary = rawSummary;\n\nif (!summary.startsWith('Video ini membahas')) {\n  const match = summary.match(/Video ini membahas tentang[\\s\\S]*/i);\n  if (match) {\n    summary = match[0];\n  } else {\n    const lines = summary.split('\\n');\n    const summaryLine = lines.find(line => line.toLowerCase().includes('video ini membahas'));\n    if (summaryLine) {\n      summary = summaryLine;\n    }\n  }\n}\n\n// Final cleanup\nsummary = summary\n  .replace(/\\n+/g, ' ')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\n// Validation\nif (!summary || summary.length < 20) {\n  console.error('❌ Invalid summary after cleanup');\n  console.error('Original:', rawSummary);\n  throw new Error('Failed to extract valid summary from AI response');\n}\n\n// Ensure it starts with the required phrase\nif (!summary.toLowerCase().startsWith('video ini membahas')) {\n  summary = 'Video ini membahas tentang ' + summary;\n}\n\nconsole.log('✅ Clean summary:', summary);\nconsole.log('Length:', summary.length, 'characters');\n\n// ==========================================\n// CRITICAL: GET REQUIRED FIELDS\n// ==========================================\n\n// Try to get fields from current item\nlet playlist_id = item.playlist_id || item.playlistId;\nlet video_no = item.video_no || item.videoNo || item.No;\nlet video_id = item.video_id || item.videoId;\nlet video_title = item.video_title || item.videoTitle || item.title;\n\n// If not in current item, try to get from previous nodes\n// This is important when data flows through multiple nodes\nif (!playlist_id || !video_no) {\n  console.log('⚠️ Required fields not in current item, checking workflow context...');\n  \n  // Try to access data from specific nodes in the workflow\n  try {\n    // Check if there's a \"Loop Over Items\" node\n    const loopData = $('Loop Over Items').first()?.json;\n    if (loopData) {\n      playlist_id = playlist_id || loopData.playlist_id;\n      video_no = video_no || loopData.video_no;\n      video_id = video_id || loopData.video_id;\n      video_title = video_title || loopData.video_title;\n    }\n  } catch (e) {\n    console.log('No Loop Over Items node found');\n  }\n  \n  try {\n    // Check if there's an \"Aggregate Playlist\" node\n    const aggData = $('Aggregate Playlist').first()?.json;\n    if (aggData) {\n      playlist_id = playlist_id || aggData.playlist_id;\n    }\n  } catch (e) {\n    console.log('No Aggregate Playlist node found');\n  }\n  \n  try {\n    // Check \"Needs Summary?\" node\n    const needsSummary = $('Needs Summary?').first()?.json;\n    if (needsSummary) {\n      playlist_id = playlist_id || needsSummary.playlist_id;\n      video_no = video_no || needsSummary.video_no;\n      video_id = video_id || needsSummary.video_id;\n      video_title = video_title || needsSummary.video_title;\n    }\n  } catch (e) {\n    console.log('No Needs Summary? node found');\n  }\n}\n\nconsole.log('Field extraction result:', {\n  playlist_id,\n  video_no,\n  video_id,\n  video_title\n});\n\n// Final validation\nif (!playlist_id) {\n  console.error('❌ Missing playlist_id!');\n  console.error('Available in item:', Object.keys(item));\n  throw new Error('Missing required field: playlist_id');\n}\n\nif (!video_no) {\n  console.error('❌ Missing video_no!');\n  console.error('Available in item:', Object.keys(item));\n  throw new Error('Missing required field: video_no');\n}\n\nconsole.log('✅ All required fields validated');\n\n// Return complete data with ALL required fields\nreturn [{\n  json: {\n    // Required fields for database update\n    playlist_id: playlist_id,\n    video_no: video_no,\n    \n    // Optional but useful fields\n    video_id: video_id,\n    video_title: video_title,\n    \n    // The generated summary\n    summary: summary,\n    summary_length: summary.length,\n    \n    // Debugging\n    raw_output: rawSummary,\n    \n    // Preserve ALL original fields from input\n    ...item\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1168,
+        1248
+      ],
+      "id": "40e49f0a-2c4f-414f-9ae0-76cbfbe3b345",
+      "name": "Extract Summary"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlist_items",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "summary": "={{ $json.summary }}",
+            "playlist_id": "={{ $json.playlist_id }}",
+            "video_no": "={{ $json.video_no }}",
+            "has_summary": "={{ !!$json.summary && $json.summary.trim().length > 0 }}"
+          },
+          "matchingColumns": [
+            "playlist_id",
+            "video_no"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_no",
+              "displayName": "video_no",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video_title",
+              "displayName": "video_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_str",
+              "displayName": "duration_str",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_seconds",
+              "displayName": "duration_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embed_url",
+              "displayName": "embed_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "refined_title",
+              "displayName": "refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quiz_knowledge_check",
+              "displayName": "quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_transcript",
+              "displayName": "has_transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_summary",
+              "displayName": "has_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "has_refined_title",
+              "displayName": "has_refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_quiz_knowledge_check",
+              "displayName": "has_quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript_length",
+              "displayName": "transcript_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "word_count",
+              "displayName": "word_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -944,
+        1248
+      ],
+      "id": "e1396b8e-95b7-4704-8517-bbcaf9a34dde",
+      "name": "Save Summary",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ !$json.quiz_knowledge_check }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "id": "b1939a61-c404-4bb8-85ea-36dd91152ec6"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        304,
+        1200
+      ],
+      "id": "cb5ab95f-3cb0-4966-ae35-49a65db33013",
+      "name": "Needs KC?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Buatlah 1 soal multiple choice dalam format Aiken:\n\nTRANSCRIPT:\n{{ $json.text || $json.transcript }}\n\nSUMMARY:\n{{ $json.summary }}\n\nOutput HANYA 1 soal dalam format Aiken, tidak ada text lain!",
+        "options": {
+          "systemMessage": "You are an expert at creating educational questions in Indonesian.\n\nCRITICAL RULES:\n1. Generate EXACTLY 1 question\n2. Pure Aiken format\n3. Indonesian language\n4. 4 options (A,B,C,D)\n\nAIKEN FORMAT:\nQuestion?\nA. Option\nB. Option\nC. Option\nD. Option\nANSWER: X"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        528,
+        1248
+      ],
+      "id": "6d8af2a3-ca98-4968-8692-8b261c9a63c4",
+      "name": "Generate KC Quiz"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Robust KC extractor: tolerate many formats and normalize to pure AIKEN\n\n// 1) AI output (from previous node)\nconst aiOutput = $input.first().json;\n\n// 2) Get original data safely (works whether we just saved summary or it already existed)\nlet previousData = {};\ntry {\n  previousData = $('Save Summary').first().json;        // after generating summary\n} catch {\n  try {\n    previousData = $item(0).$node['Needs Summary?'].json; // summary already existed path\n  } catch {\n    previousData = {};\n  }\n}\n\n// 3) Read raw text from AI output (handle multiple shapes)\nlet raw = '';\nif (aiOutput?.output) raw = aiOutput.output;\nelse if (aiOutput?.text) raw = aiOutput.text;\nelse if (typeof aiOutput === 'string') raw = aiOutput;\nelse {\n  const vals = Object.values(aiOutput || {});\n  raw = vals.find(v => typeof v === 'string' && v.length > 20) || '';\n}\nraw = (raw || '').replace(/\\r/g, '').trim();\nif (!raw) throw new Error('KC AI output empty');\n\n// 4) Normalize common variants to AIKEN-friendly form\nlet s = raw;\n\n// unify option markers to \"A. \" etc (accept a., a), a:, a-)\ns = s\n  .replace(/^\\s*a[\\.\\):\\-]\\s*/gim, 'A. ')\n  .replace(/^\\s*b[\\.\\):\\-]\\s*/gim, 'B. ')\n  .replace(/^\\s*c[\\.\\):\\-]\\s*/gim, 'C. ')\n  .replace(/^\\s*d[\\.\\):\\-]\\s*/gim, 'D. ');\n\n// also catch uppercase without dot\ns = s\n  .replace(/^\\s*A\\s+(?=[^\\s])/gm, 'A. ')\n  .replace(/^\\s*B\\s+(?=[^\\s])/gm, 'B. ')\n  .replace(/^\\s*C\\s+(?=[^\\s])/gm, 'C. ')\n  .replace(/^\\s*D\\s+(?=[^\\s])/gm, 'D. ');\n\n// normalize answer label (Jawaban:, Answer:, Kunci:, dsb) to ANSWER:\ns = s.replace(/^\\s*(jawaban|answer|kunci|ans(?:wer)?)\\s*[:\\-]\\s*/gim, 'ANSWER: ');\ns = s.replace(/ANSWER\\s*[:\\-]\\s*/gi, 'ANSWER: ');\n\n// 5) Parse lines\nconst lines = s.split('\\n').map(l => l.trim()).filter(Boolean);\n\n// find first options indices\nconst optRe = /^[A-D]\\.\\s+/;\nconst ansRe = /^ANSWER:\\s*([A-D])/i;\n\nlet qIdx = lines.findIndex(l => optRe.test(l));\nif (qIdx <= 0) {\n  // if options start at first line, assume the question is the previous raw content’s first non-empty line\n  // fallback: use the first line that isn't an option or ANSWER\n  qIdx = lines.findIndex(l => optRe.test(l));\n}\nconst questionLines = [];\nfor (let i = 0; i < lines.length; i++) {\n  if (optRe.test(lines[i])) break;\n  // stop collecting at the first ANSWER line if any\n  if (ansRe.test(lines[i])) break;\n  questionLines.push(lines[i]);\n}\nconst question = (questionLines.join(' ').trim() || '').replace(/\\s+/g, ' ');\nif (!question || question.length < 10 || question.toLowerCase().startsWith('a. ')) {\n  // fallback: take the first non-option non-answer line\n  const cand = lines.find(l => !optRe.test(l) && !ansRe.test(l)) || '';\n  if (cand) {\n    // if the candidate looks like \"Question: xxx\", strip the label\n    question = cand.replace(/^\\s*(question|pertanyaan)\\s*[:\\-]\\s*/i, '').trim();\n  }\n}\n\n// collect up to 4 options after question\nconst options = [];\nfor (const l of lines) {\n  if (optRe.test(l)) options.push(l.replace(/\\s+/g, ' ').trim());\n  if (options.length === 4) break;\n}\n\n// try to find the answer\nlet ansLine = lines.find(l => ansRe.test(l)) || '';\nlet answer = '';\nif (ansLine) {\n  const m = ansLine.match(ansRe);\n  answer = (m && m[1] || '').toUpperCase();\n}\n\n// If still missing answer but have 4 options, pick A as conservative fallback\nif (!answer && options.length >= 4) answer = 'A';\n\n// As a last resort: if options < 4 but model wrote them in one line separated by semicolons or dashes\nif (options.length < 4) {\n  // try to extract inline options from a line containing \"A.\" and \"B.\" etc\n  const inline = s.match(/A\\.\\s.*?(?=B\\.|$)/s) ||\n                 s.match(/A\\)\\s.*?(?=B\\)|$)/s);\n  // If found, we already normalized above; keep options as gathered (best effort)\n}\n\n// Validate minimally: have question, 4 options, and an answer letter A-D\nif (options.length < 4 || !/^[A-D]$/.test(answer) || !question) {\n  // Instead of failing the whole flow, keep best-effort text and proceed\n  // You can switch this to throw new Error(...) if you want strict behavior.\n  console.warn('KC normalization warning. Proceeding with best effort.');\n  // Try to complete missing pieces\n  while (options.length < 4) options.push(['A. ', 'B. ', 'C. ', 'D. '][options.length] + 'Pilihan');\n  if (!/^[A-D]$/.test(answer)) answer = 'A';\n}\n\n// 6) Reconstruct pure AIKEN (single question)\nconst kc =\n  `${question}\\n` +\n  `${options[0]}\\n` +\n  `${options[1]}\\n` +\n  `${options[2]}\\n` +\n  `${options[3]}\\n` +\n  `ANSWER: ${answer}`;\n\n// 7) Return\nreturn [{\n  json: {\n    ...previousData,\n    quiz_knowledge_check: kc.trim(),\n    kc_generated: true\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1248
+      ],
+      "id": "8806d397-56b9-4e39-8759-a5bd2b001929",
+      "name": "Extract KC Quiz"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlist_items",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "playlist_id": "={{ $json.playlist_id }}",
+            "video_no": "={{ $json.video_no }}",
+            "has_quiz_knowledge_check": "={{ !!$json.quiz_knowledge_check && $json.quiz_knowledge_check.trim().length > 0 }}",
+            "quiz_knowledge_check": "={{$json.quiz_knowledge_check}}"
+          },
+          "matchingColumns": [
+            "playlist_id",
+            "video_no"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_no",
+              "displayName": "video_no",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video_title",
+              "displayName": "video_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_str",
+              "displayName": "duration_str",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_seconds",
+              "displayName": "duration_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embed_url",
+              "displayName": "embed_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "refined_title",
+              "displayName": "refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "quiz_knowledge_check",
+              "displayName": "quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "has_transcript",
+              "displayName": "has_transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_summary",
+              "displayName": "has_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_refined_title",
+              "displayName": "has_refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_quiz_knowledge_check",
+              "displayName": "has_quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "transcript_length",
+              "displayName": "transcript_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "word_count",
+              "displayName": "word_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "audio_path",
+              "displayName": "audio_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "audio_file_path",
+              "displayName": "audio_file_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1104,
+        1248
+      ],
+      "id": "785885e9-4307-424a-8ae9-172d5226d4b0",
+      "name": "Save KC Quiz",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": "={{ Math.floor(Math.random() * 3) + 3 }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1328,
+        1200
+      ],
+      "id": "174a5bfb-30be-4beb-901f-c87091dd99e6",
+      "name": "Rate Limit Wait",
+      "webhookId": "rate-limit-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format video callback with EXPLICIT has_* flags\nconst data = $input.first().json;\n\n// Explicit boolean flags based on actual data presence\nconst hasTranscript = !!(data.transcript && data.transcript.trim().length > 0);\nconst hasSummary = !!(data.summary && data.summary.trim().length > 0);\nconst hasRefinedTitle = !!(data.refined_title && data.refined_title.trim().length > 0);\nconst hasQuizKC = !!(data.quiz_knowledge_check && data.quiz_knowledge_check.trim().length > 0);\n\nreturn [{\n  json: {\n    playlist_id: data.playlist_id,\n    video_id: data.video_id,\n    video_no: data.video_no,\n    video_title: data.video_title,\n    \n    // Full data\n    transcript: data.transcript || null,\n    transcript_length: data.transcript_length || (data.transcript ? data.transcript.length : null),\n    word_count: data.word_count || null,\n    summary: data.summary || null,\n    refined_title: data.refined_title || data.video_title,\n    quiz_knowledge_check: data.quiz_knowledge_check || null,\n    \n    // EXPLICIT FLAGS\n    has_transcript: hasTranscript,\n    has_summary: hasSummary,\n    has_refined_title: hasRefinedTitle,\n    has_quiz_knowledge_check: hasQuizKC,\n    \n    status: 'item_completed',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1552,
+        1200
+      ],
+      "id": "fb1e0558-847b-44e1-92f2-fe05eedeb49a",
+      "name": "Format Video Callback"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://youtubetocourse:8789/api/callback",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1776,
+        1328
+      ],
+      "id": "176e2eed-02a2-41d0-ad26-fa46b2779a53",
+      "name": "Send Video Callback"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Selalu kembalikan 1 row bahkan jika tidak ada item\nWITH pid AS (\n  SELECT COALESCE(\n    NULLIF('{{$json.playlist_id}}', ''),\n    (\n      SELECT playlist_id\n      FROM yt_playlists\n      ORDER BY updated_at DESC\n      LIMIT 1\n    )\n  ) AS playlist_id\n)\nSELECT\n  COUNT(*) FILTER (\n    WHERE transcript IS NULL OR transcript = ''\n  ) AS missing_transcripts,\n  COUNT(*) FILTER (\n    WHERE summary IS NULL OR summary = ''\n  ) AS missing_summaries,\n  COUNT(*) FILTER (\n    WHERE quiz_knowledge_check IS NULL OR quiz_knowledge_check = ''\n  ) AS missing_kc,\n  COUNT(*) AS total_items,\n  (SELECT playlist_id FROM pid) AS playlist_id\nFROM public.yt_playlist_items\nWHERE playlist_id = (SELECT playlist_id FROM pid);\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3088,
+        544
+      ],
+      "id": "22f86847-222e-40d8-9654-86513ca812b4",
+      "name": "Check All Items Complete",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=Tugas: Buatkan judul video yang lebih baik, informatif, dan SEO-friendly.\nJUDUL ORIGINAL: {{ $json.video_title }}\nRINGKASAN VIDEO: {{ $json.summary }}\nINSTRUKSI:\n1. Maksimal 80 karakter\n2. Jelas dan spesifik tentang isi video\n3. Gunakan kata kunci penting dari ringkasan\n4. Bahasa Indonesia yang baik dan benar\n5. Menarik tapi tidak clickbait\n6. Fokus pada VALUE yang didapat penonton\nJANGAN:\n- Gunakan clickbait atau sensasional\n- Terlalu umum atau vague\n- Menggunakan tanda tanya berlebihan\n- Menulis terlalu panjang\nOutput HANYA judul baru (tanpa tanda kutip):",
+        "options": {
+          "systemMessage": "=You are an expert at creating clear, informative, SEO-optimized video titles in Indonesian language.\nCRITICAL RULES:\n1. Output ONLY the refined title, nothing else\n2. Maximum 80 characters\n3. NO quotation marks\n4. NO explanation or commentary\n5. Clear and descriptive\n6. Professional Indonesian language\n7. Focus on the video's core value\n8. NO numbering in front of refined title\nOutput format: Just the title text, period."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -496,
+        1248
+      ],
+      "id": "4d51471d-74d5-4952-8f4f-ebe8ff6a7fcf",
+      "name": "Generate Refined Title"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// EXTRACT REFINED TITLE & PRESERVE ALL FIELDS\n// ==========================================\n\nconst item = $input.first().json;\n\nconsole.log('=== Full Input Data ===');\nconsole.log('Available keys:', Object.keys(item));\nconsole.log('Full item:', JSON.stringify(item, null, 2));\n\n// Extract refined title from various possible fields\nlet rawTitle = item.output || item.text || item.response || item.message?.content || '';\n\n// Also check nested structures\nif (!rawTitle && item.candidates && item.candidates[0]) {\n  const candidate = item.candidates[0];\n  if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {\n    rawTitle = candidate.content.parts[0].text;\n  }\n}\n\nconsole.log('Raw title extracted:', rawTitle?.substring(0, 100));\n\n// Clean up\nlet refinedTitle = rawTitle\n  .trim()\n  .replace(/^[\"']+|[\"']+$/g, '')    // Remove quotes\n  .replace(/^Judul:\\s*/i, '')       // Remove \"Judul:\" prefix\n  .replace(/^\\d+\\.\\s*/, '')         // Remove numbering\n  .replace(/\\n+/g, ' ')              // Remove line breaks\n  .replace(/\\s+/g, ' ')              // Remove multiple spaces\n  .trim();\n\nconsole.log('Cleaned title:', refinedTitle);\n\n// Truncate if too long\nif (refinedTitle.length > 80) {\n  refinedTitle = refinedTitle.substring(0, 77) + '...';\n  console.log('Title truncated to 80 chars');\n}\n\n// Validation - fallback to original if extraction failed\nif (!refinedTitle || refinedTitle.length < 10) {\n  console.warn('⚠️ Refined title too short or empty, using original title');\n  refinedTitle = item.video_title || 'Untitled';\n}\n\nconsole.log('✅ Final refined title:', refinedTitle);\nconsole.log('Length:', refinedTitle.length, 'characters');\n\n// ==========================================\n// CRITICAL: GET REQUIRED FIELDS\n// ==========================================\n\n// Try to get fields from current item\nlet playlist_id = item.playlist_id || item.playlistId;\nlet video_no = item.video_no || item.videoNo || item.No;\nlet video_id = item.video_id || item.videoId;\nlet video_title = item.video_title || item.videoTitle || item.title;\nlet summary = item.summary;\n\n// If not in current item, try to get from previous nodes\nif (!playlist_id || !video_no) {\n  console.log('⚠️ Required fields not in current item, checking workflow context...');\n  \n  // Try to access data from specific nodes in the workflow\n  try {\n    // Check \"Loop Incomplete Items\" node\n    const loopData = $('Loop Incomplete Items').first()?.json;\n    if (loopData) {\n      playlist_id = playlist_id || loopData.playlist_id;\n      video_no = video_no || loopData.video_no;\n      video_id = video_id || loopData.video_id;\n      video_title = video_title || loopData.video_title;\n      summary = summary || loopData.summary;\n    }\n  } catch (e) {\n    console.log('No Loop Incomplete Items node found');\n  }\n  \n  try {\n    // Check \"Save Summary\" node\n    const summaryData = $('Save Summary').first()?.json;\n    if (summaryData) {\n      playlist_id = playlist_id || summaryData.playlist_id;\n      video_no = video_no || summaryData.video_no;\n      video_id = video_id || summaryData.video_id;\n      video_title = video_title || summaryData.video_title;\n      summary = summary || summaryData.summary;\n    }\n  } catch (e) {\n    console.log('No Save Summary node found');\n  }\n  \n  try {\n    // Check \"Needs Summary?\" node\n    const needsSummary = $('Needs Summary?').first()?.json;\n    if (needsSummary) {\n      playlist_id = playlist_id || needsSummary.playlist_id;\n      video_no = video_no || needsSummary.video_no;\n      video_id = video_id || needsSummary.video_id;\n      video_title = video_title || needsSummary.video_title;\n      summary = summary || needsSummary.summary;\n    }\n  } catch (e) {\n    console.log('No Needs Summary? node found');\n  }\n}\n\nconsole.log('Field extraction result:', {\n  playlist_id,\n  video_no,\n  video_id,\n  video_title,\n  has_summary: !!summary\n});\n\n// Final validation\nif (!playlist_id) {\n  console.error('❌ Missing playlist_id!');\n  console.error('Available in item:', Object.keys(item));\n  throw new Error('Missing required field: playlist_id');\n}\n\nif (!video_no && video_no !== 0) {\n  console.error('❌ Missing video_no!');\n  console.error('Available in item:', Object.keys(item));\n  throw new Error('Missing required field: video_no');\n}\n\nconsole.log('✅ All required fields validated');\n\n// Return complete data with ALL required fields\nreturn [{\n  json: {\n    // Required fields for database update\n    playlist_id: playlist_id,\n    video_no: video_no,\n    \n    // Optional but useful fields\n    video_id: video_id,\n    video_title: video_title,\n    summary: summary,\n    \n    // The generated refined title\n    refined_title: refinedTitle,\n    refined_title_length: refinedTitle.length,\n    \n    // Debugging\n    raw_output: rawTitle,\n    \n    // Preserve ALL original fields from input\n    ...item\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        1248
+      ],
+      "id": "b3418aa7-3124-4381-b6c4-3d005c4f3527",
+      "name": "Extract Refined Title"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlist_items",
+          "mode": "list",
+          "cachedResultName": "yt_playlist_items"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_no": "={{ $json.video_no }}",
+            "refined_title": "={{ $json.refined_title }}",
+            "playlist_id": "={{ $json.playlist_id }}"
+          },
+          "matchingColumns": [
+            "playlist_id",
+            "video_no"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_no",
+              "displayName": "video_no",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "video_title",
+              "displayName": "video_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_str",
+              "displayName": "duration_str",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "duration_seconds",
+              "displayName": "duration_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embed_url",
+              "displayName": "embed_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "refined_title",
+              "displayName": "refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quiz_knowledge_check",
+              "displayName": "quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_transcript",
+              "displayName": "has_transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_summary",
+              "displayName": "has_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_refined_title",
+              "displayName": "has_refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "has_quiz_knowledge_check",
+              "displayName": "has_quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "transcript_length",
+              "displayName": "transcript_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "word_count",
+              "displayName": "word_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        80,
+        1248
+      ],
+      "id": "c523c7b3-96a9-45f5-b44c-be05d4400718",
+      "name": "Save Refined Title",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_playlist_items",
+          "mode": "list",
+          "cachedResultName": "yt_playlist_items"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "video_no": "={{ $json.video_no }}",
+            "duration_seconds": "={{ $json.duration_seconds }}",
+            "playlist_id": "={{ $json.playlist_id }}",
+            "video_title": "={{ $json.video_title }}",
+            "video_id": "={{ $json.video_id }}",
+            "duration_str": "={{ $json.duration_str }}",
+            "embed_url": "={{ $json.embed_url }}",
+            "status": "={{ $json.status }}",
+            "audio_path": "={{ $json.audio_path }}",
+            "audio_file_path": "={{ $json.audio_file_path }}",
+            "received_at": "={{ $json.received_at }}",
+            "transcript": "={{ $json.transcript }}"
+          },
+          "matchingColumns": [
+            "playlist_id",
+            "video_no"
+          ],
+          "schema": [
+            {
+              "id": "playlist_id",
+              "displayName": "playlist_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_no",
+              "displayName": "video_no",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_id",
+              "displayName": "video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "video_title",
+              "displayName": "video_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "duration_str",
+              "displayName": "duration_str",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "duration_seconds",
+              "displayName": "duration_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "embed_url",
+              "displayName": "embed_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "refined_title",
+              "displayName": "refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "quiz_knowledge_check",
+              "displayName": "quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "has_transcript",
+              "displayName": "has_transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "has_summary",
+              "displayName": "has_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "has_refined_title",
+              "displayName": "has_refined_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "has_quiz_knowledge_check",
+              "displayName": "has_quiz_knowledge_check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "transcript_length",
+              "displayName": "transcript_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "word_count",
+              "displayName": "word_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "audio_path",
+              "displayName": "audio_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "audio_file_path",
+              "displayName": "audio_file_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4208,
+        1040
+      ],
+      "id": "95fc2519-aae7-45d4-8ebe-a2c53e9c5847",
+      "name": "Upsert Playlist Items",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "   // Take the first item to get playlist_id\n   const items = $input.all();\n   const playlistId = items[0].json.playlist_id;\n   \n   return [{\n     json: {\n       playlist_id: playlistId\n     }\n   }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3984,
+        1040
+      ],
+      "id": "0b84e104-9637-482d-90cc-641af1e15e16",
+      "name": "Aggregate Playlist ID"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b6dbe341-1eff-4f04-a676-991843f89b8a",
+              "leftValue": "={{ $json.refined_title }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        1200
+      ],
+      "id": "3089e73c-fe58-4e18-a600-d7ce1580d935",
+      "name": "Needs Refined Title?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.missing_transcripts }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "499d9109-c732-47c3-b456-de7ae0a8d121"
+            },
+            {
+              "leftValue": "={{ $json.missing_summaries }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "d3a00148-cbe1-4aaf-99e3-6e56a494d486"
+            },
+            {
+              "leftValue": "={{ $json.missing_kc }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "72a8d8f9-8877-4afb-9a57-6780793faf2e"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2864,
+        544
+      ],
+      "id": "a7bbd0f3-eaf5-4bb3-901a-4c627c4d0163",
+      "name": "All Items Ready?"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  video_no,\n  video_id,\n  video_title,\n  summary,\n  refined_title,\n  transcript,\n  playlist_id,\n  duration_str\nFROM public.yt_playlist_items\nWHERE playlist_id = '{{$node[\"Check All Items Complete\"].json[\"playlist_id\"]}}'\nORDER BY video_no;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2416,
+        400
+      ],
+      "id": "0f53d37b-1a37-415f-ac9e-919af9c5aaf4",
+      "name": "Get All Items",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  playlist_id,\n  (quiz_prepost IS NOT NULL AND quiz_prepost <> '') AS has_prepost\nFROM public.yt_playlists\nWHERE playlist_id = '{{$item(0).$node[\"Check All Items Complete\"].json[\"playlist_id\"]}}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2192,
+        400
+      ],
+      "id": "88bac959-2bba-4329-83fe-d5f35241fa73",
+      "name": "Check PrePost Exists",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.has_prepost }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              },
+              "id": "4349c8b5-bab4-4a8b-b325-c09b5e351697"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1968,
+        400
+      ],
+      "id": "f81f4873-7a9f-4478-be63-5b1d8b9d3fef",
+      "name": "PrePost Exists?"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil semua item dari node sebelumnya\nconst itemsNode = $('Get All Items');\nconst allItems = itemsNode.all().map(n => n.json);\n\n// Ambil Playlist ID (dari item pertama saja cukup)\nconst playlistId = $('Check All Items Complete').first().json.playlist_id;\n\n// RETURN ARRAY: \n// n8n akan otomatis menjalankan node berikutnya sebanyak jumlah item di array ini.\nreturn allItems.map((item, index) => {\n  return {\n    json: {\n      playlist_id: playlistId,\n      video_no: item.video_no,\n      video_title: item.video_title,\n      summary: item.summary || \"\",\n      // Kita kirim total videos juga untuk referensi jika perlu\n      total_videos: allItems.length \n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1744,
+        608
+      ],
+      "id": "4f0029f7-c687-41c0-be27-57b4666c46a1",
+      "name": "Aggregate Playlist Content"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=TUGAS: Buat TEPAT 3 Soal Pilihan Ganda (Multiple Choice) berdasarkan ringkasan video ini.\n\nKONTEKS VIDEO:\nJudul: {{ $json.video_title }}\nRingkasan: {{ $json.summary }}\n\nATURAN WAJIB:\n1. Buat 1 soal level BASIC (Pemahaman).\n2. Buat 1 soal level MEDIUM (Penerapan).\n3. Buat 1 soal level ADVANCED (Analisis).\n4. Gunakan Bahasa Indonesia.\n5. Format HARUS murni AIKEN (tanpa nomor soal, tanpa teks pembuka).\n\nFORMAT OUTPUT (Copy persis struktur ini):\n[Pertanyaan Anda Disini?]\nA. [Opsi A]\nB. [Opsi B]\nC. [Opsi C]\nD. [Opsi D]\nANSWER: [Kunci Jawaban]\n\n[Baris Kosong]\n\n(Ulangi sampai 3 soal)",
+        "options": {
+          "systemMessage": "You are a strict Exam Generator Engine specializing in Aiken format.\n\nCORE DIRECTIVE:\nYou MUST generate exactly {{ $json.total_videos * 3 }} questions. No less, no more.\nThe input contains summaries for {{ $json.total_videos }} videos.\nYou must generate exactly 3 questions PER VIDEO summary provided.\n\nDIFFICULTY PER VIDEO:\nFor each video, you must generate:\n1. One Basic Question (Recall/Definition)\n2. One Medium Question (Application/Concept)\n3. One Advanced Question (Analysis/Case Study)\n\nOUTPUT RULES:\n- OUTPUT ONLY the questions in Aiken format.\n- Do not number the questions manually (like \"1.\", \"2.\") if not required by your specific Aiken loader, but standard Aiken usually uses \"1. Question text\" format.\n- Ensure the \"ANSWER: X\" line is capitalized correctly.\n- Separate questions with exactly one empty line.\n- Use Indonesian language only.\n- NO opening text (like \"Here are the questions\").\n- NO closing text.\n\nYour output will be parsed by a machine. Any deviation from the format causes system failure."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1520,
+        608
+      ],
+      "id": "fd6cdd2e-9fcb-4396-988d-602c1f5f2d4f",
+      "name": "Generate PrePost Quiz"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil semua hasil eksekusi dari node AI\nconst items = $input.all();\n\n// Ambil ID dari sumber asli (Aggregate Playlist Content)\nlet playlistId = 'UNKNOWN';\ntry {\n  playlistId = $('Aggregate Playlist Content').first().json.playlist_id;\n} catch (error) {\n  if (items[0]?.json?.playlist_id) playlistId = items[0].json.playlist_id;\n}\n\n// Ambil total video\nlet totalVideos = 0;\ntry {\n  totalVideos = $('Aggregate Playlist Content').all().length; \n} catch (e) {\n  totalVideos = items.length;\n}\n\n// Gabungkan output teks\nlet fullQuizText = \"\";\nlet totalQuestionsFound = 0;\n\nfor (const item of items) {\n  // Ambil output teks\n  let aiText = item.json.output || item.json.text || \"\";\n  \n  // --- PEMBERSIHAN SUPER AGRESIF ---\n  \n  // 1. Bersihkan markdown\n  aiText = aiText.replace(/```json|```/g, '').trim();\n  \n  // 2. Coba parse jika AI mengembalikan Array JSON string [\"Soal 1\", \"Soal 2\"]\n  // Ini sering jadi penyebab munculnya ['...']\n  if (aiText.startsWith('[') && aiText.endsWith(']')) {\n      try {\n          const parsed = JSON.parse(aiText);\n          if (Array.isArray(parsed)) {\n              aiText = parsed.join('\\n\\n'); // Ubah array jadi teks biasa\n          }\n      } catch (e) {\n          // Kalau gagal parse, lanjut ke pembersihan manual di bawah\n      }\n  }\n\n  // 3. HAPUS SEMUA KURUNG SIKU [ DAN ] DI MANAPUN BERADA\n  // Regex ini akan menghapus [1], [Soal], atau wrapper [...]\n  aiText = aiText.replace(/[\\[\\]]/g, ''); \n  \n  // 4. Bersihkan quote berlebih di awal/akhir\n  aiText = aiText.replace(/^\"|\"$/g, '');\n  \n  // 5. Perbaiki newline\n  aiText = aiText.replace(/\\\\n/g, '\\n'); \n  \n  // --------------------------------\n\n  if (aiText.length > 10) {\n    fullQuizText += aiText + \"\\n\\n\";\n    \n    // Hitung jumlah soal\n    const count = (aiText.match(/ANSWER:/gi) || []).length;\n    totalQuestionsFound += count;\n  }\n}\n\n// Final cleanup\nfullQuizText = fullQuizText.replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\n// Validasi\nconst minAcceptable = Math.max(1, totalVideos * 2); \nlet warning = null;\n\nif (totalQuestionsFound < minAcceptable) {\n  warning = `Hanya berhasil membuat ${totalQuestionsFound} soal dari target ${totalVideos * 3}.`;\n}\n\nreturn [{\n  json: {\n    playlist_id: playlistId,\n    \n    quiz_prepost: fullQuizText,\n    quiz_prepost_count: totalQuestionsFound,\n    has_quiz_prepost: totalQuestionsFound > 0,\n    total_videos: totalVideos,\n    prepost_source: 'generated_loop',\n    prepost_warning: warning,\n    \n    query_params: [\n      fullQuizText,           \n      totalQuestionsFound,    \n      totalQuestionsFound > 0,\n      playlistId              \n    ]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1168,
+        608
+      ],
+      "id": "5cfd646e-6efd-434e-9be5-c54e1082e3fb",
+      "name": "Extract PrePost Quiz"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE public.yt_playlists\nSET\n  quiz_prepost = $1,\n  quiz_prepost_count = $2,\n  has_quiz_prepost = $3,\n  updated_at = NOW()\nWHERE playlist_id = $4\nRETURNING \n  playlist_id, \n  has_quiz_prepost, \n  quiz_prepost_count, \n  quiz_prepost;",
+        "options": {
+          "queryReplacement": "={{\n  [\n    $json.quiz_prepost,\n    $json.quiz_prepost_count,\n    $json.quiz_prepost_count > 0,\n    $json.playlist_id\n  ]\n}}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -944,
+        608
+      ],
+      "id": "1774d92d-7e8e-4155-8382-a87a90cec181",
+      "name": "Save PrePost to Playlist",
+      "credentials": {
+        "postgres": {
+          "id": "zMdP0E3yaPMdxeKL",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const playlistData = $input.first().json;\nconst allItems = $('Get All Items').all().map(n => n.json);\n\nreturn [{\n  json: {\n    playlist_id: playlistData.playlist_id,\n    playlist_title: playlistData.playlist_title || playlistData.title || \"\",\n    status: 'playlist_completed',\n    total_videos: playlistData.total_videos,\n\n    has_playlist_prepost: true,\n    quiz_prepost_count: playlistData.quiz_prepost_count,\n    quiz_prepost: playlistData.quiz_prepost || \"\",\n\n    all_items_processed: true,\n    items: allItems.map(item => ({\n      video_no: item.video_no,\n      video_id: item.video_id,\n      video_title: item.video_title,\n      summary: item.summary || \"\",\n      \n      // ✅ NEW: Sertakan durasi agar bisa dihitung di node selanjutnya\n      duration_str: item.duration_str || \"00:00\" \n    })),\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        608
+      ],
+      "id": "38fd641c-bfe6-4e97-9cfc-6f1a557aa0f7",
+      "name": "Format Playlist Callback"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://youtubetocourse:8789/api/callback",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -432,
+        784
+      ],
+      "id": "17178fc9-4b3d-49a8-9292-70128a8a5dbe",
+      "name": "Send Playlist Callback"
+    },
+    {
+      "parameters": {
+        "jsCode": "const playlistData = $input.first().json;\nconst allItems = $('Get All Items').all().map(n => n.json);\n\nreturn [{\n  json: {\n    playlist_id: playlistData.playlist_id,\n    playlist_title: playlistData.playlist_title || playlistData.title || \"\",\n    status: 'playlist_completed',\n    total_videos: playlistData.total_videos,\n\n    has_playlist_prepost: true,\n    quiz_prepost_count: playlistData.quiz_prepost_count,\n    quiz_prepost: playlistData.quiz_prepost || \"\",\n\n    all_items_processed: true,\n    items: allItems.map(item => ({\n      video_no: item.video_no,\n      video_id: item.video_id,\n      video_title: item.video_title,\n      summary: item.summary || \"\",\n      \n      // ✅ NEW: Sertakan durasi agar bisa dihitung di node selanjutnya\n      duration_str: item.duration_str || \"00:00\" \n    })),\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        320
+      ],
+      "id": "7e540d51-fec9-4084-8cb5-439e21c85af2",
+      "name": "Format Existing Callback"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://youtubetocourse:8789/api/callback",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -432,
+        352
+      ],
+      "id": "18b2d1cb-6582-4b5c-abe8-4abce923e21f",
+      "name": "Send Existing Callback"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7c361bd0-a9e7-4205-a658-c7f75a3ac1ed",
+              "leftValue": "={{ Number($json.total_items) > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2640,
+        544
+      ],
+      "id": "49223125-8215-4239-9a2d-71f594c98d99",
+      "name": "Any items?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ffd5d4fc-9a45-461b-bd3e-5a534ceb260d",
+              "name": "status",
+              "value": "no_items",
+              "type": "string"
+            },
+            {
+              "id": "2aff394e-a5be-4a2d-b175-495f83901233",
+              "name": "playlist_id",
+              "value": "={{ $json.playlist_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        864
+      ],
+      "id": "ffee26c8-0f85-45ed-b61b-c61e4b862404",
+      "name": "No Items Handler"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.7,
+          "numPredict": 300
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1456,
+        1472
+      ],
+      "id": "6d44d7c5-003f-46ae-ad0d-f16915f82f04",
+      "name": "Ollama Summary Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.5,
+          "numCtx": 8192,
+          "numPredict": 8000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1456,
+        832
+      ],
+      "id": "13cfa5fa-9e86-4eb4-a5e6-5f126f36a3cd",
+      "name": "Ollama PrePost Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        1472
+      ],
+      "id": "16c39466-9017-4f2e-8532-d0311df09cff",
+      "name": "Ollama Refined Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:14b-instruct",
+        "options": {
+          "temperature": 0.7,
+          "numPredict": 1000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        608,
+        1472
+      ],
+      "id": "49a3c848-d4f9-449a-b80b-c0a334148a0e",
+      "name": "Ollama KC Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "er9UBfBKoRVqOkGC",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://n8n:5678/webhook/course-metadata-generation",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n(() => {\n  // 1. Helper function\n  const parseDuration = (durationStr) => {\n    if (!durationStr) return 0;\n    const parts = durationStr.split(':').map(Number);\n    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2]; \n    if (parts.length === 2) return parts[0] * 60 + parts[1]; \n    return 0;\n  };\n\n  // 2. Hitung Total Detik (menggunakan duration_str yang baru kita tambahkan)\n  const totalSeconds = $json.items \n    ? $json.items.reduce((acc, item) => acc + parseDuration(item.duration_str), 0) \n    : 0;\n\n  // 3. Return Object\n  return {\n    \"playlistId\": $json.playlist_id,\n    \"playlistTitle\": $json.playlist_title || \"\",\n    \"totalVideos\": $json.total_videos || ($json.items ? $json.items.length : 0),\n    \n    // DATA INI SEKARANG AKAN TERISI:\n    \"totalDurationSeconds\": totalSeconds,\n\n    \"language\": \"Bahasa Indonesia\",\n    \"videoSummaries\": $json.items ? $json.items.map((item, idx) => {\n      const summary = item.summary || item.video_title;\n      return `Video ${idx + 1}: ${summary}`;\n    }).join(\". \") : \"\",\n    \"allVideoTitles\": $json.items ? $json.items.map(item => item.video_title).join(\", \") : \"\",\n    \"source\": \"production-workflow-trigger\",\n    \"triggered_at\": new Date().toISOString()\n  };\n})() \n}}",
+        "options": {}
+      },
+      "typeVersion": 4.2,
+      "id": "f77b57b8-d956-409b-9c16-0b2e46cae211",
+      "position": [
+        -432,
+        576
+      ],
+      "name": "Trigger Metadata Workflow",
+      "type": "n8n-nodes-base.httpRequest"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Payload": {
+      "main": [
+        [
+          {
+            "node": "Route by Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Table": {
+      "main": [
+        [
+          {
+            "node": "Upsert Playlist",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upsert Playlist Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Playlist": {
+      "main": [
+        [
+          {
+            "node": "Check All Items Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Incomplete Items": {
+      "main": [
+        [
+          {
+            "node": "Has Incomplete Items?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Incomplete Items?": {
+      "main": [
+        [
+          {
+            "node": "Loop Incomplete Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check All Items Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Incomplete Items": {
+      "main": [
+        [
+          {
+            "node": "Check All Items Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Needs Transcript?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Transcript?": {
+      "main": [
+        [
+          {
+            "node": "Read Audio File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Needs Summary?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Audio File": {
+      "main": [
+        [
+          {
+            "node": "Wait Before Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait Before Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Audio": {
+      "main": [
+        [
+          {
+            "node": "Format Transcript Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Transcript Data": {
+      "main": [
+        [
+          {
+            "node": "Save Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Transcript": {
+      "main": [
+        [
+          {
+            "node": "Needs Summary?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Summary?": {
+      "main": [
+        [
+          {
+            "node": "Generate Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Needs Refined Title?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Summary": {
+      "main": [
+        [
+          {
+            "node": "Extract Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Summary": {
+      "main": [
+        [
+          {
+            "node": "Save Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Summary": {
+      "main": [
+        [
+          {
+            "node": "Needs Refined Title?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs KC?": {
+      "main": [
+        [
+          {
+            "node": "Generate KC Quiz",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rate Limit Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate KC Quiz": {
+      "main": [
+        [
+          {
+            "node": "Extract KC Quiz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract KC Quiz": {
+      "main": [
+        [
+          {
+            "node": "Save KC Quiz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save KC Quiz": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit Wait": {
+      "main": [
+        [
+          {
+            "node": "Format Video Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Video Callback": {
+      "main": [
+        [
+          {
+            "node": "Send Video Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Video Callback": {
+      "main": [
+        [
+          {
+            "node": "Loop Incomplete Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check All Items Complete": {
+      "main": [
+        [
+          {
+            "node": "All Items Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Refined Title": {
+      "main": [
+        [
+          {
+            "node": "Extract Refined Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Refined Title": {
+      "main": [
+        [
+          {
+            "node": "Save Refined Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Refined Title": {
+      "main": [
+        [
+          {
+            "node": "Needs KC?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Playlist Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Playlist ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Playlist ID": {
+      "main": [
+        [
+          {
+            "node": "Get Incomplete Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Refined Title?": {
+      "main": [
+        [
+          {
+            "node": "Generate Refined Title",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Needs KC?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Items Ready?": {
+      "main": [
+        [
+          {
+            "node": "Any items?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Items": {
+      "main": [
+        [
+          {
+            "node": "Check PrePost Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check PrePost Exists": {
+      "main": [
+        [
+          {
+            "node": "PrePost Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PrePost Exists?": {
+      "main": [
+        [
+          {
+            "node": "Format Existing Callback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aggregate Playlist Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Playlist Content": {
+      "main": [
+        [
+          {
+            "node": "Generate PrePost Quiz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate PrePost Quiz": {
+      "main": [
+        [
+          {
+            "node": "Extract PrePost Quiz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PrePost Quiz": {
+      "main": [
+        [
+          {
+            "node": "Save PrePost to Playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save PrePost to Playlist": {
+      "main": [
+        [
+          {
+            "node": "Format Playlist Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Playlist Callback": {
+      "main": [
+        [
+          {
+            "node": "Send Playlist Callback",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Trigger Metadata Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Existing Callback": {
+      "main": [
+        [
+          {
+            "node": "Send Existing Callback",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Trigger Metadata Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any items?": {
+      "main": [
+        [
+          {
+            "node": "Get All Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Items Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Items Handler": {
+      "main": [
+        [
+          {
+            "node": "Send Existing Callback",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Trigger Metadata Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Summary Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Summary",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama PrePost Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate PrePost Quiz",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Refined Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Refined Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama KC Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate KC Quiz",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "36b8e151-01be-44e0-8ac9-cce00b6a29ec",
+  "meta": {
+    "instanceId": "56ecd34583d6d088500224d5288a64b25c469c36d46ca03f053c15f57c990d1a"
+  },
+  "id": "1PutRPhqwhB542Cu",
+  "tags": []
+}

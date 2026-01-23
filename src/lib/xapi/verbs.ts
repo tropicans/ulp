@@ -71,6 +71,11 @@ export const VERBS = {
         id: "https://w3id.org/xapi/video/verbs/seeked",
         display: { en: "seeked", id: "mencari" }
     } as XAPIVerb,
+
+    attended: {
+        id: "http://adlnet.gov/expapi/verbs/attended",
+        display: { en: "attended", id: "menghadiri" }
+    } as XAPIVerb,
 }
 
 // Activity Types
@@ -82,6 +87,7 @@ export const ACTIVITY_TYPES = {
     question: "http://adlnet.gov/expapi/activities/cmi.interaction",
     video: "https://w3id.org/xapi/video/activity-type/video",
     certificate: "http://id.tincanapi.com/activitytype/certificate",
+    meeting: "http://adlnet.gov/expapi/activities/meeting",
 }
 
 // Platform IRI - use official domain

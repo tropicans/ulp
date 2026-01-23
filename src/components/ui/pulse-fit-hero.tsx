@@ -41,6 +41,7 @@ interface PulseFitHeroProps {
         text: string;
     };
     programs?: ProgramCard[];
+    reflectiveText?: string;
     className?: string;
     children?: React.ReactNode;
 }
@@ -62,6 +63,7 @@ export function PulseFitHero({
     disclaimer,
     socialProof,
     programs = [],
+    reflectiveText,
     className,
     children,
 }: PulseFitHeroProps) {
@@ -75,6 +77,23 @@ export function PulseFitHero({
             role="banner"
             aria-label="Hero section"
         >
+            {/* Subtle Visual Metaphor: Steady Path */}
+            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+                <svg className="w-full h-full opacity-[0.05] dark:opacity-[0.08]" preserveAspectRatio="none" viewBox="0 0 1200 800" fill="none">
+                    <path
+                        d="M-100 600 C 200 550, 400 650, 700 600 S 1100 500, 1300 550"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        className="text-slate-900 dark:text-white"
+                    />
+                    <path
+                        d="M-100 620 C 200 570, 400 670, 700 620 S 1100 520, 1300 570"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        className="text-slate-900 dark:text-white"
+                    />
+                </svg>
+            </div>
             {/* Header */}
             <motion.header
                 initial={{ opacity: 0, y: -20 }}

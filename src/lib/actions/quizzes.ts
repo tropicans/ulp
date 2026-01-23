@@ -6,8 +6,14 @@ import { revalidatePath } from "next/cache"
 import { awardPoints, updateActivityStreak } from "./gamification"
 import { z } from "zod"
 import { QuizType, GradingStatus } from "@/generated/prisma"
-import { sendStatementAsync } from "@/lib/xapi"
-import { buildActor, buildActivity, buildResult } from "@/lib/xapi/utils"
+import {
+    queueStatement,
+    recordActivity,
+    buildActor,
+    buildActivity,
+    buildResult
+} from "@/lib/xapi"
+import { genIdempotencyKey } from "@/lib/xapi/utils"
 import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 const createQuizSchema = z.object({
@@ -203,7 +209,6 @@ export async function submitQuizAttempt(data: z.infer<typeof quizSubmissionSchem
 
             return {
                 id: crypto.randomUUID(),
-                attemptId,
                 questionId: ans.questionId,
                 answer: ans.answerText,
                 selectedOptions: ans.selectedOptions !== undefined ? { index: ans.selectedOptions } : undefined,
@@ -250,21 +255,36 @@ export async function submitQuizAttempt(data: z.infer<typeof quizSubmissionSchem
             })
 
             if (quizModule) {
-                sendStatementAsync({
-                    actor: buildActor(session.user.email || '', session.user.name),
-                    verb: isPassed ? VERBS.passed : VERBS.failed,
-                    object: buildActivity(
-                        `${PLATFORM_IRI}/courses/${quizModule.Module.Course.slug}/quizzes/${validated.quizId}`,
-                        ACTIVITY_TYPES.assessment,
-                        quiz.title,
-                        quiz.description || undefined
-                    ),
-                    result: buildResult({
-                        score: Math.round(score),
-                        success: isPassed,
-                        completion: true
-                    })
-                })
+                const activityType = isPassed ? "QUIZ_PASS" : "QUIZ_FAIL"
+
+                queueStatement(
+                    {
+                        actor: buildActor(session.user.email || '', session.user.name),
+                        verb: isPassed ? VERBS.passed : VERBS.failed,
+                        object: buildActivity(
+                            `${PLATFORM_IRI}/courses/${quizModule.Module.Course.slug}/quizzes/${validated.quizId}`,
+                            ACTIVITY_TYPES.assessment,
+                            quiz.title,
+                            quiz.description || undefined
+                        ),
+                        result: buildResult({
+                            score: Math.round(score),
+                            success: isPassed,
+                            completion: true
+                        })
+                    },
+                    genIdempotencyKey(isPassed ? "quiz_pass" : "quiz_fail", session.user.id, validated.quizId, attemptId)
+                )
+
+                // Record to unified journey
+                recordActivity(
+                    session.user.id,
+                    activityType,
+                    validated.quizId,
+                    quiz.title,
+                    quizModule.Module.courseId,
+                    { score, attemptId }
+                )
             }
         }
 

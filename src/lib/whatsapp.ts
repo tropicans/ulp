@@ -37,17 +37,19 @@ export async function sendWhatsApp(options: SendWhatsAppOptions): Promise<Fonnte
     }
 
     try {
+        const formData = new URLSearchParams()
+        formData.append("target", formattedPhone)
+        formData.append("message", message)
+        if (delay > 0) {
+            formData.append("delay", delay.toString())
+        }
+
         const response = await fetch("https://api.fonnte.com/send", {
             method: "POST",
             headers: {
                 "Authorization": apiKey,
-                "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                target: formattedPhone,
-                message: message,
-                delay: delay,
-            }),
+            body: formData,
         })
 
         const data = await response.json() as FonnteResponse
@@ -192,4 +194,21 @@ _TITIAN_`,
 Segera selesaikan tugas Anda!
 
 _TITIAN_`,
+
+    verificationOTP: (data: {
+        userName: string
+        otp: string
+        expiresIn: string
+    }) => `Halo ${data.userName}! 🔐
+
+*Kode Verifikasi TITIAN*
+
+Kode OTP Anda:
+*${data.otp}*
+
+⏰ Berlaku ${data.expiresIn}
+
+Jangan berikan kode ini kepada siapapun.
+
+_TITIAN - Learning Experience Platform_`,
 }

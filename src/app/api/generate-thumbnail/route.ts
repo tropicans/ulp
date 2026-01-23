@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 
-const PROXY_BASE = "https://proxy.kelazz.my.id"
-const API_KEY = "internal_only_x91aP"
+const PROXY_BASE = process.env.AI_PROXY_URL || "https://proxy.kelazz.my.id"
+const API_KEY = process.env.AI_PROXY_KEY || "internal_only_x91aP"
 
 export async function POST(request: NextRequest) {
     try {

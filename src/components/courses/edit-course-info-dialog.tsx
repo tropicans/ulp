@@ -22,19 +22,23 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Pencil, Loader2 } from "lucide-react"
+import { Pencil, Loader2, Sparkles } from "lucide-react"
 import { updateCourse } from "@/lib/actions/courses"
 import { DeliveryMode, Difficulty } from "@/generated/prisma"
+import { toast } from "sonner"
+import { COURSE_CATEGORIES } from "@/lib/constants/categories"
 
 interface EditCourseInfoDialogProps {
     course: {
         id: string
         title: string
         description: string | null
+        courseShortDesc?: string | null
         deliveryMode: DeliveryMode
         difficulty: Difficulty
         category: string | null
         duration: number | null
+        ytPlaylistId?: string | null
     }
 }
 
@@ -55,16 +59,53 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [generating, setGenerating] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const [formData, setFormData] = useState({
         title: course.title,
         description: course.description || "",
+        courseShortDesc: course.courseShortDesc || "",
         deliveryMode: course.deliveryMode,
         difficulty: course.difficulty,
         category: course.category || "",
         duration: course.duration || 0,
     })
+
+    const handleGenerateAI = async () => {
+        setGenerating(true)
+        setError(null)
+
+        try {
+            const response = await fetch("/api/generate-course-info", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ courseId: course.id })
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || "Gagal generate dengan AI")
+            }
+
+            if (data.success) {
+                setFormData(prev => ({
+                    ...prev,
+                    title: data.title || prev.title,
+                    courseShortDesc: data.shortDesc || prev.courseShortDesc,
+                    description: data.description || prev.description
+                }))
+                toast.success("Berhasil generate dengan AI!")
+            }
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Gagal generate dengan AI"
+            setError(message)
+            toast.error(message)
+        } finally {
+            setGenerating(false)
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -96,7 +137,7 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                     Edit
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle className="text-slate-900 dark:text-white">Edit Informasi Kursus</DialogTitle>
@@ -106,6 +147,31 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                     </DialogHeader>
 
                     <div className="grid gap-4 py-6">
+                        {/* AI Generate Button */}
+                        <div className="flex justify-end">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleGenerateAI}
+                                disabled={generating || !course.ytPlaylistId}
+                                className="border-purple-300 dark:border-purple-600 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title={!course.ytPlaylistId ? "Hanya tersedia untuk kursus dari YouTube playlist" : "Generate judul & deskripsi dengan AI"}
+                            >
+                                {generating ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Generating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles className="w-4 h-4 mr-2" />
+                                        Generate by AI
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+
                         {error && (
                             <div className="p-3 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 text-sm">
                                 {error}
@@ -118,19 +184,34 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                                 id="title"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
                                 placeholder="Contoh: Administrasi Publik Modern"
+                                disabled={generating}
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="description" className="text-slate-700 dark:text-slate-300">Deskripsi</Label>
+                            <Label htmlFor="courseShortDesc" className="text-slate-700 dark:text-slate-300">Deskripsi Singkat</Label>
+                            <Textarea
+                                id="courseShortDesc"
+                                value={formData.courseShortDesc}
+                                onChange={(e) => setFormData({ ...formData, courseShortDesc: e.target.value })}
+                                className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[60px] ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
+                                placeholder="Ringkasan singkat kursus (maks 500 karakter)"
+                                maxLength={500}
+                                disabled={generating}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="description" className="text-slate-700 dark:text-slate-300">Deskripsi Lengkap</Label>
                             <Textarea
                                 id="description"
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[100px]"
+                                className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[100px] ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
                                 placeholder="Jelaskan tentang kursus ini..."
+                                disabled={generating}
                             />
                         </div>
 
@@ -177,13 +258,21 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="category" className="text-slate-700 dark:text-slate-300">Kategori</Label>
-                                <Input
-                                    id="category"
+                                <Select
                                     value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
-                                    placeholder="Contoh: Manajemen"
-                                />
+                                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                                >
+                                    <SelectTrigger className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                                        <SelectValue placeholder="Pilih Kategori" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                                        {COURSE_CATEGORIES.map((cat) => (
+                                            <SelectItem key={cat.value} value={cat.value} className="text-slate-900 dark:text-white">
+                                                {cat.icon} {cat.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div className="space-y-2">

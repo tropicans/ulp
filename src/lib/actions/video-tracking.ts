@@ -2,7 +2,13 @@
 
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import { sendStatementAsync, buildActor, buildActivity } from "@/lib/xapi"
+import {
+    queueStatement,
+    recordActivity,
+    buildActor,
+    buildActivity
+} from "@/lib/xapi"
+import { genIdempotencyKey } from "@/lib/xapi/utils"
 import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 import { XAPIStatement } from "@/lib/xapi/types"
 
@@ -30,7 +36,7 @@ export async function trackVideoPlay(
         actor: buildActor(session.user.email, session.user.name),
         verb: VERBS.played,
         object: buildActivity(
-            `${PLATFORM_IRI}/courses/${lesson.Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
+            `${PLATFORM_IRI}/courses/${(lesson as any).Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
             ACTIVITY_TYPES.video,
             lesson.title
         ),
@@ -41,7 +47,10 @@ export async function trackVideoPlay(
         }
     }
 
-    sendStatementAsync(statement)
+    queueStatement(
+        statement,
+        genIdempotencyKey("video_play", session.user.id, lessonId, videoId, currentTime.toString())
+    )
     return { success: true }
 }
 
@@ -72,7 +81,7 @@ export async function trackVideoPause(
         actor: buildActor(session.user.email, session.user.name),
         verb: VERBS.paused,
         object: buildActivity(
-            `${PLATFORM_IRI}/courses/${lesson.Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
+            `${PLATFORM_IRI}/courses/${(lesson as any).Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
             ACTIVITY_TYPES.video,
             lesson.title
         ),
@@ -84,7 +93,10 @@ export async function trackVideoPause(
         }
     }
 
-    sendStatementAsync(statement)
+    queueStatement(
+        statement,
+        genIdempotencyKey("video_pause", session.user.id, lessonId, videoId, currentTime.toString())
+    )
     return { success: true }
 }
 
@@ -113,7 +125,7 @@ export async function trackVideoSeek(
         actor: buildActor(session.user.email, session.user.name),
         verb: VERBS.seeked,
         object: buildActivity(
-            `${PLATFORM_IRI}/courses/${lesson.Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
+            `${PLATFORM_IRI}/courses/${(lesson as any).Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
             ACTIVITY_TYPES.video,
             lesson.title
         ),
@@ -125,7 +137,10 @@ export async function trackVideoSeek(
         }
     }
 
-    sendStatementAsync(statement)
+    queueStatement(
+        statement,
+        genIdempotencyKey("video_seek", session.user.id, lessonId, videoId, fromTime.toString(), toTime.toString())
+    )
     return { success: true }
 }
 
@@ -153,7 +168,7 @@ export async function trackVideoCompleted(
         actor: buildActor(session.user.email, session.user.name),
         verb: VERBS.completed,
         object: buildActivity(
-            `${PLATFORM_IRI}/courses/${lesson.Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
+            `${PLATFORM_IRI}/courses/${(lesson as any).Module.Course.slug}/lessons/${lessonId}/video/${videoId}`,
             ACTIVITY_TYPES.video,
             lesson.title
         ),
@@ -163,6 +178,19 @@ export async function trackVideoCompleted(
         }
     }
 
-    sendStatementAsync(statement)
+    queueStatement(
+        statement,
+        genIdempotencyKey("video_complete", session.user.id, lessonId, videoId)
+    )
+
+    // Record to unified journey
+    recordActivity(
+        session.user.id,
+        "VIDEO_COMPLETE",
+        lessonId,
+        lesson.title,
+        (lesson as any).Module.courseId,
+        { videoId, duration }
+    )
     return { success: true }
 }

@@ -4,16 +4,25 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { getCourses } from "@/lib/actions/courses"
 import { CourseCard } from "@/components/courses/course-card"
-import { GraduationCap, Filter, BookOpen } from "lucide-react"
+import { GraduationCap, Filter, BookOpen, ChevronDown } from "lucide-react"
 import { CourseFilters } from "@/components/courses/course-filters"
 import { DeliveryMode } from "@/generated/prisma"
 import { motion, AnimatePresence } from "framer-motion"
+import { COURSE_CATEGORIES, getCategoryLabel } from "@/lib/constants/categories"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 // Inner component that uses useSearchParams
 function CoursesContent() {
     const searchParams = useSearchParams()
     const [courses, setCourses] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
     // Get mode from URL search params
     const mode = searchParams.get("mode") as DeliveryMode | null
@@ -23,13 +32,14 @@ function CoursesContent() {
             setIsLoading(true)
             const fetchedCourses = await getCourses({
                 isPublished: true,
-                deliveryMode: mode || undefined
+                deliveryMode: mode || undefined,
+                category: selectedCategory || undefined
             })
             setCourses(fetchedCourses)
             setIsLoading(false)
         }
         loadCourses()
-    }, [mode])
+    }, [mode, selectedCategory])
 
     const container = {
         hidden: { opacity: 0 },
@@ -77,9 +87,25 @@ function CoursesContent() {
                 >
                     <CourseFilters />
                     <div className="w-px h-8 bg-slate-300 dark:bg-white/10 mx-2" />
-                    <div className="p-2 hover:bg-slate-200 dark:hover:bg-white/5 rounded-xl transition-colors group cursor-pointer">
-                        <Filter className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white" />
-                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-9 px-3 rounded-xl text-xs font-bold">
+                                <Filter className="w-4 h-4 mr-2" />
+                                {selectedCategory ? getCategoryLabel(selectedCategory) : "Semua Kategori"}
+                                <ChevronDown className="w-3 h-3 ml-2" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-64">
+                            <DropdownMenuItem onClick={() => setSelectedCategory(null)}>
+                                📁 Semua Kategori
+                            </DropdownMenuItem>
+                            {COURSE_CATEGORIES.map((cat) => (
+                                <DropdownMenuItem key={cat.value} onClick={() => setSelectedCategory(cat.value)}>
+                                    {cat.icon} {cat.label}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </motion.div>
             </motion.div>
 

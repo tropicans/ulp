@@ -149,7 +149,7 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="container mx-auto px-4 mt-24 relative z-10"
+                className="container mx-auto px-4 mt-14 relative z-10"
             >
                 <div className="grid lg:grid-cols-3 gap-12">
                     {/* Main Content */}
@@ -173,12 +173,13 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                         </motion.div>
 
                         {/* Feature Grid */}
-                        <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-5 gap-4">
                             {[
                                 { label: "Kesulitan", value: course.difficulty, icon: BarChart, color: "text-blue-500" },
                                 { label: "Penyampaian", value: deliveryModeConfig[course.deliveryMode as DeliveryMode].label, icon: Calendar, color: "text-purple-500" },
                                 { label: "Estimasi", value: `${course.duration || "--"} Jam`, icon: Clock, color: "text-green-500" },
-                                { label: "Peserta", value: "Aktif", icon: Users, color: "text-yellow-500" },
+                                { label: "Bahasa", value: course.language || "Indonesia", icon: FileText, color: "text-orange-500" },
+                                { label: "JP", value: `${course.jp || course.duration || 1} JP`, icon: BookOpen, color: "text-yellow-500" },
                             ].map((stat) => (
                                 <div key={stat.label} className="p-6 rounded-[32px] bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 backdrop-blur-sm group hover:border-slate-300 dark:hover:border-white/10 transition-colors">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">{stat.label}</p>
@@ -239,28 +240,7 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                 )}
                             </div>
 
-                            {/* Additional Info Grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                {/* Language */}
-                                <div className="p-4 rounded-xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Bahasa</p>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{course.language || 'Bahasa Indonesia'}</p>
-                                </div>
 
-                                {/* Course Level */}
-                                <div className="p-4 rounded-xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Tingkat</p>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{course.courseLevel || 'Beginner'}</p>
-                                </div>
-
-                                {/* JP Hours */}
-                                {course.jp && (
-                                    <div className="p-4 rounded-xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Jam Pembelajaran</p>
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{course.jp} JP</p>
-                                    </div>
-                                )}
-                            </div>
 
                             {/* Recommended Next Courses */}
                             {course.recommendedNext && (

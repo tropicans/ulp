@@ -17,7 +17,8 @@ import {
     Settings,
     LogOut,
     Award,
-    Bell
+    Bell,
+    History as HistoryIcon
 } from "lucide-react"
 import Link from "next/link"
 import type { Role } from "@/generated/prisma"
@@ -95,6 +96,12 @@ export function UserNav({ user }: UserNavProps) {
                         <Link href="/dashboard/profile" className="flex items-center w-full">
                             <User className="mr-2 h-4 w-4" />
                             Profil Saya
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                        <Link href="/dashboard/learner/journey" className="flex items-center w-full">
+                            <HistoryIcon className="mr-2 h-4 w-4" />
+                            Jejak Belajar
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">

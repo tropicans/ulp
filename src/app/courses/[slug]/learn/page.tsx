@@ -23,6 +23,24 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         redirect(`/login?callbackUrl=/courses/${slug}/learn`)
     }
 
+    // Check if verification is required
+    const verificationSetting = await prisma.systemSetting.findUnique({
+        where: { key: "require_email_verification" }
+    })
+
+    if (verificationSetting?.value === "true") {
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { emailVerified: true, phoneVerified: true }
+        })
+
+        // Redirect to verify page if not verified
+        if (!user?.emailVerified && !user?.phoneVerified) {
+            redirect("/verify")
+        }
+    }
+
+
     // Get course with modules, lessons, quizzes, and sessions
     const course = await prisma.course.findUnique({
         where: { slug: slug },

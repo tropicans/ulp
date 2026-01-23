@@ -7,6 +7,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import {
     Settings,
     Shield,
@@ -16,15 +24,65 @@ import {
     Lock,
     Globe,
     Cpu,
-    Briefcase
+    Palette,
+    Youtube,
+    Sparkles,
+    GraduationCap,
+    Clock,
+    Users,
+    CheckCircle2,
+    Loader2,
+    ArrowLeft,
+    Mail,
+    Key
 } from "lucide-react"
 import { toast } from "sonner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Link from "next/link"
+
+// Setting type definition
+interface SettingConfig {
+    label: string
+    default: string
+    type: "text" | "email" | "number" | "password" | "switch" | "select" | "color"
+    description: string
+    options?: string[]
+}
+
+// Setting definitions with metadata
+const SETTINGS_CONFIG: Record<string, SettingConfig> = {
+    // General
+    site_name: { label: "Nama Platform", default: "TITIAN", type: "text", description: "Judul yang muncul di browser dan email" },
+    site_tagline: { label: "Tagline", default: "Learning Experience Platform ASN", type: "text", description: "Deskripsi singkat platform" },
+    support_email: { label: "Email Support", default: "admin@setneg.go.id", type: "email", description: "Alamat kontak bantuan teknis" },
+    footer_text: { label: "Teks Footer", default: "© 2026 Sekretariat Negara RI", type: "text", description: "Copyright yang muncul di footer" },
+
+    // Learning
+    default_jp: { label: "Default JP (Jam Pelajaran)", default: "2", type: "number", description: "JP default untuk kursus baru" },
+    completion_threshold: { label: "Passing Grade (%)", default: "70", type: "number", description: "Minimum nilai untuk lulus kursus" },
+    certificate_auto_issue: { label: "Sertifikat Otomatis", default: "true", type: "switch", description: "Terbitkan sertifikat otomatis saat lulus" },
+    max_quiz_attempts: { label: "Maks Percobaan Quiz", default: "3", type: "number", description: "Jumlah percobaan maksimal untuk quiz" },
+
+    // Security
+    allow_registration: { label: "Registrasi Mandiri", default: "true", type: "switch", description: "Izinkan pengguna baru mendaftar tanpa undangan" },
+    require_email_verification: { label: "Verifikasi Email Wajib", default: "false", type: "switch", description: "Pengguna harus memverifikasi email sebelum login" },
+    session_timeout: { label: "Session Timeout (menit)", default: "60", type: "number", description: "Waktu kedaluwarsa sesi login" },
+    allowed_domains: { label: "Domain Email yang Diizinkan", default: "", type: "text", description: "Kosongkan untuk semua domain, atau pisahkan dengan koma (setneg.go.id,kemenpan.go.id)" },
+
+    // Appearance
+    primary_color: { label: "Warna Utama", default: "#3B82F6", type: "color", description: "Warna aksen utama platform" },
+    logo_url: { label: "URL Logo", default: "", type: "text", description: "URL logo platform (opsional)" },
+    dark_mode_default: { label: "Dark Mode Default", default: "false", type: "switch", description: "Gunakan dark mode sebagai default" },
+}
+
+type SettingKey = keyof typeof SETTINGS_CONFIG
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
-    const [isSaving, setIsSaving] = useState<string | null>(null)
+    const [savingKeys, setSavingKeys] = useState<Set<string>>(new Set())
+    const [changedKeys, setChangedKeys] = useState<Set<string>>(new Set())
+    const [localValues, setLocalValues] = useState<Record<string, string>>({})
 
     useEffect(() => {
         fetchSettings()
@@ -35,149 +93,408 @@ export default function SettingsPage() {
         const result = await getSystemSettings()
         if (result.settings) {
             setSettings(result.settings)
+            // Initialize local values
+            const values: Record<string, string> = {}
+            Object.keys(SETTINGS_CONFIG).forEach(key => {
+                const setting = result.settings.find((s: any) => s.key === key)
+                values[key] = setting?.value || SETTINGS_CONFIG[key as SettingKey].default
+            })
+            setLocalValues(values)
         }
         setIsLoading(false)
     }
 
-    const handleUpdate = async (key: string, value: string) => {
-        setIsSaving(key)
-        const result = await updateSystemSetting(key, value)
+    const handleChange = (key: string, value: string) => {
+        setLocalValues(prev => ({ ...prev, [key]: value }))
+        const originalValue = settings.find(s => s.key === key)?.value || SETTINGS_CONFIG[key as SettingKey]?.default || ""
+        if (value !== originalValue) {
+            setChangedKeys(prev => new Set(prev).add(key))
+        } else {
+            setChangedKeys(prev => {
+                const newSet = new Set(prev)
+                newSet.delete(key)
+                return newSet
+            })
+        }
+    }
+
+    const handleSave = async (key: string) => {
+        setSavingKeys(prev => new Set(prev).add(key))
+        const result = await updateSystemSetting(key, localValues[key])
         if (result.success) {
-            toast.success(`Pengaturan '${key}' diperbarui`)
+            toast.success(`Pengaturan '${SETTINGS_CONFIG[key as SettingKey]?.label || key}' disimpan`)
+            setChangedKeys(prev => {
+                const newSet = new Set(prev)
+                newSet.delete(key)
+                return newSet
+            })
             fetchSettings()
         } else {
-            toast.error(result.error || "Gagal memperbarui")
+            toast.error(result.error || "Gagal menyimpan")
         }
-        setIsSaving(null)
+        setSavingKeys(prev => {
+            const newSet = new Set(prev)
+            newSet.delete(key)
+            return newSet
+        })
     }
 
-    const getSettingValue = (key: string, defaultValue = "") => {
-        return settings.find(s => s.key === key)?.value || defaultValue
+    const handleSaveAll = async () => {
+        const keys = Array.from(changedKeys)
+        for (const key of keys) {
+            await handleSave(key)
+        }
     }
 
-    if (isLoading) return <div className="container mx-auto p-12 animate-pulse bg-white dark:bg-slate-900 min-h-screen" />
+    const renderSettingInput = (key: string) => {
+        const config = SETTINGS_CONFIG[key]
+        if (!config) return null
+        const value = localValues[key] || config.default
+        const isSaving = savingKeys.has(key)
+        const isChanged = changedKeys.has(key)
+
+        if (config.type === "switch") {
+            return (
+                <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 group hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+                    <div className="space-y-0.5">
+                        <Label className="text-slate-900 dark:text-white font-bold">{config.label}</Label>
+                        <p className="text-xs text-slate-500">{config.description}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        {isSaving && <Loader2 className="w-4 h-4 animate-spin text-blue-500" />}
+                        <Switch
+                            checked={value === "true"}
+                            onCheckedChange={(checked) => {
+                                handleChange(key, checked.toString())
+                                // Auto-save for switches
+                                setTimeout(() => handleSave(key), 100)
+                            }}
+                            disabled={isSaving}
+                        />
+                    </div>
+                </div>
+            )
+        }
+
+        if (config.type === "select" && config.options) {
+            return (
+                <div className="space-y-2">
+                    <Label className="text-slate-900 dark:text-white font-bold">{config.label}</Label>
+                    <div className="flex gap-2">
+                        <Select value={value} onValueChange={(v) => handleChange(key, v)}>
+                            <SelectTrigger className="bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {config.options.map(opt => (
+                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Button
+                            onClick={() => handleSave(key)}
+                            disabled={isSaving || !isChanged}
+                            size="icon"
+                            className={isChanged ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-300 dark:bg-slate-700"}
+                        >
+                            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        </Button>
+                    </div>
+                    <p className="text-[10px] text-slate-500 font-medium">{config.description}</p>
+                </div>
+            )
+        }
+
+        return (
+            <div className="space-y-2">
+                <Label className="text-slate-900 dark:text-white font-bold">{config.label}</Label>
+                <div className="flex gap-2">
+                    <Input
+                        type={config.type === "password" ? "password" : config.type === "number" ? "number" : "text"}
+                        value={value}
+                        onChange={(e) => handleChange(key, e.target.value)}
+                        className={`bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white ${isChanged ? 'ring-2 ring-blue-500/50' : ''}`}
+                        placeholder={config.default || `Masukkan ${config.label.toLowerCase()}`}
+                    />
+                    <Button
+                        onClick={() => handleSave(key)}
+                        disabled={isSaving || !isChanged}
+                        size="icon"
+                        className={isChanged ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-300 dark:bg-slate-700"}
+                    >
+                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : isChanged ? <Save className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                    </Button>
+                </div>
+                <p className="text-[10px] text-slate-500 font-medium">{config.description}</p>
+            </div>
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <div className="container mx-auto px-4 py-12">
+                <div className="animate-pulse space-y-8">
+                    <div className="h-16 bg-slate-200 dark:bg-slate-800 rounded-2xl w-1/2" />
+                    <div className="h-12 bg-slate-200 dark:bg-slate-800 rounded-2xl w-full" />
+                    <div className="h-96 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+                </div>
+            </div>
+        )
+    }
 
     return (
-        <div className="container max-w-5xl mx-auto px-4 py-12">
-            <div className="mb-10">
-                <h1 className="text-4xl font-black text-slate-900 dark:text-white flex items-center gap-4">
-                    <div className="p-3 bg-red-600 rounded-2xl shadow-lg shadow-red-900/20">
-                        <Settings className="w-8 h-8 text-white" />
+        <div className="container mx-auto px-4 py-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl shadow-lg shadow-red-500/20">
+                        <Settings className="w-6 h-6 text-white" />
                     </div>
-                    Pengaturan Sistem
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Konfigurasi parameter global dan kebijakan platform LXP</p>
+                    <div>
+                        <h1 className="text-2xl font-black text-slate-900 dark:text-white">Pengaturan Sistem</h1>
+                        <p className="text-sm text-slate-500">Konfigurasi parameter global platform</p>
+                    </div>
+                </div>
+                {changedKeys.size > 0 && (
+                    <Button onClick={handleSaveAll} className="bg-blue-600 hover:bg-blue-700">
+                        <Save className="w-4 h-4 mr-2" />
+                        Simpan Semua ({changedKeys.size})
+                    </Button>
+                )}
             </div>
 
-            <Tabs defaultValue="general" className="space-y-8">
-                <TabsList className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 rounded-2xl">
-                    <TabsTrigger value="general" className="rounded-xl px-8 font-bold data-[state=active]:bg-red-600">
-                        <Globe className="w-4 h-4 mr-2" /> Umum
+            <Tabs defaultValue="general" className="space-y-6">
+                <TabsList className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 rounded-xl grid grid-cols-5 w-full">
+                    <TabsTrigger value="general" className="rounded-lg text-xs font-bold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
+                        <Globe className="w-4 h-4 mr-1.5" /> Umum
                     </TabsTrigger>
-                    <TabsTrigger value="auth" className="rounded-xl px-8 font-bold data-[state=active]:bg-red-600">
-                        <Lock className="w-4 h-4 mr-2" /> Keamanan
+                    <TabsTrigger value="learning" className="rounded-lg text-xs font-bold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
+                        <GraduationCap className="w-4 h-4 mr-1.5" /> Pembelajaran
                     </TabsTrigger>
-                    <TabsTrigger value="notifications" className="rounded-xl px-8 font-bold data-[state=active]:bg-red-600">
-                        <Bell className="w-4 h-4 mr-2" /> Notifikasi
+                    <TabsTrigger value="auth" className="rounded-lg text-xs font-bold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
+                        <Lock className="w-4 h-4 mr-1.5" /> Keamanan
+                    </TabsTrigger>
+                    <TabsTrigger value="integration" className="rounded-lg text-xs font-bold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
+                        <Cpu className="w-4 h-4 mr-1.5" /> Integrasi
+                    </TabsTrigger>
+                    <TabsTrigger value="appearance" className="rounded-lg text-xs font-bold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
+                        <Palette className="w-4 h-4 mr-1.5" /> Tampilan
                     </TabsTrigger>
                 </TabsList>
 
+                {/* General Tab */}
                 <TabsContent value="general" className="space-y-6">
-                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-800 pb-6">
+                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
+                        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
                             <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
-                                <Cpu className="w-5 h-5 text-red-500" /> Profil Platform
+                                <Cpu className="w-5 h-5 text-blue-500" /> Profil Platform
                             </CardTitle>
-                            <CardDescription>Atur identitas aplikasi dan preferensi dasar</CardDescription>
+                            <CardDescription>Atur identitas aplikasi dan informasi dasar</CardDescription>
                         </CardHeader>
-                        <CardContent className="pt-8 space-y-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="space-y-4">
-                                    <Label className="text-slate-900 dark:text-white font-bold">Nama Platform</Label>
-                                    <div className="flex gap-2">
-                                        <Input
-                                            defaultValue={getSettingValue("site_name", "TITIAN")}
-                                            className="bg-slate-100 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
-                                            id="site_name"
-                                        />
-                                        <Button
-                                            onClick={() => handleUpdate("site_name", (document.getElementById("site_name") as HTMLInputElement).value)}
-                                            disabled={isSaving === "site_name"}
-                                            className="bg-red-600 hover:bg-red-700"
-                                        >
-                                            {isSaving === "site_name" ? "..." : <Save className="w-4 h-4" />}
-                                        </Button>
-                                    </div>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Judul yang muncul di browser dan email</p>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <Label className="text-slate-900 dark:text-white font-bold">Support Email</Label>
-                                    <div className="flex gap-2">
-                                        <Input
-                                            defaultValue={getSettingValue("support_email", "admin@lxp.id")}
-                                            className="bg-slate-100 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
-                                            id="support_email"
-                                        />
-                                        <Button
-                                            onClick={() => handleUpdate("support_email", (document.getElementById("support_email") as HTMLInputElement).value)}
-                                            disabled={isSaving === "support_email"}
-                                            className="bg-red-600 hover:bg-red-700"
-                                        >
-                                            {isSaving === "support_email" ? "..." : <Save className="w-4 h-4" />}
-                                        </Button>
-                                    </div>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Alamat kontak bantuan teknis</p>
-                                </div>
+                        <CardContent className="pt-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {renderSettingInput("site_name")}
+                                {renderSettingInput("site_tagline")}
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {renderSettingInput("support_email")}
+                                {renderSettingInput("footer_text")}
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
+                {/* Learning Tab */}
+                <TabsContent value="learning" className="space-y-6">
+                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
+                        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
+                            <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                                <GraduationCap className="w-5 h-5 text-green-500" /> Pengaturan Pembelajaran
+                            </CardTitle>
+                            <CardDescription>Konfigurasi default untuk kursus dan penilaian</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {renderSettingInput("default_jp")}
+                                {renderSettingInput("completion_threshold")}
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {renderSettingInput("max_quiz_attempts")}
+                            </div>
+                            <div className="space-y-4">
+                                {renderSettingInput("certificate_auto_issue")}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Security Tab */}
                 <TabsContent value="auth" className="space-y-6">
-                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-800 pb-6">
+                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
+                        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
                             <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
                                 <Shield className="w-5 h-5 text-red-500" /> Kebijakan Akses
                             </CardTitle>
+                            <CardDescription>Kelola registrasi dan autentikasi pengguna</CardDescription>
                         </CardHeader>
-                        <CardContent className="pt-8 space-y-6">
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                                <div className="space-y-0.5">
-                                    <Label className="text-slate-900 dark:text-white font-bold">Registrasi Mandiri</Label>
-                                    <p className="text-xs text-slate-500">Izinkan pengguna baru mendaftar tanpa undangan</p>
-                                </div>
-                                <Switch
-                                    checked={getSettingValue("allow_registration", "true") === "true"}
-                                    onCheckedChange={(checked) => handleUpdate("allow_registration", checked.toString())}
-                                />
-                            </div>
-
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                                <div className="space-y-0.5">
-                                    <Label className="text-slate-900 dark:text-white font-bold">Verifikasi Email Wajib</Label>
-                                    <p className="text-xs text-slate-500">Pengguna harus memverifikasi email sebelum login</p>
-                                </div>
-                                <Switch
-                                    checked={getSettingValue("require_email_verification", "false") === "true"}
-                                    onCheckedChange={(checked) => handleUpdate("require_email_verification", checked.toString())}
-                                />
+                        <CardContent className="pt-6 space-y-4">
+                            {renderSettingInput("allow_registration")}
+                            {renderSettingInput("require_email_verification")}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                                {renderSettingInput("session_timeout")}
+                                {renderSettingInput("allowed_domains")}
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="notifications" className="space-y-6">
-                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
-                        <CardHeader className="border-b border-slate-200 dark:border-slate-800 pb-6">
-                            <CardTitle className="text-slate-900 dark:text-white">Preferensi Server Notifikasi</CardTitle>
+                {/* Integration Tab - Shows ENV status */}
+                <TabsContent value="integration" className="space-y-6">
+                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
+                        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
+                            <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                                <Cpu className="w-5 h-5 text-blue-500" /> Status Integrasi
+                            </CardTitle>
+                            <CardDescription>
+                                Konfigurasi integrasi dikelola melalui file <code className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-mono">.env</code> pada server
+                            </CardDescription>
                         </CardHeader>
-                        <CardContent className="pt-8 text-center py-20">
-                            <Database className="w-16 h-16 text-slate-300 dark:text-slate-800 mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Konfigurasi SMTP</h3>
-                            <p className="text-slate-500 italic max-w-sm mx-auto">
-                                Fitur ini memerlukan konfigurasi environment variable tambahan pada server untuk aktivasi penuh.
-                            </p>
+                        <CardContent className="pt-6 space-y-4">
+                            {/* Info banner */}
+                            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 mb-6">
+                                <p className="text-sm text-amber-800 dark:text-amber-200">
+                                    <strong>ℹ️ Info:</strong> Nilai integrasi dibaca dari environment variables. Untuk mengubah, edit file <code className="px-1 bg-amber-100 dark:bg-amber-900 rounded">.env</code> dan restart container.
+                                </p>
+                            </div>
+
+                            {/* YouTube */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-red-100 dark:bg-red-950">
+                                        <Youtube className="w-5 h-5 text-red-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">YouTube API</h4>
+                                        <p className="text-xs text-slate-500">Import playlist dan metadata video</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Ollama AI */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-950">
+                                        <Sparkles className="w-5 h-5 text-purple-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">Ollama AI (Local LLM)</h4>
+                                        <p className="text-xs text-slate-500">Generate konten dengan model lokal</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Whisper STT */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-blue-100 dark:bg-blue-950">
+                                        <Database className="w-5 h-5 text-blue-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">Whisper STT</h4>
+                                        <p className="text-xs text-slate-500">Speech-to-text untuk transkrip video</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* xAPI LRS */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-950">
+                                        <GraduationCap className="w-5 h-5 text-orange-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">xAPI LRS</h4>
+                                        <p className="text-xs text-slate-500">Learning Record Store untuk analytics</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* MinIO Storage */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-cyan-100 dark:bg-cyan-950">
+                                        <Database className="w-5 h-5 text-cyan-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">MinIO / S3 Storage</h4>
+                                        <p className="text-xs text-slate-500">Object storage untuk file dan media</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* n8n Webhooks */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-green-100 dark:bg-green-950">
+                                        <Cpu className="w-5 h-5 text-green-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">n8n Automation</h4>
+                                        <p className="text-xs text-slate-500">Workflow automation dan webhooks</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
+                                    </span>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Appearance Tab */}
+                <TabsContent value="appearance" className="space-y-6">
+                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
+                        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
+                            <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                                <Palette className="w-5 h-5 text-pink-500" /> Branding
+                            </CardTitle>
+                            <CardDescription>Sesuaikan tampilan dan identitas visual platform</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {renderSettingInput("primary_color")}
+                                {renderSettingInput("logo_url")}
+                            </div>
+                            <div className="space-y-4">
+                                {renderSettingInput("dark_mode_default")}
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>

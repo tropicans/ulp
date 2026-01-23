@@ -24,6 +24,7 @@ const registerSchema = z.object({
 const completeProfileSchema = z.object({
     name: z.string().min(2, "Nama minimal 2 karakter"),
     unitKerja: z.string().min(2, "Organisasi wajib diisi"),
+    phone: z.string().optional(),
     role: z.enum(["LEARNER", "INSTRUCTOR"]).default("LEARNER"),
 })
 
@@ -97,6 +98,7 @@ export async function completeProfile(formData: FormData) {
         const rawData = {
             name: formData.get("name") as string,
             unitKerja: formData.get("unitKerja") as string,
+            phone: (formData.get("phone") as string) || undefined,
             role: (formData.get("role") as string) || "LEARNER",
         }
 
@@ -109,6 +111,7 @@ export async function completeProfile(formData: FormData) {
             data: {
                 name: validatedData.name,
                 unitKerja: validatedData.unitKerja,
+                phone: validatedData.phone || null,
                 role: validatedData.role as Role,
             },
         })

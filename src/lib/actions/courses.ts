@@ -5,7 +5,13 @@ import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { DeliveryMode, Difficulty } from "@/generated/prisma"
-import { sendStatementAsync, buildActor, buildActivity } from "@/lib/xapi"
+import {
+    queueStatement,
+    recordActivity,
+    buildActor,
+    buildActivity
+} from "@/lib/xapi"
+import { genIdempotencyKey } from "@/lib/xapi/utils"
 import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 const courseSchema = z.object({
@@ -38,6 +44,8 @@ export async function getCourses(filters?: {
                 ...(filters?.deliveryMode && { deliveryMode: filters.deliveryMode }),
                 ...(filters?.difficulty && { difficulty: filters.difficulty }),
                 ...(filters?.category && { category: filters.category }),
+                // Exclude personal learner courses from main catalog unless explicitly requested
+                ...(!filters?.category && { NOT: { category: "PERSONAL" } }),
                 ...(filters?.isPublished !== undefined && { isPublished: filters.isPublished }),
             },
             select: {
@@ -153,7 +161,7 @@ export async function getCourseBySlug(slug: string) {
 export async function createCourse(data: z.infer<typeof courseSchema>) {
     try {
         const session = await auth()
-        if (!session?.user?.id || (session.user.role !== "INSTRUCTOR" && session.user.role !== "SUPER_ADMIN" && session.user.role !== "ADMIN_UNIT")) {
+        if (!session?.user?.id) {
             return { error: "Unauthorized" }
         }
 
@@ -171,18 +179,28 @@ export async function createCourse(data: z.infer<typeof courseSchema>) {
             slug = `${baseSlug}-${Math.random().toString(36).substring(2, 7)}`
         }
 
+        const isLearner = session.user.role === "LEARNER"
+
         const course = await prisma.course.create({
             data: {
                 id: crypto.randomUUID(),
                 ...validatedData,
                 slug,
                 instructorId: session.user.id,
+                isPublished: isLearner ? true : false,
+                category: isLearner ? "PERSONAL" : (validatedData.category || null),
                 updatedAt: new Date(),
             }
         })
 
         revalidatePath("/dashboard/courses")
         revalidatePath("/courses")
+
+        // Auto-enroll if learner
+        if (isLearner) {
+            await enrollInCourse(course.id)
+        }
+
         return { success: true, course }
     } catch (error) {
         if (error instanceof z.ZodError) {
@@ -196,6 +214,7 @@ export async function createCourse(data: z.infer<typeof courseSchema>) {
 const updateCourseSchema = z.object({
     title: z.string().min(3, "Judul minimal 3 karakter"),
     description: z.string().min(10, "Deskripsi minimal 10 karakter"),
+    courseShortDesc: z.string().max(500, "Deskripsi singkat maksimal 500 karakter").optional().nullable(),
     deliveryMode: z.nativeEnum(DeliveryMode),
     difficulty: z.nativeEnum(Difficulty),
     category: z.string().optional().nullable(),
@@ -364,18 +383,29 @@ export async function enrollInCourse(courseId: string) {
             }
         })
 
-        // Send xAPI statement for enrollment (async, fire-and-forget)
+        // Send xAPI statement for enrollment (transactional outbox)
         if (course) {
-            sendStatementAsync({
-                actor: buildActor(session.user.email || '', session.user.name),
-                verb: VERBS.enrolled,
-                object: buildActivity(
-                    `${PLATFORM_IRI}/courses/${course.slug}`,
-                    ACTIVITY_TYPES.course,
-                    course.title,
-                    course.description || undefined
-                )
-            })
+            queueStatement(
+                {
+                    actor: buildActor(session.user.email || '', session.user.name),
+                    verb: VERBS.enrolled,
+                    object: buildActivity(
+                        `${PLATFORM_IRI}/courses/${course.slug}`,
+                        ACTIVITY_TYPES.course,
+                        course.title,
+                        course.description || undefined
+                    )
+                },
+                genIdempotencyKey("enrollment", session.user.id, courseId)
+            )
+
+            // Record to unified journey
+            recordActivity(
+                session.user.id,
+                "ENROLLMENT",
+                courseId,
+                course.title
+            )
         }
 
         revalidatePath(`/courses/[slug]`, "page")
@@ -448,6 +478,29 @@ export async function getUserEnrollments() {
         })
     } catch (error) {
         console.error("Error fetching enrollments:", error)
+        return []
+    }
+}
+
+/**
+ * Get courses created by the current user (Playlists)
+ */
+export async function getUserCreatedCourses() {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) return []
+
+        return await prisma.course.findMany({
+            where: { instructorId: session.user.id },
+            include: {
+                _count: {
+                    select: { Module: true }
+                }
+            },
+            orderBy: { updatedAt: "desc" }
+        })
+    } catch (error) {
+        console.error("Error fetching user created courses:", error)
         return []
     }
 }

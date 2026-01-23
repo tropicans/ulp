@@ -26,6 +26,8 @@ export function SiteHeader() {
                 { label: "Kursus Saya", href: "/dashboard/learner/my-courses" },
                 { label: "Jadwal", href: "/dashboard/learner/schedule" },
                 { label: "Sertifikat", href: "/dashboard/learner/certificates" },
+                { label: "Jejak Belajar", href: "/dashboard/learner/journey" },
+                { label: "Ala Carte", href: "/dashboard/learner/library" },
             ]
         }
 

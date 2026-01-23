@@ -4,11 +4,19 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { awardPoints, updateActivityStreak } from "./gamification"
-import { sendStatementAsync, buildActor, buildActivity, buildResult } from "@/lib/xapi"
+import {
+    queueStatement,
+    genIdempotencyKey,
+    recordActivity,
+    buildActor,
+    buildActivity,
+    buildResult
+} from "@/lib/xapi"
 import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 
 /**
  * Mark a lesson as completed
+ * Uses outbox pattern for reliable xAPI emission
  */
 export async function markLessonComplete(lessonId: string) {
     const session = await auth()
@@ -34,7 +42,7 @@ export async function markLessonComplete(lessonId: string) {
         // Get lesson and course info for xAPI
         const lesson = await prisma.lesson.findUnique({
             where: { id: lessonId },
-            include: { Module: { include: { Course: { select: { slug: true, title: true } } } } }
+            include: { Module: { include: { Course: { select: { id: true, slug: true, title: true } } } } }
         })
 
         // Mark as complete
@@ -64,19 +72,35 @@ export async function markLessonComplete(lessonId: string) {
         await awardPoints(session.user.id, "LESSON_COMPLETE")
         await updateActivityStreak(session.user.id)
 
-        // Send xAPI statement for lesson completion
+        // Queue xAPI statement (outbox pattern - reliable & idempotent)
         if (lesson) {
-            sendStatementAsync({
-                actor: buildActor(session.user.email || '', session.user.name),
-                verb: VERBS.completed,
-                object: buildActivity(
-                    `${PLATFORM_IRI}/courses/${lesson.Module.Course.slug}/lessons/${lessonId}`,
-                    ACTIVITY_TYPES.lesson,
-                    lesson.title,
-                    `Lesson in ${lesson.Module.Course.title}`
-                ),
-                result: buildResult({ completion: true })
-            })
+            const courseId = lesson.Module.Course.id
+            const courseSlug = lesson.Module.Course.slug
+
+            // Queue xAPI statement for LRS
+            queueStatement(
+                {
+                    actor: buildActor(session.user.email || '', session.user.name),
+                    verb: VERBS.completed,
+                    object: buildActivity(
+                        `${PLATFORM_IRI}/courses/${courseSlug}/lessons/${lessonId}`,
+                        ACTIVITY_TYPES.lesson,
+                        lesson.title,
+                        `Lesson in ${lesson.Module.Course.title}`
+                    ),
+                    result: buildResult({ completion: true })
+                },
+                genIdempotencyKey("lesson_complete", session.user.id, lessonId)
+            )
+
+            // Record to unified journey
+            recordActivity(
+                session.user.id,
+                "LESSON_COMPLETE",
+                lessonId,
+                lesson.title,
+                courseId
+            )
         }
 
         revalidatePath(`/courses/[slug]/learn`, "page")

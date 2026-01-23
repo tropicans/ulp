@@ -2,10 +2,12 @@ import { auth } from "@/lib/auth"
 import { redirect, notFound } from "next/navigation"
 import { getQuizById } from "@/lib/actions/quizzes"
 import { QuizBuilder } from "@/components/quizzes/quiz-builder"
-import { ArrowLeft, Settings, Info } from "lucide-react"
+import { QuizSettingsCard } from "@/components/quizzes/quiz-settings-card"
+import { EditableStatsCards } from "@/components/quizzes/editable-stats-cards"
+import { ArrowLeft, FileQuestion, Award } from "lucide-react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 interface QuizEditPageProps {
     params: Promise<{
@@ -29,77 +31,95 @@ export default async function QuizEditPage({ params }: QuizEditPageProps) {
         redirect("/dashboard/courses")
     }
 
-    return (
-        <div className="min-h-screen bg-white dark:bg-slate-900 pt-24 pb-20">
-            <div className="container max-w-5xl mx-auto px-4">
-                <Link
-                    href={`/dashboard/courses/${quiz.Module.courseId}/edit`}
-                    className="flex items-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-sm mb-6 w-fit group"
-                >
-                    <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                    Kembali ke Edit Kursus
-                </Link>
+    const totalPoints = quiz.Question.reduce((acc: number, q: any) => acc + q.points, 0)
+    const quizTypeLabels: Record<string, string> = {
+        'PRETEST': 'Pretest',
+        'POSTTEST': 'Posttest',
+        'QUIZ': 'Quiz'
+    }
+    const quizTypeColors: Record<string, string> = {
+        'PRETEST': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+        'POSTTEST': 'bg-green-500/20 text-green-400 border-green-500/30',
+        'QUIZ': 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+    }
 
-                <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
-                    <div>
-                        <div className="flex items-center gap-3 mb-2">
-                            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{quiz.title}</h1>
-                            <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-500 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
-                                {quiz.type}
-                            </span>
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 pt-4 pb-20">
+            <div className="container max-w-6xl mx-auto px-4">
+                {/* Header Section */}
+                <div className="mb-8">
+                    <Link
+                        href={`/dashboard/courses/${quiz.Module.courseId}/edit`}
+                        className="inline-flex items-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-sm mb-6 group"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                        Kembali ke Edit Kursus
+                    </Link>
+
+                    <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-3 flex-wrap">
+                                <Badge className={`${quizTypeColors[quiz.type] || quizTypeColors['QUIZ']} border px-3 py-1 text-xs font-bold uppercase tracking-wider`}>
+                                    {quizTypeLabels[quiz.type] || quiz.type}
+                                </Badge>
+                                <span className="text-xs text-slate-500 dark:text-slate-400">
+                                    Modul: {quiz.Module.title}
+                                </span>
+                            </div>
+                            <h1 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+                                {quizTypeLabels[quiz.type] || quiz.type}: {quiz.Module.Course.title}
+                            </h1>
+                            <p className="text-slate-500 dark:text-slate-400">
+                                Kelola pertanyaan dan pengaturan {quizTypeLabels[quiz.type]?.toLowerCase() || 'kuis'}
+                            </p>
                         </div>
-                        <p className="text-slate-500 dark:text-slate-400">Kelola pertanyaan dan pengaturan kuis kuis</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button variant="outline" className="border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">
-                            <Settings className="w-4 h-4 mr-2" />
-                            Pengaturan Kuis
-                        </Button>
                     </div>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <QuizBuilder quiz={quiz} />
+                {/* Stats Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div className="p-5 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 shadow-sm">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-500">
+                                <FileQuestion className="w-5 h-5" />
+                            </div>
+                            <span className="text-2xl font-black text-slate-900 dark:text-white">{quiz.Question.length}</span>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Pertanyaan</p>
+                    </div>
+                    <div className="p-5 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 shadow-sm">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-500">
+                                <Award className="w-5 h-5" />
+                            </div>
+                            <span className="text-2xl font-black text-slate-900 dark:text-white">{totalPoints}</span>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Poin</p>
+                    </div>
+                    <EditableStatsCards quiz={quiz} />
+                </div>
+
+                {/* Main Content */}
+                <div className="grid lg:grid-cols-4 gap-8">
+                    {/* Questions Section - Main Area */}
+                    <div className="lg:col-span-3">
+                        <div className="bg-white dark:bg-slate-800/30 rounded-3xl border border-slate-200 dark:border-slate-700/50 p-6 shadow-sm">
+                            <QuizBuilder quiz={quiz} />
+                        </div>
                     </div>
 
+                    {/* Sidebar */}
                     <div className="space-y-6">
-                        <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
-                            <CardHeader>
-                                <CardTitle className="text-slate-900 dark:text-white text-lg flex items-center gap-2">
-                                    <Info className="w-5 h-5 text-blue-400" />
-                                    Ringkasan Pengaturan
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4 text-sm">
-                                <div className="flex justify-between">
-                                    <span className="text-slate-500 dark:text-slate-400">Passing Score</span>
-                                    <span className="text-slate-900 dark:text-white font-semibold">{quiz.passingScore}%</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-slate-500 dark:text-slate-400">Time Limit</span>
-                                    <span className="text-slate-900 dark:text-white font-semibold">{quiz.timeLimit ? `${quiz.timeLimit} Menit` : 'Tanpa Batas'}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-slate-500 dark:text-slate-400">Max Attempts</span>
-                                    <span className="text-slate-900 dark:text-white font-semibold">{quiz.maxAttempts}x Percobaan</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-slate-500 dark:text-slate-400">Acak Soal</span>
-                                    <span className="text-slate-900 dark:text-white font-semibold">{quiz.shuffleQuestions ? 'Ya' : 'Tidak'}</span>
-                                </div>
-                                <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
-                                    <div className="flex justify-between mb-1">
-                                        <span className="text-slate-500 dark:text-slate-400">Total Pertanyaan</span>
-                                        <span className="text-slate-900 dark:text-white">{quiz.Question.length}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-slate-500 dark:text-slate-400">Total Poin</span>
-                                        <span className="text-slate-900 dark:text-white">
-                                            {quiz.Question.reduce((acc: number, q: any) => acc + q.points, 0)}
-                                        </span>
-                                    </div>
-                                </div>
+                        {/* Settings Card */}
+                        <QuizSettingsCard quiz={quiz} />
+
+                        {/* Course Info */}
+                        <Card className="border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800/30 rounded-2xl shadow-sm overflow-hidden">
+                            <CardContent className="p-4">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Kursus</p>
+                                <p className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-2">
+                                    {quiz.Module.Course.title}
+                                </p>
                             </CardContent>
                         </Card>
                     </div>

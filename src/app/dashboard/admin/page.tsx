@@ -9,7 +9,8 @@ import {
     TrendingUp,
     Shield,
     Settings,
-    Activity
+    Activity,
+    FolderTree
 } from "lucide-react"
 
 export default async function AdminDashboard() {
@@ -110,6 +111,14 @@ export default async function AdminDashboard() {
                             <Activity className="w-6 h-6 text-orange-400 mb-2 group-hover:scale-110 transition-transform" />
                             <h3 className="font-bold text-slate-900 dark:text-white text-sm">xAPI Analytics</h3>
                             <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-1">Learning Records</p>
+                        </Link>
+                        <Link
+                            href="/dashboard/admin/categories"
+                            className="p-4 rounded-xl bg-pink-500/10 border border-pink-500/20 hover:bg-pink-500/30 transition-all group"
+                        >
+                            <FolderTree className="w-6 h-6 text-pink-400 mb-2 group-hover:scale-110 transition-transform" />
+                            <h3 className="font-bold text-slate-900 dark:text-white text-sm">Kelola Kategori</h3>
+                            <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-1">Course Categories</p>
                         </Link>
                     </div>
                 </CardContent>

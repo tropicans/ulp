@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth"
 import { redirect, notFound } from "next/navigation"
 import { prisma } from "@/lib/db"
 import { QuizTaker } from "@/components/quizzes/quiz-taker"
-import { GraduationCap } from "lucide-react"
 
 interface QuizTakePageProps {
     params: Promise<{
@@ -17,6 +16,24 @@ export default async function QuizTakePage({ params }: QuizTakePageProps) {
     if (!session?.user) {
         redirect(`/login?callbackUrl=/courses/${slug}/quizzes/${quizId}/take`)
     }
+
+    // Check if verification is required
+    const verificationSetting = await prisma.systemSetting.findUnique({
+        where: { key: "require_email_verification" }
+    })
+
+    if (verificationSetting?.value === "true") {
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { emailVerified: true, phoneVerified: true }
+        })
+
+        // Redirect to verify page if not verified
+        if (!user?.emailVerified && !user?.phoneVerified) {
+            redirect("/verify")
+        }
+    }
+
 
     const quiz = await prisma.quiz.findUnique({
         where: { id: quizId },
@@ -56,19 +73,13 @@ export default async function QuizTakePage({ params }: QuizTakePageProps) {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
-            <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 px-4 md:px-6 flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                        <GraduationCap className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="font-bold text-slate-900 dark:text-white hidden sm:inline-block">TITIAN</span>
-                </div>
-                <div className="h-4 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
-                <span className="text-sm text-slate-600 dark:text-slate-400 font-medium truncate">
-                    Mengerjakan: {quiz.title}
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col pt-20">
+            {/* Quiz Info Bar - simplified without logo */}
+            <div className="h-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-20 z-20 px-4 md:px-6 flex items-center gap-4">
+                <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                    Mengerjakan: <span className="text-slate-900 dark:text-white font-semibold">{quiz.type === 'PRETEST' ? 'Pretest' : quiz.type === 'POSTTEST' ? 'Posttest' : 'Quiz'}</span>
                 </span>
-            </header>
+            </div>
 
             <main className="flex-1 overflow-y-auto px-4 py-8">
                 <QuizTaker quiz={quiz} courseSlug={slug} />

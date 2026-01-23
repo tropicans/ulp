@@ -169,7 +169,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         async jwt({ token, user, trigger, session }) {
             if (user) {
+                // Ensure both token.id and token.sub use the database user.id
                 token.id = user.id
+                token.sub = user.id  // This ensures session.user.id uses the correct ID
                 token.role = user.role || "LEARNER"
                 token.nip = user.nip
                 token.unitKerja = user.unitKerja

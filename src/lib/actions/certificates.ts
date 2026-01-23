@@ -5,7 +5,13 @@ import { auth } from "@/lib/auth"
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 import { revalidatePath } from "next/cache"
 import QRCode from "qrcode"
-import { sendStatementAsync, buildActor, buildActivity } from "@/lib/xapi"
+import {
+    queueStatement,
+    recordActivity,
+    buildActor,
+    buildActivity
+} from "@/lib/xapi"
+import { genIdempotencyKey } from "@/lib/xapi/utils"
 import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
 import { XAPIStatement } from "@/lib/xapi/types"
 
@@ -102,7 +108,21 @@ export async function generateCourseCertificate(courseId: string) {
                     }
                 }
             }
-            sendStatementAsync(statement)
+
+            queueStatement(
+                statement,
+                genIdempotencyKey("certificate_earned", session.user.id, courseId)
+            )
+
+            // Record to unified journey
+            recordActivity(
+                session.user.id,
+                "CERTIFICATE",
+                certificateId,
+                `Certificate: ${course.title}`,
+                courseId,
+                { certificateNo, verificationCode }
+            )
         }
 
         return { success: true, certificateId: certificate.id }
