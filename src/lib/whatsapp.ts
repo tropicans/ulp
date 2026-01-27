@@ -142,7 +142,7 @@ Sesi: ${data.sessionTitle}
 Jangan lupa hadir tepat waktu ya! 
 Semangat belajar! 🚀
 
-_TITIAN_`,
+_TITAN_`,
 
     enrollmentConfirmation: (data: {
         userName: string
@@ -159,7 +159,7 @@ Silakan akses dashboard untuk melihat materi pembelajaran.
 
 Selamat belajar! 🚀
 
-_TITIAN_`,
+_TITAN_`,
 
     certificateReady: (data: {
         userName: string
@@ -176,7 +176,7 @@ ${data.certificateUrl}
 
 Terus semangat belajar! 🚀
 
-_TITIAN_`,
+_TITAN_`,
 
     deadlineReminder: (data: {
         userName: string
@@ -193,7 +193,7 @@ _TITIAN_`,
 
 Segera selesaikan tugas Anda!
 
-_TITIAN_`,
+_TITAN_`,
 
     verificationOTP: (data: {
         userName: string
@@ -201,7 +201,7 @@ _TITIAN_`,
         expiresIn: string
     }) => `Halo ${data.userName}! 🔐
 
-*Kode Verifikasi TITIAN*
+*Kode Verifikasi TITAN*
 
 Kode OTP Anda:
 *${data.otp}*
@@ -210,5 +210,5 @@ Kode OTP Anda:
 
 Jangan berikan kode ini kepada siapapun.
 
-_TITIAN - Learning Experience Platform_`,
+_TITAN - Learning Experience Platform_`,
 }

@@ -113,8 +113,8 @@ export async function checkInWithQR(sessionId: string, token: string) {
                             }]
                         },
                         extensions: {
-                            "https://titian.setneg.go.id/xapi/extensions/attendance-method": "QR_CODE",
-                            "https://titian.setneg.go.id/xapi/extensions/attendance-status": status
+                            "https://TITAN.setneg.go.id/xapi/extensions/attendance-method": "QR_CODE",
+                            "https://TITAN.setneg.go.id/xapi/extensions/attendance-status": status
                         }
                     }
                 },
@@ -257,10 +257,10 @@ export async function checkInWithGPS(
                             }]
                         },
                         extensions: {
-                            "https://titian.setneg.go.id/xapi/extensions/attendance-method": "GPS",
-                            "https://titian.setneg.go.id/xapi/extensions/attendance-status": status,
-                            "https://titian.setneg.go.id/xapi/extensions/latitude": latitude,
-                            "https://titian.setneg.go.id/xapi/extensions/longitude": longitude
+                            "https://TITAN.setneg.go.id/xapi/extensions/attendance-method": "GPS",
+                            "https://TITAN.setneg.go.id/xapi/extensions/attendance-status": status,
+                            "https://TITAN.setneg.go.id/xapi/extensions/latitude": latitude,
+                            "https://TITAN.setneg.go.id/xapi/extensions/longitude": longitude
                         }
                     }
                 },
@@ -372,8 +372,8 @@ export async function checkInManual(sessionId: string, userId: string) {
                             }]
                         },
                         extensions: {
-                            "https://titian.setneg.go.id/xapi/extensions/attendance-method": "MANUAL",
-                            "https://titian.setneg.go.id/xapi/extensions/attendance-status": "PRESENT"
+                            "https://TITAN.setneg.go.id/xapi/extensions/attendance-method": "MANUAL",
+                            "https://TITAN.setneg.go.id/xapi/extensions/attendance-status": "PRESENT"
                         }
                     }
                 },

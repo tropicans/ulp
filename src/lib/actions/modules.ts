@@ -136,7 +136,7 @@ export async function updateLesson(lessonId: string, data: z.infer<typeof update
         // Get lesson and verify ownership
         const lesson = await prisma.lesson.findUnique({
             where: { id: lessonId },
-            include: { Module: { include: { Course: { select: { instructorId: true, id: true } } } } }
+            include: { Module: { include: { Course: { select: { instructorId: true, id: true, slug: true, deliveryMode: true, syncConfig: true } } } } }
         })
 
         if (!lesson) return { error: "Materi tidak ditemukan" }
@@ -156,7 +156,28 @@ export async function updateLesson(lessonId: string, data: z.infer<typeof update
             }
         })
 
+        // If this is a SYNC_ONLINE course, keep the syncConfig in sync
+        const course = lesson.Module.Course
+        if (course.deliveryMode === "SYNC_ONLINE" && validatedData.videoUrl) {
+            const currentConfig = (course.syncConfig as any) || {}
+            await prisma.course.update({
+                where: { id: course.id },
+                data: {
+                    syncConfig: {
+                        ...currentConfig,
+                        youtubeStreamUrl: validatedData.videoUrl
+                    }
+                }
+            })
+
+            // Revalidate sync subpaths
+            revalidatePath(`/courses/${course.slug}/sync/live`)
+            revalidatePath(`/courses/${course.slug}/sync/pre-learning`)
+        }
+
         revalidatePath(`/dashboard/courses/${lesson.Module.Course.id}/edit`)
+        revalidatePath(`/courses/${lesson.Module.Course.slug}`)
+
         return { success: true, lesson: updatedLesson }
     } catch (error) {
         if (error instanceof z.ZodError) return { error: error.issues[0].message }

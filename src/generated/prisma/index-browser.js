@@ -236,7 +236,8 @@ exports.Prisma.CourseScalarFieldEnum = {
   ytPlaylistId: 'ytPlaylistId',
   isProcessing: 'isProcessing',
   processingStatus: 'processingStatus',
-  lastProcessedAt: 'lastProcessedAt'
+  lastProcessedAt: 'lastProcessedAt',
+  syncConfig: 'syncConfig'
 };
 
 exports.Prisma.CourseSessionScalarFieldEnum = {
@@ -619,6 +620,23 @@ exports.Prisma.LearnerActivityScalarFieldEnum = {
   occurredAt: 'occurredAt'
 };
 
+exports.Prisma.SyncCourseProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  courseId: 'courseId',
+  preLearnAccessedAt: 'preLearnAccessedAt',
+  liveAccessedAt: 'liveAccessedAt',
+  liveWatchDuration: 'liveWatchDuration',
+  conceptMarkers: 'conceptMarkers',
+  postLearnSubmittedAt: 'postLearnSubmittedAt',
+  assessmentScore: 'assessmentScore',
+  assessmentResponse: 'assessmentResponse',
+  status: 'status',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -754,6 +772,12 @@ exports.UserStatus = exports.$Enums.UserStatus = {
   SUSPENDED: 'SUSPENDED'
 };
 
+exports.SyncCourseStatus = exports.$Enums.SyncCourseStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   Attendance: 'Attendance',
@@ -789,7 +813,8 @@ exports.Prisma.ModelName = {
   VerificationToken: 'VerificationToken',
   ProcessingJob: 'ProcessingJob',
   XapiOutbox: 'XapiOutbox',
-  LearnerActivity: 'LearnerActivity'
+  LearnerActivity: 'LearnerActivity',
+  SyncCourseProgress: 'SyncCourseProgress'
 };
 
 /**

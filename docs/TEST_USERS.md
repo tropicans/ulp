@@ -1,11 +1,11 @@
-# Test Users - LXP ASN Platform
+# Test Users - ULP ASN Platform
 
 ## 🔑 Default Test Accounts
 
-Berikut adalah akun testing yang sudah dibuat di sistem LXP ASN. Akun-akun ini akan dibuat otomatis saat menjalankan seed script.
+Berikut adalah akun testing yang sudah dibuat di sistem ULP ASN. Akun-akun ini akan dibuat otomatis saat menjalankan seed script.
 
 ### 1. Super Admin
-- **Email**: `admin@lxp.go.id`
+- **Email**: `admin@ULP.go.id`
 - **Password**: `admin123`
 - **NIP**: `199001012020121001`
 - **Role**: `SUPER_ADMIN`
@@ -18,7 +18,7 @@ Berikut adalah akun testing yang sudah dibuat di sistem LXP ASN. Akun-akun ini a
 ---
 
 ### 2. Admin Unit Kerja
-- **Email**: `adminunit@lxp.go.id`
+- **Email**: `adminunit@ULP.go.id`
 - **Password**: `admin123`
 - **NIP**: `199002022020122002`
 - **Role**: `ADMIN_UNIT`
@@ -31,7 +31,7 @@ Berikut adalah akun testing yang sudah dibuat di sistem LXP ASN. Akun-akun ini a
 ---
 
 ### 3. Instructor (Widyaiswara)
-- **Email**: `instructor@lxp.go.id`
+- **Email**: `instructor@ULP.go.id`
 - **Password**: `instructor123`
 - **NIP**: `198505152010121003`
 - **Role**: `INSTRUCTOR`
@@ -44,7 +44,7 @@ Berikut adalah akun testing yang sudah dibuat di sistem LXP ASN. Akun-akun ini a
 ---
 
 ### 4. Learner (Peserta)
-- **Email**: `learner@lxp.go.id`
+- **Email**: `learner@ULP.go.id`
 - **Password**: `learner123`
 - **NIP**: `199203032019031004`
 - **Role**: `LEARNER`
@@ -79,11 +79,11 @@ http://localhost:3000/login
 
 # Gunakan EMAIL sebagai username (bukan NIP)
 # Contoh untuk Learner:
-Username: learner@lxp.go.id
+Username: learner@ULP.go.id
 Password: learner123
 
 # Contoh untuk Admin:
-Username: admin@lxp.go.id
+Username: admin@ULP.go.id
 Password: admin123
 ```
 
@@ -184,7 +184,7 @@ npx prisma db push --force-reset
 
 - Password di-hash menggunakan **bcrypt** dengan salt rounds 10
 - NIP format: YYYYMMDDYYYYMMDDNNN (sesuai format ASN Indonesia)
-- Email menggunakan domain `@lxp.go.id`
+- Email menggunakan domain `@ULP.go.id`
 - Semua test users sudah complete profile (ada NIP dan unitKerja)
 - Tidak perlu complete-profile flow untuk test users ini
 

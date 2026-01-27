@@ -77,7 +77,7 @@ export default async function CheckInPage({ params }: CheckInPageProps) {
             </main>
 
             <footer className="p-6 text-center text-slate-500 text-xs">
-                &copy; {new Date().getFullYear()} TITIAN - Kementerian Sekretariat Negara
+                &copy; {new Date().getFullYear()} TITAN - Kementerian Sekretariat Negara
             </footer>
         </div>
     )

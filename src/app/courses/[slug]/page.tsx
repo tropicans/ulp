@@ -384,7 +384,13 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                                     asChild
                                                     className="w-full h-16 bg-blue-600 hover:bg-blue-500 text-white text-lg font-black rounded-2xl shadow-xl shadow-blue-600/20 transition-all uppercase tracking-widest"
                                                 >
-                                                    <Link href={`/courses/${course.slug}/learn`}>Mulai Belajar</Link>
+                                                    <Link href={
+                                                        course.deliveryMode === 'SYNC_ONLINE' || course.deliveryMode === 'HYBRID'
+                                                            ? `/courses/${course.slug}/sync/pre-learning`
+                                                            : `/courses/${course.slug}/learn`
+                                                    }>
+                                                        Mulai Belajar
+                                                    </Link>
                                                 </Button>
                                             </>
                                         ) : (

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TITIAN - Learning Experience Platform",
+  title: "TITAN - Unified Learning Platform",
   description: "Platform pembelajaran digital untuk ASN dengan dukungan on-classroom, hybrid, dan async online learning",
   keywords: ["LXP", "ASN", "learning", "training", "e-learning"],
 };

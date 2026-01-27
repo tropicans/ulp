@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
             quiz_prepost,
         } = payload;
 
-        // Find the lesson in TITIAN
+        // Find the lesson in TITAN
         const lesson = await prisma.lesson.findFirst({
             where: {
                 ytVideoId: video_id,
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 
         // --- Dual-Writing Logic ---
 
-        // 1. Update Lesson (TITIAN Native)
+        // 1. Update Lesson (TITAN Native)
         await (prisma.lesson.update as any)({
             where: { id: lesson.id },
             data: {

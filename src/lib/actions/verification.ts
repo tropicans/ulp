@@ -66,7 +66,7 @@ export async function sendEmailVerification(userId: string) {
         // Send email
         const emailResult = await sendEmail({
             to: user.email,
-            subject: "Kode Verifikasi TITIAN",
+            subject: "Kode Verifikasi TITAN",
             html: EmailTemplates.verificationOTP({
                 userName: user.name || "Pengguna",
                 otp,

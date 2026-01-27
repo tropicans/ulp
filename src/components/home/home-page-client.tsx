@@ -26,12 +26,12 @@ export function HomePageClient({ programs }: HomePageClientProps) {
                     <div className="flex items-center gap-3">
                         <img
                             src="/logo.png"
-                            alt="TITIAN Logo"
+                            alt="TITAN Logo"
                             width={40}
                             height={40}
                             className="object-contain"
                         />
-                        <span className="font-bold text-xl tracking-tight">TITIAN</span>
+                        <span className="font-bold text-xl tracking-tight">TITAN</span>
                     </div>
                 }
                 navigation={[

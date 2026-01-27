@@ -212,7 +212,7 @@ async function processPendingJobs() {
 
                 if (lesson) {
                     const webhookPayload = {
-                        source: 'titian-lms',
+                        source: 'TITAN-lms',
                         playlist: {
                             id: lesson.Module.Course.ytPlaylistId,
                             title: lesson.Module.Course.title,

@@ -1,4 +1,4 @@
-# LXP ASN - Documentation
+# ULP ASN - Documentation
 
 Learning Experience Platform untuk Aparatur Sipil Negara (ASN)
 
@@ -50,9 +50,9 @@ npx prisma db push
 
 | Role | Email | Password |
 |------|-------|----------|
-| Learner | `learner@lxp.go.id` | `learner123` |
-| Instructor | `instructor@lxp.go.id` | `instructor123` |
-| Admin | `admin@lxp.go.id` | `admin123` |
+| Learner | `learner@ULP.go.id` | `learner123` |
+| Instructor | `instructor@ULP.go.id` | `instructor123` |
+| Admin | `admin@ULP.go.id` | `admin123` |
 
 📖 **Full details**: See [TEST_USERS.md](./TEST_USERS.md)
 
@@ -68,7 +68,7 @@ npx prisma db push
 ## 📁 Project Structure
 
 ```
-lxp-asn/
+ULP-asn/
 ├── src/
 │   ├── app/              # Next.js app router pages
 │   │   ├── (auth)/       # Authentication pages
@@ -113,7 +113,7 @@ lxp-asn/
 
 For issues and questions, please refer to:
 - [Troubleshooting Guide](./TROUBLESHOOTING.md)
-- [GitHub Issues](https://github.com/your-org/lxp-asn/issues)
+- [GitHub Issues](https://github.com/your-org/ULP-asn/issues)
 
 ---
 

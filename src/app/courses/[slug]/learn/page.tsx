@@ -88,6 +88,24 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         redirect(`/courses/${slug}`)
     }
 
+    // For SYNC_ONLINE courses, check if pre-learning has been accessed
+    // If not, redirect to pre-learning first
+    if (course.deliveryMode === "SYNC_ONLINE" || course.deliveryMode === "HYBRID") {
+        const progress = await prisma.syncCourseProgress.findUnique({
+            where: {
+                userId_courseId: {
+                    userId: session.user.id,
+                    courseId: course.id
+                }
+            }
+        })
+
+        // If no progress record or pre-learning not accessed, redirect to pre-learning
+        if (!progress || !progress.preLearnAccessedAt) {
+            redirect(`/courses/${slug}/sync/pre-learning`)
+        }
+    }
+
     // Fetch refined titles and durations from yt_playlist_items for lessons with ytVideoId
     const allLessonsWithYtId = course.Module.flatMap(m => m.Lesson.filter(l => l.ytVideoId))
     const ytVideoIds = allLessonsWithYtId.map(l => l.ytVideoId).filter((id): id is string => !!id)

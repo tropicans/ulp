@@ -6,22 +6,28 @@ async function checkCourseMetadata() {
     try {
         const course = await prisma.course.findFirst({
             where: {
-                slug: 'tara-de-thouars---managing-work-life-balance'
+                slug: { contains: 'sesi-informasi-pengembangan-kompetensi' }
             },
             select: {
                 title: true,
                 description: true,
                 courseShortDesc: true,
-                courseDesc: true,
-                ytPlaylistId: true
+                syncConfig: true,
+                courseDesc: true
             }
         });
 
-        console.log('=== Course Metadata Check ===\n');
-        console.log('Title:', course?.title);
-        console.log('YT Playlist ID:', course?.ytPlaylistId);
-        console.log('\n--- SHORT DESC (hero) ---');
-        console.log(course?.courseShortDesc || '(empty)');
+        if (!course) {
+            console.log("Course not found");
+            return;
+        }
+
+        console.log(`=== Course Metadata Check ===\n`);
+        console.log(`Title: ${course.title}`);
+
+        const config = course.syncConfig;
+        console.log(`\n--- ADVANCE ORGANIZER CONTENT ---`);
+        console.log(config?.advanceOrganizer?.content || "No content found");
         console.log('\n--- FULL DESC (section) ---');
         console.log(course?.courseDesc?.substring(0, 200) + '...' || '(empty)');
         console.log('\n--- LEGACY DESC ---');

@@ -52,7 +52,7 @@ interface SettingConfig {
 // Setting definitions with metadata
 const SETTINGS_CONFIG: Record<string, SettingConfig> = {
     // General
-    site_name: { label: "Nama Platform", default: "TITIAN", type: "text", description: "Judul yang muncul di browser dan email" },
+    site_name: { label: "Nama Platform", default: "TITAN", type: "text", description: "Judul yang muncul di browser dan email" },
     site_tagline: { label: "Tagline", default: "Learning Experience Platform ASN", type: "text", description: "Deskripsi singkat platform" },
     support_email: { label: "Email Support", default: "admin@setneg.go.id", type: "email", description: "Alamat kontak bantuan teknis" },
     footer_text: { label: "Teks Footer", default: "© 2026 Sekretariat Negara RI", type: "text", description: "Copyright yang muncul di footer" },

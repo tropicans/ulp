@@ -92,8 +92,8 @@ export async function generateCourseCertificate(courseId: string) {
                 result: {
                     completion: true,
                     extensions: {
-                        "https://titian.setneg.go.id/xapi/extensions/certificate-no": certificateNo,
-                        "https://titian.setneg.go.id/xapi/extensions/verification-code": verificationCode
+                        "https://TITAN.setneg.go.id/xapi/extensions/certificate-no": certificateNo,
+                        "https://TITAN.setneg.go.id/xapi/extensions/verification-code": verificationCode
                     }
                 },
                 context: {

@@ -170,17 +170,17 @@ export default function VerifyPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4">
-            {/* TITIAN Branding */}
+            {/* TITAN Branding */}
             <div className="mb-6 flex items-center gap-3">
                 <Image
                     src="/logo.png"
-                    alt="TITIAN Logo"
+                    alt="TITAN Logo"
                     width={48}
                     height={48}
                     className="rounded-lg"
                 />
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">TITIAN</h1>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">TITAN</h1>
                     <p className="text-xs text-slate-500 dark:text-slate-400">Learning Experience Platform</p>
                 </div>
             </div>
@@ -362,7 +362,7 @@ export default function VerifyPage() {
 
             {/* Footer */}
             <p className="mt-6 text-xs text-slate-400 dark:text-slate-500">
-                © 2026 TITIAN - Transformasi Digital Pembelajaran ASN
+                © 2026 TITAN - Transformasi Digital Pembelajaran ASN
             </p>
         </div>
     )

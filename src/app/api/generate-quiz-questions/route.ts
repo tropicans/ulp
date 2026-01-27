@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 
 const PROXY_BASE = process.env.AI_PROXY_URL || "https://proxy.kelazz.my.id"
-const API_KEY = process.env.AI_PROXY_KEY || "internal_only_x91aP"
+const API_KEY = process.env.AI_PROXY_KEY || ""
 const AI_MODEL = process.env.AI_MODEL || "gpt-5.1"
 
 export async function POST(request: Request) {

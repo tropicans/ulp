@@ -80,14 +80,14 @@ export function SiteHeader() {
                     >
                         <img
                             src="/logo.png"
-                            alt="TITIAN Logo"
+                            alt="TITAN Logo"
                             width={40}
                             height={40}
                             className="object-contain"
                         />
                     </motion.div>
                     <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white">
-                        TITIAN
+                        TITAN
                     </span>
                 </Link>
 

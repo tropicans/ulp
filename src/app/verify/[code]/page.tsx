@@ -48,7 +48,7 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
                             <CheckCircle2 className="w-12 h-12 text-white -rotate-3" />
                         </div>
                         <CardTitle className="text-3xl font-black text-slate-900 dark:text-white mb-2">Sertifikat Valid</CardTitle>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm uppercase tracking-widest font-bold">TITIAN Verification Hub</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm uppercase tracking-widest font-bold">TITAN Verification Hub</p>
                     </CardHeader>
 
                     <CardContent className="p-8 space-y-8">
@@ -91,7 +91,7 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
                             <div>
                                 <p className="text-sm font-bold text-slate-900 dark:text-white">Terverifikasi Secara Digital</p>
                                 <p className="text-xs text-slate-500 leading-relaxed">
-                                    Sertifikat ini diterbitkan secara otomatis oleh sistem TITIAN setelah peserta menyelesaikan kurikulum yang diwajibkan.
+                                    Sertifikat ini diterbitkan secara otomatis oleh sistem TITAN setelah peserta menyelesaikan kurikulum yang diwajibkan.
                                 </p>
                             </div>
                         </div>

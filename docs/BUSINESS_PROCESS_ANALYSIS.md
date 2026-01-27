@@ -1,8 +1,8 @@
-# Analisis Proses Bisnis Aplikasi TITIAN LXP
+# Analisis Proses Bisnis Aplikasi TITAN ULP
 
 ## Gambaran Umum
 
-TITIAN adalah Learning Experience Platform (LXP) untuk Aparatur Sipil Negara (ASN) yang mendukung berbagai mode pembelajaran: **Classroom**, **Hybrid**, **Live Online**, dan **Self-Paced**.
+TITAN adalah Learning Experience Platform (ULP) untuk Aparatur Sipil Negara (ASN) yang mendukung berbagai mode pembelajaran: **Classroom**, **Hybrid**, **Live Online**, dan **Self-Paced**.
 
 ---
 

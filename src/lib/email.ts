@@ -21,7 +21,7 @@ interface EmailResult {
  */
 export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     const apiKey = process.env.RESEND_API_KEY
-    const defaultFrom = process.env.EMAIL_FROM || "noreply@titian.go.id"
+    const defaultFrom = process.env.EMAIL_FROM || "noreply@TITAN.go.id"
 
     if (!apiKey) {
         console.error("RESEND_API_KEY not configured")
@@ -78,7 +78,7 @@ export const EmailTemplates = {
     <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
         <div style="background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <div style="text-align: center; margin-bottom: 32px;">
-                <h1 style="color: #3b82f6; font-size: 28px; margin: 0;">TITIAN</h1>
+                <h1 style="color: #3b82f6; font-size: 28px; margin: 0;">TITAN</h1>
                 <p style="color: #64748b; margin: 8px 0 0 0;">Learning Experience Platform</p>
             </div>
             
@@ -102,7 +102,7 @@ export const EmailTemplates = {
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
             
             <p style="color: #94a3b8; font-size: 12px; text-align: center; margin: 0;">
-                Jika Anda tidak mendaftar di TITIAN, abaikan email ini.<br>
+                Jika Anda tidak mendaftar di TITAN, abaikan email ini.<br>
                 © 2026 Sekretariat Negara RI
             </p>
         </div>
@@ -135,12 +135,12 @@ export const EmailTemplates = {
                 
                 <p style="color: #475569; line-height: 1.6; margin-bottom: 24px;">
                     Halo ${data.userName}, akun Anda sudah terverifikasi.<br>
-                    Sekarang Anda dapat mengakses semua fitur TITIAN.
+                    Sekarang Anda dapat mengakses semua fitur TITAN.
                 </p>
                 
                 <a href="${process.env.AUTH_URL || 'http://localhost:3001'}/login" 
                    style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
-                    Masuk ke TITIAN
+                    Masuk ke TITAN
                 </a>
             </div>
         </div>

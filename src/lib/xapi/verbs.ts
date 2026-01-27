@@ -91,5 +91,5 @@ export const ACTIVITY_TYPES = {
 }
 
 // Platform IRI - use official domain
-export const PLATFORM_IRI = "https://titian.setneg.go.id"
-export const PLATFORM_NAME = "TITIAN LXP"
+export const PLATFORM_IRI = "https://TITAN.setneg.go.id"
+export const PLATFORM_NAME = "TITAN LXP"

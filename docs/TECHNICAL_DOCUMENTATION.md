@@ -1,4 +1,4 @@
-# Dokumentasi Teknis TITIAN LXP
+# Dokumentasi Teknis TITAN ULP
 
 ## Gambaran Arsitektur
 

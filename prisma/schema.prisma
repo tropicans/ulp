@@ -153,12 +153,17 @@ model Course {
   Enrollment    Enrollment[]
   Forum         Forum[]
   Module        Module[]
+  SyncCourseProgress SyncCourseProgress[]
   
   // YouTube Integration Fields
   ytPlaylistId      String?   @unique
   isProcessing      Boolean   @default(false)
   processingStatus  String?   // 'pending', 'processing', 'completed', 'failed'
   lastProcessedAt   DateTime?
+  
+  // Sync Course Configuration
+  // Config: { advanceOrganizer, learningFocus[], youtubeStreamUrl, conceptValidation[] }
+  syncConfig        Json?     @map("sync_config")
 
   @@index([deliveryMode])
   @@index([instructorId])
@@ -452,6 +457,7 @@ model User {
   UserBadge     UserBadge[]
   UserVerificationOTP UserVerificationOTP[]
   LearnerActivity LearnerActivity[]
+  SyncCourseProgress SyncCourseProgress[]
 
   @@index([email])
   @@index([nip])
@@ -671,6 +677,47 @@ model LearnerActivity {
   @@map("learner_activity")
 }
 
+/// Sync Course Progress tracking per PRD
+/// Tracks pre-learning, live session, and post-learning completion
+model SyncCourseProgress {
+  id                     String    @id @default(uuid())
+  userId                 String    @map("user_id")
+  courseId               String    @map("course_id")
+  
+  // Pre-Learning: Advance Organizer
+  preLearnAccessedAt     DateTime? @map("pre_learn_accessed_at")
+  
+  // Live Session: YouTube Live
+  liveAccessedAt         DateTime? @map("live_accessed_at")
+  liveWatchDuration      Int       @default(0) @map("live_watch_duration") // Seconds watched
+  conceptMarkers         Json?     @map("concept_markers") // Array of { timestamp, text }
+  
+  // Post-Learning: Concept Validation
+  postLearnSubmittedAt   DateTime? @map("post_learn_submitted_at")
+  assessmentScore        Float?    @map("assessment_score") // Recorded but non-blocking
+  assessmentResponse     Json?     @map("assessment_response") // Snapshot of responses
+  
+  // Completion Status
+  status                 SyncCourseStatus @default(NOT_STARTED)
+  completedAt            DateTime? @map("completed_at")
+  
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+  
+  User                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Course                 Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, courseId])
+  @@index([userId, status])
+  @@index([courseId])
+  @@map("sync_course_progress")
+}
+
+enum SyncCourseStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
 
 
 enum AttendanceMethod {

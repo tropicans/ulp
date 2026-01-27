@@ -96,7 +96,11 @@ export default function MyCoursesPage() {
                                         <Flame className="w-3.5 h-3.5 text-orange-500" />
                                         <span className="text-[10px] font-bold text-slate-500 uppercase">Aktif</span>
                                     </div>
-                                    <Link href={`/courses/${enrollment.Course.slug}/learn`}>
+                                    <Link href={
+                                        enrollment.Course.deliveryMode === "SYNC_ONLINE"
+                                            ? `/courses/${enrollment.Course.slug}/sync/pre-learning`
+                                            : `/courses/${enrollment.Course.slug}/learn`
+                                    }>
                                         <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl h-10 px-6 transition-all group-hover:shadow-lg group-hover:shadow-blue-900/40">
                                             Belajar <ChevronRight className="w-4 h-4 ml-1" />
                                         </Button>

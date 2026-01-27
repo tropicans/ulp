@@ -39,3 +39,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Utility/migration scripts with hardcoded connection strings
+verify-migration.js
+targeted-quiz-import.js
+sync-knowledge-check.js
+sql-check.js
+migrate-yt-tables.js
+list-schemas.js
+list-dbs.js
+list-all-tables.js
+import-quiz-from-legacy.js
+find-instructor.js
+check-quiz-data.js
+check-legacy-quiz-tables.js
+check-course-status.js
+migrate-legacy-data.js
+sync-quiz-from-json.js
+
+# n8n workflows (contains API keys)
+n8n_workflows/

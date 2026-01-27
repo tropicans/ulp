@@ -1,4 +1,4 @@
-"use server"
+// Policy definition - not a server action file
 
 import { Policy, PolicyContext } from "../orchestrator"
 import { prisma } from "@/lib/db"

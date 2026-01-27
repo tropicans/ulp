@@ -188,12 +188,27 @@ export type XapiOutbox = $Result.DefaultSelection<Prisma.$XapiOutboxPayload>
  * Denormalized learner activity for unified journey view
  */
 export type LearnerActivity = $Result.DefaultSelection<Prisma.$LearnerActivityPayload>
+/**
+ * Model SyncCourseProgress
+ * Sync Course Progress tracking per PRD
+ * Tracks pre-learning, live session, and post-learning completion
+ */
+export type SyncCourseProgress = $Result.DefaultSelection<Prisma.$SyncCourseProgressPayload>
 
 /**
  * Enums
  */
 export namespace $Enums {
-  export const AttendanceMethod: {
+  export const SyncCourseStatus: {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
+export type SyncCourseStatus = (typeof SyncCourseStatus)[keyof typeof SyncCourseStatus]
+
+
+export const AttendanceMethod: {
   QR_CODE: 'QR_CODE',
   MANUAL: 'MANUAL',
   ZOOM_AUTO: 'ZOOM_AUTO',
@@ -341,6 +356,10 @@ export const UserStatus: {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 }
+
+export type SyncCourseStatus = $Enums.SyncCourseStatus
+
+export const SyncCourseStatus: typeof $Enums.SyncCourseStatus
 
 export type AttendanceMethod = $Enums.AttendanceMethod
 
@@ -865,6 +884,16 @@ export class PrismaClient<
     * ```
     */
   get learnerActivity(): Prisma.LearnerActivityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.syncCourseProgress`: Exposes CRUD operations for the **SyncCourseProgress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SyncCourseProgresses
+    * const syncCourseProgresses = await prisma.syncCourseProgress.findMany()
+    * ```
+    */
+  get syncCourseProgress(): Prisma.SyncCourseProgressDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1340,7 +1369,8 @@ export namespace Prisma {
     VerificationToken: 'VerificationToken',
     ProcessingJob: 'ProcessingJob',
     XapiOutbox: 'XapiOutbox',
-    LearnerActivity: 'LearnerActivity'
+    LearnerActivity: 'LearnerActivity',
+    SyncCourseProgress: 'SyncCourseProgress'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1359,7 +1389,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendance" | "attendanceToken" | "auditLog" | "badge" | "certificate" | "category" | "course" | "courseSession" | "enrollment" | "forum" | "forumComment" | "forumPost" | "lesson" | "module" | "notification" | "progress" | "question" | "questionAnswer" | "quiz" | "quizAttempt" | "session" | "systemSetting" | "user" | "userVerificationOTP" | "ytPlaylist" | "ytPlaylistItem" | "ytUserSettings" | "ytCurationSession" | "ytCurationCandidate" | "userBadge" | "verificationToken" | "processingJob" | "xapiOutbox" | "learnerActivity"
+      modelProps: "account" | "attendance" | "attendanceToken" | "auditLog" | "badge" | "certificate" | "category" | "course" | "courseSession" | "enrollment" | "forum" | "forumComment" | "forumPost" | "lesson" | "module" | "notification" | "progress" | "question" | "questionAnswer" | "quiz" | "quizAttempt" | "session" | "systemSetting" | "user" | "userVerificationOTP" | "ytPlaylist" | "ytPlaylistItem" | "ytUserSettings" | "ytCurationSession" | "ytCurationCandidate" | "userBadge" | "verificationToken" | "processingJob" | "xapiOutbox" | "learnerActivity" | "syncCourseProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3953,6 +3983,80 @@ export namespace Prisma {
           }
         }
       }
+      SyncCourseProgress: {
+        payload: Prisma.$SyncCourseProgressPayload<ExtArgs>
+        fields: Prisma.SyncCourseProgressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SyncCourseProgressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SyncCourseProgressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>
+          }
+          findFirst: {
+            args: Prisma.SyncCourseProgressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SyncCourseProgressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>
+          }
+          findMany: {
+            args: Prisma.SyncCourseProgressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>[]
+          }
+          create: {
+            args: Prisma.SyncCourseProgressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>
+          }
+          createMany: {
+            args: Prisma.SyncCourseProgressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SyncCourseProgressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>[]
+          }
+          delete: {
+            args: Prisma.SyncCourseProgressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>
+          }
+          update: {
+            args: Prisma.SyncCourseProgressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>
+          }
+          deleteMany: {
+            args: Prisma.SyncCourseProgressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SyncCourseProgressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SyncCourseProgressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>[]
+          }
+          upsert: {
+            args: Prisma.SyncCourseProgressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncCourseProgressPayload>
+          }
+          aggregate: {
+            args: Prisma.SyncCourseProgressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSyncCourseProgress>
+          }
+          groupBy: {
+            args: Prisma.SyncCourseProgressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SyncCourseProgressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SyncCourseProgressCountArgs<ExtArgs>
+            result: $Utils.Optional<SyncCourseProgressCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4084,6 +4188,7 @@ export namespace Prisma {
     processingJob?: ProcessingJobOmit
     xapiOutbox?: XapiOutboxOmit
     learnerActivity?: LearnerActivityOmit
+    syncCourseProgress?: SyncCourseProgressOmit
   }
 
   /* Types for Logging */
@@ -4231,6 +4336,7 @@ export namespace Prisma {
     Enrollment: number
     Forum: number
     Module: number
+    SyncCourseProgress: number
   }
 
   export type CourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4239,6 +4345,7 @@ export namespace Prisma {
     Enrollment?: boolean | CourseCountOutputTypeCountEnrollmentArgs
     Forum?: boolean | CourseCountOutputTypeCountForumArgs
     Module?: boolean | CourseCountOutputTypeCountModuleArgs
+    SyncCourseProgress?: boolean | CourseCountOutputTypeCountSyncCourseProgressArgs
   }
 
   // Custom InputTypes
@@ -4285,6 +4392,13 @@ export namespace Prisma {
    */
   export type CourseCountOutputTypeCountModuleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ModuleWhereInput
+  }
+
+  /**
+   * CourseCountOutputType without action
+   */
+  export type CourseCountOutputTypeCountSyncCourseProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SyncCourseProgressWhereInput
   }
 
 
@@ -4582,6 +4696,7 @@ export namespace Prisma {
     UserBadge: number
     UserVerificationOTP: number
     LearnerActivity: number
+    SyncCourseProgress: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4599,6 +4714,7 @@ export namespace Prisma {
     UserBadge?: boolean | UserCountOutputTypeCountUserBadgeArgs
     UserVerificationOTP?: boolean | UserCountOutputTypeCountUserVerificationOTPArgs
     LearnerActivity?: boolean | UserCountOutputTypeCountLearnerActivityArgs
+    SyncCourseProgress?: boolean | UserCountOutputTypeCountSyncCourseProgressArgs
   }
 
   // Custom InputTypes
@@ -4708,6 +4824,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountLearnerActivityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LearnerActivityWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSyncCourseProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SyncCourseProgressWhereInput
   }
 
 
@@ -12751,6 +12874,7 @@ export namespace Prisma {
     isProcessing: number
     processingStatus: number
     lastProcessedAt: number
+    syncConfig: number
     _all: number
   }
 
@@ -12865,6 +12989,7 @@ export namespace Prisma {
     isProcessing?: true
     processingStatus?: true
     lastProcessedAt?: true
+    syncConfig?: true
     _all?: true
   }
 
@@ -12986,6 +13111,7 @@ export namespace Prisma {
     isProcessing: boolean
     processingStatus: string | null
     lastProcessedAt: Date | null
+    syncConfig: JsonValue | null
     _count: CourseCountAggregateOutputType | null
     _avg: CourseAvgAggregateOutputType | null
     _sum: CourseSumAggregateOutputType | null
@@ -13039,6 +13165,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: boolean
     lastProcessedAt?: boolean
+    syncConfig?: boolean
     Category?: boolean | Course$CategoryArgs<ExtArgs>
     Certificate?: boolean | Course$CertificateArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
@@ -13046,6 +13173,7 @@ export namespace Prisma {
     Enrollment?: boolean | Course$EnrollmentArgs<ExtArgs>
     Forum?: boolean | Course$ForumArgs<ExtArgs>
     Module?: boolean | Course$ModuleArgs<ExtArgs>
+    SyncCourseProgress?: boolean | Course$SyncCourseProgressArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -13081,6 +13209,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: boolean
     lastProcessedAt?: boolean
+    syncConfig?: boolean
     Category?: boolean | Course$CategoryArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
@@ -13117,6 +13246,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: boolean
     lastProcessedAt?: boolean
+    syncConfig?: boolean
     Category?: boolean | Course$CategoryArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
@@ -13153,9 +13283,10 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: boolean
     lastProcessedAt?: boolean
+    syncConfig?: boolean
   }
 
-  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnail" | "deliveryMode" | "difficulty" | "category" | "categoryId" | "tags" | "capacity" | "duration" | "startDate" | "endDate" | "isPublished" | "isFeatured" | "instructorId" | "createdAt" | "updatedAt" | "courseShortDesc" | "courseDesc" | "courseLevel" | "language" | "requirements" | "outcomes" | "recommendedNext" | "jp" | "ytPlaylistId" | "isProcessing" | "processingStatus" | "lastProcessedAt", ExtArgs["result"]["course"]>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnail" | "deliveryMode" | "difficulty" | "category" | "categoryId" | "tags" | "capacity" | "duration" | "startDate" | "endDate" | "isPublished" | "isFeatured" | "instructorId" | "createdAt" | "updatedAt" | "courseShortDesc" | "courseDesc" | "courseLevel" | "language" | "requirements" | "outcomes" | "recommendedNext" | "jp" | "ytPlaylistId" | "isProcessing" | "processingStatus" | "lastProcessedAt" | "syncConfig", ExtArgs["result"]["course"]>
   export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Category?: boolean | Course$CategoryArgs<ExtArgs>
     Certificate?: boolean | Course$CertificateArgs<ExtArgs>
@@ -13164,6 +13295,7 @@ export namespace Prisma {
     Enrollment?: boolean | Course$EnrollmentArgs<ExtArgs>
     Forum?: boolean | Course$ForumArgs<ExtArgs>
     Module?: boolean | Course$ModuleArgs<ExtArgs>
+    SyncCourseProgress?: boolean | Course$SyncCourseProgressArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CourseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13185,6 +13317,7 @@ export namespace Prisma {
       Enrollment: Prisma.$EnrollmentPayload<ExtArgs>[]
       Forum: Prisma.$ForumPayload<ExtArgs>[]
       Module: Prisma.$ModulePayload<ExtArgs>[]
+      SyncCourseProgress: Prisma.$SyncCourseProgressPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13218,6 +13351,7 @@ export namespace Prisma {
       isProcessing: boolean
       processingStatus: string | null
       lastProcessedAt: Date | null
+      syncConfig: Prisma.JsonValue | null
     }, ExtArgs["result"]["course"]>
     composites: {}
   }
@@ -13619,6 +13753,7 @@ export namespace Prisma {
     Enrollment<T extends Course$EnrollmentArgs<ExtArgs> = {}>(args?: Subset<T, Course$EnrollmentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Forum<T extends Course$ForumArgs<ExtArgs> = {}>(args?: Subset<T, Course$ForumArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ForumPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Module<T extends Course$ModuleArgs<ExtArgs> = {}>(args?: Subset<T, Course$ModuleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    SyncCourseProgress<T extends Course$SyncCourseProgressArgs<ExtArgs> = {}>(args?: Subset<T, Course$SyncCourseProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13679,6 +13814,7 @@ export namespace Prisma {
     readonly isProcessing: FieldRef<"Course", 'Boolean'>
     readonly processingStatus: FieldRef<"Course", 'String'>
     readonly lastProcessedAt: FieldRef<"Course", 'DateTime'>
+    readonly syncConfig: FieldRef<"Course", 'Json'>
   }
     
 
@@ -14211,6 +14347,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ModuleScalarFieldEnum | ModuleScalarFieldEnum[]
+  }
+
+  /**
+   * Course.SyncCourseProgress
+   */
+  export type Course$SyncCourseProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    where?: SyncCourseProgressWhereInput
+    orderBy?: SyncCourseProgressOrderByWithRelationInput | SyncCourseProgressOrderByWithRelationInput[]
+    cursor?: SyncCourseProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SyncCourseProgressScalarFieldEnum | SyncCourseProgressScalarFieldEnum[]
   }
 
   /**
@@ -31948,6 +32108,7 @@ export namespace Prisma {
     UserBadge?: boolean | User$UserBadgeArgs<ExtArgs>
     UserVerificationOTP?: boolean | User$UserVerificationOTPArgs<ExtArgs>
     LearnerActivity?: boolean | User$LearnerActivityArgs<ExtArgs>
+    SyncCourseProgress?: boolean | User$SyncCourseProgressArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -32036,6 +32197,7 @@ export namespace Prisma {
     UserBadge?: boolean | User$UserBadgeArgs<ExtArgs>
     UserVerificationOTP?: boolean | User$UserVerificationOTPArgs<ExtArgs>
     LearnerActivity?: boolean | User$LearnerActivityArgs<ExtArgs>
+    SyncCourseProgress?: boolean | User$SyncCourseProgressArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -32058,6 +32220,7 @@ export namespace Prisma {
       UserBadge: Prisma.$UserBadgePayload<ExtArgs>[]
       UserVerificationOTP: Prisma.$UserVerificationOTPPayload<ExtArgs>[]
       LearnerActivity: Prisma.$LearnerActivityPayload<ExtArgs>[]
+      SyncCourseProgress: Prisma.$SyncCourseProgressPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -32488,6 +32651,7 @@ export namespace Prisma {
     UserBadge<T extends User$UserBadgeArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBadgeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBadgePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserVerificationOTP<T extends User$UserVerificationOTPArgs<ExtArgs> = {}>(args?: Subset<T, User$UserVerificationOTPArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserVerificationOTPPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     LearnerActivity<T extends User$LearnerActivityArgs<ExtArgs> = {}>(args?: Subset<T, User$LearnerActivityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LearnerActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    SyncCourseProgress<T extends User$SyncCourseProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$SyncCourseProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -33258,6 +33422,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LearnerActivityScalarFieldEnum | LearnerActivityScalarFieldEnum[]
+  }
+
+  /**
+   * User.SyncCourseProgress
+   */
+  export type User$SyncCourseProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    where?: SyncCourseProgressWhereInput
+    orderBy?: SyncCourseProgressOrderByWithRelationInput | SyncCourseProgressOrderByWithRelationInput[]
+    cursor?: SyncCourseProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SyncCourseProgressScalarFieldEnum | SyncCourseProgressScalarFieldEnum[]
   }
 
   /**
@@ -45892,6 +46080,1219 @@ export namespace Prisma {
 
 
   /**
+   * Model SyncCourseProgress
+   */
+
+  export type AggregateSyncCourseProgress = {
+    _count: SyncCourseProgressCountAggregateOutputType | null
+    _avg: SyncCourseProgressAvgAggregateOutputType | null
+    _sum: SyncCourseProgressSumAggregateOutputType | null
+    _min: SyncCourseProgressMinAggregateOutputType | null
+    _max: SyncCourseProgressMaxAggregateOutputType | null
+  }
+
+  export type SyncCourseProgressAvgAggregateOutputType = {
+    liveWatchDuration: number | null
+    assessmentScore: number | null
+  }
+
+  export type SyncCourseProgressSumAggregateOutputType = {
+    liveWatchDuration: number | null
+    assessmentScore: number | null
+  }
+
+  export type SyncCourseProgressMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    courseId: string | null
+    preLearnAccessedAt: Date | null
+    liveAccessedAt: Date | null
+    liveWatchDuration: number | null
+    postLearnSubmittedAt: Date | null
+    assessmentScore: number | null
+    status: $Enums.SyncCourseStatus | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SyncCourseProgressMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    courseId: string | null
+    preLearnAccessedAt: Date | null
+    liveAccessedAt: Date | null
+    liveWatchDuration: number | null
+    postLearnSubmittedAt: Date | null
+    assessmentScore: number | null
+    status: $Enums.SyncCourseStatus | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SyncCourseProgressCountAggregateOutputType = {
+    id: number
+    userId: number
+    courseId: number
+    preLearnAccessedAt: number
+    liveAccessedAt: number
+    liveWatchDuration: number
+    conceptMarkers: number
+    postLearnSubmittedAt: number
+    assessmentScore: number
+    assessmentResponse: number
+    status: number
+    completedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SyncCourseProgressAvgAggregateInputType = {
+    liveWatchDuration?: true
+    assessmentScore?: true
+  }
+
+  export type SyncCourseProgressSumAggregateInputType = {
+    liveWatchDuration?: true
+    assessmentScore?: true
+  }
+
+  export type SyncCourseProgressMinAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    preLearnAccessedAt?: true
+    liveAccessedAt?: true
+    liveWatchDuration?: true
+    postLearnSubmittedAt?: true
+    assessmentScore?: true
+    status?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SyncCourseProgressMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    preLearnAccessedAt?: true
+    liveAccessedAt?: true
+    liveWatchDuration?: true
+    postLearnSubmittedAt?: true
+    assessmentScore?: true
+    status?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SyncCourseProgressCountAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    preLearnAccessedAt?: true
+    liveAccessedAt?: true
+    liveWatchDuration?: true
+    conceptMarkers?: true
+    postLearnSubmittedAt?: true
+    assessmentScore?: true
+    assessmentResponse?: true
+    status?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SyncCourseProgressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SyncCourseProgress to aggregate.
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncCourseProgresses to fetch.
+     */
+    orderBy?: SyncCourseProgressOrderByWithRelationInput | SyncCourseProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SyncCourseProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncCourseProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncCourseProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SyncCourseProgresses
+    **/
+    _count?: true | SyncCourseProgressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SyncCourseProgressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SyncCourseProgressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SyncCourseProgressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SyncCourseProgressMaxAggregateInputType
+  }
+
+  export type GetSyncCourseProgressAggregateType<T extends SyncCourseProgressAggregateArgs> = {
+        [P in keyof T & keyof AggregateSyncCourseProgress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSyncCourseProgress[P]>
+      : GetScalarType<T[P], AggregateSyncCourseProgress[P]>
+  }
+
+
+
+
+  export type SyncCourseProgressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SyncCourseProgressWhereInput
+    orderBy?: SyncCourseProgressOrderByWithAggregationInput | SyncCourseProgressOrderByWithAggregationInput[]
+    by: SyncCourseProgressScalarFieldEnum[] | SyncCourseProgressScalarFieldEnum
+    having?: SyncCourseProgressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SyncCourseProgressCountAggregateInputType | true
+    _avg?: SyncCourseProgressAvgAggregateInputType
+    _sum?: SyncCourseProgressSumAggregateInputType
+    _min?: SyncCourseProgressMinAggregateInputType
+    _max?: SyncCourseProgressMaxAggregateInputType
+  }
+
+  export type SyncCourseProgressGroupByOutputType = {
+    id: string
+    userId: string
+    courseId: string
+    preLearnAccessedAt: Date | null
+    liveAccessedAt: Date | null
+    liveWatchDuration: number
+    conceptMarkers: JsonValue | null
+    postLearnSubmittedAt: Date | null
+    assessmentScore: number | null
+    assessmentResponse: JsonValue | null
+    status: $Enums.SyncCourseStatus
+    completedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SyncCourseProgressCountAggregateOutputType | null
+    _avg: SyncCourseProgressAvgAggregateOutputType | null
+    _sum: SyncCourseProgressSumAggregateOutputType | null
+    _min: SyncCourseProgressMinAggregateOutputType | null
+    _max: SyncCourseProgressMaxAggregateOutputType | null
+  }
+
+  type GetSyncCourseProgressGroupByPayload<T extends SyncCourseProgressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SyncCourseProgressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SyncCourseProgressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SyncCourseProgressGroupByOutputType[P]>
+            : GetScalarType<T[P], SyncCourseProgressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SyncCourseProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    preLearnAccessedAt?: boolean
+    liveAccessedAt?: boolean
+    liveWatchDuration?: boolean
+    conceptMarkers?: boolean
+    postLearnSubmittedAt?: boolean
+    assessmentScore?: boolean
+    assessmentResponse?: boolean
+    status?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["syncCourseProgress"]>
+
+  export type SyncCourseProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    preLearnAccessedAt?: boolean
+    liveAccessedAt?: boolean
+    liveWatchDuration?: boolean
+    conceptMarkers?: boolean
+    postLearnSubmittedAt?: boolean
+    assessmentScore?: boolean
+    assessmentResponse?: boolean
+    status?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["syncCourseProgress"]>
+
+  export type SyncCourseProgressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    preLearnAccessedAt?: boolean
+    liveAccessedAt?: boolean
+    liveWatchDuration?: boolean
+    conceptMarkers?: boolean
+    postLearnSubmittedAt?: boolean
+    assessmentScore?: boolean
+    assessmentResponse?: boolean
+    status?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["syncCourseProgress"]>
+
+  export type SyncCourseProgressSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    preLearnAccessedAt?: boolean
+    liveAccessedAt?: boolean
+    liveWatchDuration?: boolean
+    conceptMarkers?: boolean
+    postLearnSubmittedAt?: boolean
+    assessmentScore?: boolean
+    assessmentResponse?: boolean
+    status?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SyncCourseProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "courseId" | "preLearnAccessedAt" | "liveAccessedAt" | "liveWatchDuration" | "conceptMarkers" | "postLearnSubmittedAt" | "assessmentScore" | "assessmentResponse" | "status" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["syncCourseProgress"]>
+  export type SyncCourseProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+  }
+  export type SyncCourseProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+  }
+  export type SyncCourseProgressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+  }
+
+  export type $SyncCourseProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SyncCourseProgress"
+    objects: {
+      User: Prisma.$UserPayload<ExtArgs>
+      Course: Prisma.$CoursePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      courseId: string
+      preLearnAccessedAt: Date | null
+      liveAccessedAt: Date | null
+      liveWatchDuration: number
+      conceptMarkers: Prisma.JsonValue | null
+      postLearnSubmittedAt: Date | null
+      assessmentScore: number | null
+      assessmentResponse: Prisma.JsonValue | null
+      status: $Enums.SyncCourseStatus
+      completedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["syncCourseProgress"]>
+    composites: {}
+  }
+
+  type SyncCourseProgressGetPayload<S extends boolean | null | undefined | SyncCourseProgressDefaultArgs> = $Result.GetResult<Prisma.$SyncCourseProgressPayload, S>
+
+  type SyncCourseProgressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SyncCourseProgressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SyncCourseProgressCountAggregateInputType | true
+    }
+
+  export interface SyncCourseProgressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SyncCourseProgress'], meta: { name: 'SyncCourseProgress' } }
+    /**
+     * Find zero or one SyncCourseProgress that matches the filter.
+     * @param {SyncCourseProgressFindUniqueArgs} args - Arguments to find a SyncCourseProgress
+     * @example
+     * // Get one SyncCourseProgress
+     * const syncCourseProgress = await prisma.syncCourseProgress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SyncCourseProgressFindUniqueArgs>(args: SelectSubset<T, SyncCourseProgressFindUniqueArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SyncCourseProgress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SyncCourseProgressFindUniqueOrThrowArgs} args - Arguments to find a SyncCourseProgress
+     * @example
+     * // Get one SyncCourseProgress
+     * const syncCourseProgress = await prisma.syncCourseProgress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SyncCourseProgressFindUniqueOrThrowArgs>(args: SelectSubset<T, SyncCourseProgressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SyncCourseProgress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressFindFirstArgs} args - Arguments to find a SyncCourseProgress
+     * @example
+     * // Get one SyncCourseProgress
+     * const syncCourseProgress = await prisma.syncCourseProgress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SyncCourseProgressFindFirstArgs>(args?: SelectSubset<T, SyncCourseProgressFindFirstArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SyncCourseProgress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressFindFirstOrThrowArgs} args - Arguments to find a SyncCourseProgress
+     * @example
+     * // Get one SyncCourseProgress
+     * const syncCourseProgress = await prisma.syncCourseProgress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SyncCourseProgressFindFirstOrThrowArgs>(args?: SelectSubset<T, SyncCourseProgressFindFirstOrThrowArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SyncCourseProgresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SyncCourseProgresses
+     * const syncCourseProgresses = await prisma.syncCourseProgress.findMany()
+     * 
+     * // Get first 10 SyncCourseProgresses
+     * const syncCourseProgresses = await prisma.syncCourseProgress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const syncCourseProgressWithIdOnly = await prisma.syncCourseProgress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SyncCourseProgressFindManyArgs>(args?: SelectSubset<T, SyncCourseProgressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SyncCourseProgress.
+     * @param {SyncCourseProgressCreateArgs} args - Arguments to create a SyncCourseProgress.
+     * @example
+     * // Create one SyncCourseProgress
+     * const SyncCourseProgress = await prisma.syncCourseProgress.create({
+     *   data: {
+     *     // ... data to create a SyncCourseProgress
+     *   }
+     * })
+     * 
+     */
+    create<T extends SyncCourseProgressCreateArgs>(args: SelectSubset<T, SyncCourseProgressCreateArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SyncCourseProgresses.
+     * @param {SyncCourseProgressCreateManyArgs} args - Arguments to create many SyncCourseProgresses.
+     * @example
+     * // Create many SyncCourseProgresses
+     * const syncCourseProgress = await prisma.syncCourseProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SyncCourseProgressCreateManyArgs>(args?: SelectSubset<T, SyncCourseProgressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SyncCourseProgresses and returns the data saved in the database.
+     * @param {SyncCourseProgressCreateManyAndReturnArgs} args - Arguments to create many SyncCourseProgresses.
+     * @example
+     * // Create many SyncCourseProgresses
+     * const syncCourseProgress = await prisma.syncCourseProgress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SyncCourseProgresses and only return the `id`
+     * const syncCourseProgressWithIdOnly = await prisma.syncCourseProgress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SyncCourseProgressCreateManyAndReturnArgs>(args?: SelectSubset<T, SyncCourseProgressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SyncCourseProgress.
+     * @param {SyncCourseProgressDeleteArgs} args - Arguments to delete one SyncCourseProgress.
+     * @example
+     * // Delete one SyncCourseProgress
+     * const SyncCourseProgress = await prisma.syncCourseProgress.delete({
+     *   where: {
+     *     // ... filter to delete one SyncCourseProgress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SyncCourseProgressDeleteArgs>(args: SelectSubset<T, SyncCourseProgressDeleteArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SyncCourseProgress.
+     * @param {SyncCourseProgressUpdateArgs} args - Arguments to update one SyncCourseProgress.
+     * @example
+     * // Update one SyncCourseProgress
+     * const syncCourseProgress = await prisma.syncCourseProgress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SyncCourseProgressUpdateArgs>(args: SelectSubset<T, SyncCourseProgressUpdateArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SyncCourseProgresses.
+     * @param {SyncCourseProgressDeleteManyArgs} args - Arguments to filter SyncCourseProgresses to delete.
+     * @example
+     * // Delete a few SyncCourseProgresses
+     * const { count } = await prisma.syncCourseProgress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SyncCourseProgressDeleteManyArgs>(args?: SelectSubset<T, SyncCourseProgressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SyncCourseProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SyncCourseProgresses
+     * const syncCourseProgress = await prisma.syncCourseProgress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SyncCourseProgressUpdateManyArgs>(args: SelectSubset<T, SyncCourseProgressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SyncCourseProgresses and returns the data updated in the database.
+     * @param {SyncCourseProgressUpdateManyAndReturnArgs} args - Arguments to update many SyncCourseProgresses.
+     * @example
+     * // Update many SyncCourseProgresses
+     * const syncCourseProgress = await prisma.syncCourseProgress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SyncCourseProgresses and only return the `id`
+     * const syncCourseProgressWithIdOnly = await prisma.syncCourseProgress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SyncCourseProgressUpdateManyAndReturnArgs>(args: SelectSubset<T, SyncCourseProgressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SyncCourseProgress.
+     * @param {SyncCourseProgressUpsertArgs} args - Arguments to update or create a SyncCourseProgress.
+     * @example
+     * // Update or create a SyncCourseProgress
+     * const syncCourseProgress = await prisma.syncCourseProgress.upsert({
+     *   create: {
+     *     // ... data to create a SyncCourseProgress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SyncCourseProgress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SyncCourseProgressUpsertArgs>(args: SelectSubset<T, SyncCourseProgressUpsertArgs<ExtArgs>>): Prisma__SyncCourseProgressClient<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SyncCourseProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressCountArgs} args - Arguments to filter SyncCourseProgresses to count.
+     * @example
+     * // Count the number of SyncCourseProgresses
+     * const count = await prisma.syncCourseProgress.count({
+     *   where: {
+     *     // ... the filter for the SyncCourseProgresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends SyncCourseProgressCountArgs>(
+      args?: Subset<T, SyncCourseProgressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SyncCourseProgressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SyncCourseProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SyncCourseProgressAggregateArgs>(args: Subset<T, SyncCourseProgressAggregateArgs>): Prisma.PrismaPromise<GetSyncCourseProgressAggregateType<T>>
+
+    /**
+     * Group by SyncCourseProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncCourseProgressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SyncCourseProgressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SyncCourseProgressGroupByArgs['orderBy'] }
+        : { orderBy?: SyncCourseProgressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SyncCourseProgressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSyncCourseProgressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SyncCourseProgress model
+   */
+  readonly fields: SyncCourseProgressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SyncCourseProgress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SyncCourseProgressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    Course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SyncCourseProgress model
+   */
+  interface SyncCourseProgressFieldRefs {
+    readonly id: FieldRef<"SyncCourseProgress", 'String'>
+    readonly userId: FieldRef<"SyncCourseProgress", 'String'>
+    readonly courseId: FieldRef<"SyncCourseProgress", 'String'>
+    readonly preLearnAccessedAt: FieldRef<"SyncCourseProgress", 'DateTime'>
+    readonly liveAccessedAt: FieldRef<"SyncCourseProgress", 'DateTime'>
+    readonly liveWatchDuration: FieldRef<"SyncCourseProgress", 'Int'>
+    readonly conceptMarkers: FieldRef<"SyncCourseProgress", 'Json'>
+    readonly postLearnSubmittedAt: FieldRef<"SyncCourseProgress", 'DateTime'>
+    readonly assessmentScore: FieldRef<"SyncCourseProgress", 'Float'>
+    readonly assessmentResponse: FieldRef<"SyncCourseProgress", 'Json'>
+    readonly status: FieldRef<"SyncCourseProgress", 'SyncCourseStatus'>
+    readonly completedAt: FieldRef<"SyncCourseProgress", 'DateTime'>
+    readonly createdAt: FieldRef<"SyncCourseProgress", 'DateTime'>
+    readonly updatedAt: FieldRef<"SyncCourseProgress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SyncCourseProgress findUnique
+   */
+  export type SyncCourseProgressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncCourseProgress to fetch.
+     */
+    where: SyncCourseProgressWhereUniqueInput
+  }
+
+  /**
+   * SyncCourseProgress findUniqueOrThrow
+   */
+  export type SyncCourseProgressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncCourseProgress to fetch.
+     */
+    where: SyncCourseProgressWhereUniqueInput
+  }
+
+  /**
+   * SyncCourseProgress findFirst
+   */
+  export type SyncCourseProgressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncCourseProgress to fetch.
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncCourseProgresses to fetch.
+     */
+    orderBy?: SyncCourseProgressOrderByWithRelationInput | SyncCourseProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SyncCourseProgresses.
+     */
+    cursor?: SyncCourseProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncCourseProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncCourseProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SyncCourseProgresses.
+     */
+    distinct?: SyncCourseProgressScalarFieldEnum | SyncCourseProgressScalarFieldEnum[]
+  }
+
+  /**
+   * SyncCourseProgress findFirstOrThrow
+   */
+  export type SyncCourseProgressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncCourseProgress to fetch.
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncCourseProgresses to fetch.
+     */
+    orderBy?: SyncCourseProgressOrderByWithRelationInput | SyncCourseProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SyncCourseProgresses.
+     */
+    cursor?: SyncCourseProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncCourseProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncCourseProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SyncCourseProgresses.
+     */
+    distinct?: SyncCourseProgressScalarFieldEnum | SyncCourseProgressScalarFieldEnum[]
+  }
+
+  /**
+   * SyncCourseProgress findMany
+   */
+  export type SyncCourseProgressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncCourseProgresses to fetch.
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncCourseProgresses to fetch.
+     */
+    orderBy?: SyncCourseProgressOrderByWithRelationInput | SyncCourseProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SyncCourseProgresses.
+     */
+    cursor?: SyncCourseProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncCourseProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncCourseProgresses.
+     */
+    skip?: number
+    distinct?: SyncCourseProgressScalarFieldEnum | SyncCourseProgressScalarFieldEnum[]
+  }
+
+  /**
+   * SyncCourseProgress create
+   */
+  export type SyncCourseProgressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SyncCourseProgress.
+     */
+    data: XOR<SyncCourseProgressCreateInput, SyncCourseProgressUncheckedCreateInput>
+  }
+
+  /**
+   * SyncCourseProgress createMany
+   */
+  export type SyncCourseProgressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SyncCourseProgresses.
+     */
+    data: SyncCourseProgressCreateManyInput | SyncCourseProgressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SyncCourseProgress createManyAndReturn
+   */
+  export type SyncCourseProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * The data used to create many SyncCourseProgresses.
+     */
+    data: SyncCourseProgressCreateManyInput | SyncCourseProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SyncCourseProgress update
+   */
+  export type SyncCourseProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SyncCourseProgress.
+     */
+    data: XOR<SyncCourseProgressUpdateInput, SyncCourseProgressUncheckedUpdateInput>
+    /**
+     * Choose, which SyncCourseProgress to update.
+     */
+    where: SyncCourseProgressWhereUniqueInput
+  }
+
+  /**
+   * SyncCourseProgress updateMany
+   */
+  export type SyncCourseProgressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SyncCourseProgresses.
+     */
+    data: XOR<SyncCourseProgressUpdateManyMutationInput, SyncCourseProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which SyncCourseProgresses to update
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * Limit how many SyncCourseProgresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SyncCourseProgress updateManyAndReturn
+   */
+  export type SyncCourseProgressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * The data used to update SyncCourseProgresses.
+     */
+    data: XOR<SyncCourseProgressUpdateManyMutationInput, SyncCourseProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which SyncCourseProgresses to update
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * Limit how many SyncCourseProgresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SyncCourseProgress upsert
+   */
+  export type SyncCourseProgressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SyncCourseProgress to update in case it exists.
+     */
+    where: SyncCourseProgressWhereUniqueInput
+    /**
+     * In case the SyncCourseProgress found by the `where` argument doesn't exist, create a new SyncCourseProgress with this data.
+     */
+    create: XOR<SyncCourseProgressCreateInput, SyncCourseProgressUncheckedCreateInput>
+    /**
+     * In case the SyncCourseProgress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SyncCourseProgressUpdateInput, SyncCourseProgressUncheckedUpdateInput>
+  }
+
+  /**
+   * SyncCourseProgress delete
+   */
+  export type SyncCourseProgressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+    /**
+     * Filter which SyncCourseProgress to delete.
+     */
+    where: SyncCourseProgressWhereUniqueInput
+  }
+
+  /**
+   * SyncCourseProgress deleteMany
+   */
+  export type SyncCourseProgressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SyncCourseProgresses to delete
+     */
+    where?: SyncCourseProgressWhereInput
+    /**
+     * Limit how many SyncCourseProgresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SyncCourseProgress without action
+   */
+  export type SyncCourseProgressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncCourseProgress
+     */
+    select?: SyncCourseProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncCourseProgress
+     */
+    omit?: SyncCourseProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncCourseProgressInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -46041,7 +47442,8 @@ export namespace Prisma {
     ytPlaylistId: 'ytPlaylistId',
     isProcessing: 'isProcessing',
     processingStatus: 'processingStatus',
-    lastProcessedAt: 'lastProcessedAt'
+    lastProcessedAt: 'lastProcessedAt',
+    syncConfig: 'syncConfig'
   };
 
   export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
@@ -46508,6 +47910,26 @@ export namespace Prisma {
   export type LearnerActivityScalarFieldEnum = (typeof LearnerActivityScalarFieldEnum)[keyof typeof LearnerActivityScalarFieldEnum]
 
 
+  export const SyncCourseProgressScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    courseId: 'courseId',
+    preLearnAccessedAt: 'preLearnAccessedAt',
+    liveAccessedAt: 'liveAccessedAt',
+    liveWatchDuration: 'liveWatchDuration',
+    conceptMarkers: 'conceptMarkers',
+    postLearnSubmittedAt: 'postLearnSubmittedAt',
+    assessmentScore: 'assessmentScore',
+    assessmentResponse: 'assessmentResponse',
+    status: 'status',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SyncCourseProgressScalarFieldEnum = (typeof SyncCourseProgressScalarFieldEnum)[keyof typeof SyncCourseProgressScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -46845,6 +48267,20 @@ export namespace Prisma {
    * Reference to a field of type 'UserStatus[]'
    */
   export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SyncCourseStatus'
+   */
+  export type EnumSyncCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SyncCourseStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SyncCourseStatus[]'
+   */
+  export type ListEnumSyncCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SyncCourseStatus[]'>
     
   /**
    * Deep Input Types
@@ -47424,6 +48860,7 @@ export namespace Prisma {
     isProcessing?: BoolFilter<"Course"> | boolean
     processingStatus?: StringNullableFilter<"Course"> | string | null
     lastProcessedAt?: DateTimeNullableFilter<"Course"> | Date | string | null
+    syncConfig?: JsonNullableFilter<"Course">
     Category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     Certificate?: CertificateListRelationFilter
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -47431,6 +48868,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentListRelationFilter
     Forum?: ForumListRelationFilter
     Module?: ModuleListRelationFilter
+    SyncCourseProgress?: SyncCourseProgressListRelationFilter
   }
 
   export type CourseOrderByWithRelationInput = {
@@ -47465,6 +48903,7 @@ export namespace Prisma {
     isProcessing?: SortOrder
     processingStatus?: SortOrderInput | SortOrder
     lastProcessedAt?: SortOrderInput | SortOrder
+    syncConfig?: SortOrderInput | SortOrder
     Category?: CategoryOrderByWithRelationInput
     Certificate?: CertificateOrderByRelationAggregateInput
     User?: UserOrderByWithRelationInput
@@ -47472,6 +48911,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentOrderByRelationAggregateInput
     Forum?: ForumOrderByRelationAggregateInput
     Module?: ModuleOrderByRelationAggregateInput
+    SyncCourseProgress?: SyncCourseProgressOrderByRelationAggregateInput
   }
 
   export type CourseWhereUniqueInput = Prisma.AtLeast<{
@@ -47509,6 +48949,7 @@ export namespace Prisma {
     isProcessing?: BoolFilter<"Course"> | boolean
     processingStatus?: StringNullableFilter<"Course"> | string | null
     lastProcessedAt?: DateTimeNullableFilter<"Course"> | Date | string | null
+    syncConfig?: JsonNullableFilter<"Course">
     Category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     Certificate?: CertificateListRelationFilter
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -47516,6 +48957,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentListRelationFilter
     Forum?: ForumListRelationFilter
     Module?: ModuleListRelationFilter
+    SyncCourseProgress?: SyncCourseProgressListRelationFilter
   }, "id" | "slug" | "ytPlaylistId">
 
   export type CourseOrderByWithAggregationInput = {
@@ -47550,6 +48992,7 @@ export namespace Prisma {
     isProcessing?: SortOrder
     processingStatus?: SortOrderInput | SortOrder
     lastProcessedAt?: SortOrderInput | SortOrder
+    syncConfig?: SortOrderInput | SortOrder
     _count?: CourseCountOrderByAggregateInput
     _avg?: CourseAvgOrderByAggregateInput
     _max?: CourseMaxOrderByAggregateInput
@@ -47592,6 +49035,7 @@ export namespace Prisma {
     isProcessing?: BoolWithAggregatesFilter<"Course"> | boolean
     processingStatus?: StringNullableWithAggregatesFilter<"Course"> | string | null
     lastProcessedAt?: DateTimeNullableWithAggregatesFilter<"Course"> | Date | string | null
+    syncConfig?: JsonNullableWithAggregatesFilter<"Course">
   }
 
   export type CourseSessionWhereInput = {
@@ -48861,6 +50305,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeListRelationFilter
     UserVerificationOTP?: UserVerificationOTPListRelationFilter
     LearnerActivity?: LearnerActivityListRelationFilter
+    SyncCourseProgress?: SyncCourseProgressListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -48898,6 +50343,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeOrderByRelationAggregateInput
     UserVerificationOTP?: UserVerificationOTPOrderByRelationAggregateInput
     LearnerActivity?: LearnerActivityOrderByRelationAggregateInput
+    SyncCourseProgress?: SyncCourseProgressOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -48938,6 +50384,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeListRelationFilter
     UserVerificationOTP?: UserVerificationOTPListRelationFilter
     LearnerActivity?: LearnerActivityListRelationFilter
+    SyncCourseProgress?: SyncCourseProgressListRelationFilter
   }, "id" | "nip" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -50011,6 +51458,112 @@ export namespace Prisma {
     occurredAt?: DateTimeWithAggregatesFilter<"LearnerActivity"> | Date | string
   }
 
+  export type SyncCourseProgressWhereInput = {
+    AND?: SyncCourseProgressWhereInput | SyncCourseProgressWhereInput[]
+    OR?: SyncCourseProgressWhereInput[]
+    NOT?: SyncCourseProgressWhereInput | SyncCourseProgressWhereInput[]
+    id?: StringFilter<"SyncCourseProgress"> | string
+    userId?: StringFilter<"SyncCourseProgress"> | string
+    courseId?: StringFilter<"SyncCourseProgress"> | string
+    preLearnAccessedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    liveAccessedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    liveWatchDuration?: IntFilter<"SyncCourseProgress"> | number
+    conceptMarkers?: JsonNullableFilter<"SyncCourseProgress">
+    postLearnSubmittedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    assessmentScore?: FloatNullableFilter<"SyncCourseProgress"> | number | null
+    assessmentResponse?: JsonNullableFilter<"SyncCourseProgress">
+    status?: EnumSyncCourseStatusFilter<"SyncCourseProgress"> | $Enums.SyncCourseStatus
+    completedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    createdAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+    Course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+  }
+
+  export type SyncCourseProgressOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    preLearnAccessedAt?: SortOrderInput | SortOrder
+    liveAccessedAt?: SortOrderInput | SortOrder
+    liveWatchDuration?: SortOrder
+    conceptMarkers?: SortOrderInput | SortOrder
+    postLearnSubmittedAt?: SortOrderInput | SortOrder
+    assessmentScore?: SortOrderInput | SortOrder
+    assessmentResponse?: SortOrderInput | SortOrder
+    status?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    User?: UserOrderByWithRelationInput
+    Course?: CourseOrderByWithRelationInput
+  }
+
+  export type SyncCourseProgressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_courseId?: SyncCourseProgressUserIdCourseIdCompoundUniqueInput
+    AND?: SyncCourseProgressWhereInput | SyncCourseProgressWhereInput[]
+    OR?: SyncCourseProgressWhereInput[]
+    NOT?: SyncCourseProgressWhereInput | SyncCourseProgressWhereInput[]
+    userId?: StringFilter<"SyncCourseProgress"> | string
+    courseId?: StringFilter<"SyncCourseProgress"> | string
+    preLearnAccessedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    liveAccessedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    liveWatchDuration?: IntFilter<"SyncCourseProgress"> | number
+    conceptMarkers?: JsonNullableFilter<"SyncCourseProgress">
+    postLearnSubmittedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    assessmentScore?: FloatNullableFilter<"SyncCourseProgress"> | number | null
+    assessmentResponse?: JsonNullableFilter<"SyncCourseProgress">
+    status?: EnumSyncCourseStatusFilter<"SyncCourseProgress"> | $Enums.SyncCourseStatus
+    completedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    createdAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+    Course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+  }, "id" | "userId_courseId">
+
+  export type SyncCourseProgressOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    preLearnAccessedAt?: SortOrderInput | SortOrder
+    liveAccessedAt?: SortOrderInput | SortOrder
+    liveWatchDuration?: SortOrder
+    conceptMarkers?: SortOrderInput | SortOrder
+    postLearnSubmittedAt?: SortOrderInput | SortOrder
+    assessmentScore?: SortOrderInput | SortOrder
+    assessmentResponse?: SortOrderInput | SortOrder
+    status?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SyncCourseProgressCountOrderByAggregateInput
+    _avg?: SyncCourseProgressAvgOrderByAggregateInput
+    _max?: SyncCourseProgressMaxOrderByAggregateInput
+    _min?: SyncCourseProgressMinOrderByAggregateInput
+    _sum?: SyncCourseProgressSumOrderByAggregateInput
+  }
+
+  export type SyncCourseProgressScalarWhereWithAggregatesInput = {
+    AND?: SyncCourseProgressScalarWhereWithAggregatesInput | SyncCourseProgressScalarWhereWithAggregatesInput[]
+    OR?: SyncCourseProgressScalarWhereWithAggregatesInput[]
+    NOT?: SyncCourseProgressScalarWhereWithAggregatesInput | SyncCourseProgressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SyncCourseProgress"> | string
+    userId?: StringWithAggregatesFilter<"SyncCourseProgress"> | string
+    courseId?: StringWithAggregatesFilter<"SyncCourseProgress"> | string
+    preLearnAccessedAt?: DateTimeNullableWithAggregatesFilter<"SyncCourseProgress"> | Date | string | null
+    liveAccessedAt?: DateTimeNullableWithAggregatesFilter<"SyncCourseProgress"> | Date | string | null
+    liveWatchDuration?: IntWithAggregatesFilter<"SyncCourseProgress"> | number
+    conceptMarkers?: JsonNullableWithAggregatesFilter<"SyncCourseProgress">
+    postLearnSubmittedAt?: DateTimeNullableWithAggregatesFilter<"SyncCourseProgress"> | Date | string | null
+    assessmentScore?: FloatNullableWithAggregatesFilter<"SyncCourseProgress"> | number | null
+    assessmentResponse?: JsonNullableWithAggregatesFilter<"SyncCourseProgress">
+    status?: EnumSyncCourseStatusWithAggregatesFilter<"SyncCourseProgress"> | $Enums.SyncCourseStatus
+    completedAt?: DateTimeNullableWithAggregatesFilter<"SyncCourseProgress"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SyncCourseProgress"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SyncCourseProgress"> | Date | string
+  }
+
   export type AccountCreateInput = {
     id?: string
     type: string
@@ -50631,6 +52184,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
@@ -50638,6 +52192,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateInput = {
@@ -50672,11 +52227,13 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUpdateInput = {
@@ -50709,6 +52266,7 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
@@ -50716,6 +52274,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateInput = {
@@ -50750,11 +52309,13 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateManyInput = {
@@ -50789,6 +52350,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CourseUpdateManyMutationInput = {
@@ -50821,6 +52383,7 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CourseUncheckedUpdateManyInput = {
@@ -50855,6 +52418,7 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CourseSessionCreateInput = {
@@ -52225,6 +53789,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -52262,6 +53827,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -52299,6 +53865,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -52336,6 +53903,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -53596,6 +55164,123 @@ export namespace Prisma {
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SyncCourseProgressCreateInput = {
+    id?: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    User: UserCreateNestedOneWithoutSyncCourseProgressInput
+    Course: CourseCreateNestedOneWithoutSyncCourseProgressInput
+  }
+
+  export type SyncCourseProgressUncheckedCreateInput = {
+    id?: string
+    userId: string
+    courseId: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SyncCourseProgressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutSyncCourseProgressNestedInput
+    Course?: CourseUpdateOneRequiredWithoutSyncCourseProgressNestedInput
+  }
+
+  export type SyncCourseProgressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SyncCourseProgressCreateManyInput = {
+    id?: string
+    userId: string
+    courseId: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SyncCourseProgressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SyncCourseProgressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -54357,6 +56042,12 @@ export namespace Prisma {
     none?: ModuleWhereInput
   }
 
+  export type SyncCourseProgressListRelationFilter = {
+    every?: SyncCourseProgressWhereInput
+    some?: SyncCourseProgressWhereInput
+    none?: SyncCourseProgressWhereInput
+  }
+
   export type CertificateOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -54374,6 +56065,10 @@ export namespace Prisma {
   }
 
   export type ModuleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SyncCourseProgressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54409,6 +56104,7 @@ export namespace Prisma {
     isProcessing?: SortOrder
     processingStatus?: SortOrder
     lastProcessedAt?: SortOrder
+    syncConfig?: SortOrder
   }
 
   export type CourseAvgOrderByAggregateInput = {
@@ -56284,6 +57980,85 @@ export namespace Prisma {
     occurredAt?: SortOrder
   }
 
+  export type EnumSyncCourseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SyncCourseStatus | EnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSyncCourseStatusFilter<$PrismaModel> | $Enums.SyncCourseStatus
+  }
+
+  export type SyncCourseProgressUserIdCourseIdCompoundUniqueInput = {
+    userId: string
+    courseId: string
+  }
+
+  export type SyncCourseProgressCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    preLearnAccessedAt?: SortOrder
+    liveAccessedAt?: SortOrder
+    liveWatchDuration?: SortOrder
+    conceptMarkers?: SortOrder
+    postLearnSubmittedAt?: SortOrder
+    assessmentScore?: SortOrder
+    assessmentResponse?: SortOrder
+    status?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SyncCourseProgressAvgOrderByAggregateInput = {
+    liveWatchDuration?: SortOrder
+    assessmentScore?: SortOrder
+  }
+
+  export type SyncCourseProgressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    preLearnAccessedAt?: SortOrder
+    liveAccessedAt?: SortOrder
+    liveWatchDuration?: SortOrder
+    postLearnSubmittedAt?: SortOrder
+    assessmentScore?: SortOrder
+    status?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SyncCourseProgressMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    preLearnAccessedAt?: SortOrder
+    liveAccessedAt?: SortOrder
+    liveWatchDuration?: SortOrder
+    postLearnSubmittedAt?: SortOrder
+    assessmentScore?: SortOrder
+    status?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SyncCourseProgressSumOrderByAggregateInput = {
+    liveWatchDuration?: SortOrder
+    assessmentScore?: SortOrder
+  }
+
+  export type EnumSyncCourseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SyncCourseStatus | EnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSyncCourseStatusWithAggregatesFilter<$PrismaModel> | $Enums.SyncCourseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSyncCourseStatusFilter<$PrismaModel>
+    _max?: NestedEnumSyncCourseStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -56559,6 +58334,13 @@ export namespace Prisma {
     connect?: ModuleWhereUniqueInput | ModuleWhereUniqueInput[]
   }
 
+  export type SyncCourseProgressCreateNestedManyWithoutCourseInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutCourseInput, SyncCourseProgressUncheckedCreateWithoutCourseInput> | SyncCourseProgressCreateWithoutCourseInput[] | SyncCourseProgressUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutCourseInput | SyncCourseProgressCreateOrConnectWithoutCourseInput[]
+    createMany?: SyncCourseProgressCreateManyCourseInputEnvelope
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+  }
+
   export type CertificateUncheckedCreateNestedManyWithoutCourseInput = {
     create?: XOR<CertificateCreateWithoutCourseInput, CertificateUncheckedCreateWithoutCourseInput> | CertificateCreateWithoutCourseInput[] | CertificateUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: CertificateCreateOrConnectWithoutCourseInput | CertificateCreateOrConnectWithoutCourseInput[]
@@ -56592,6 +58374,13 @@ export namespace Prisma {
     connectOrCreate?: ModuleCreateOrConnectWithoutCourseInput | ModuleCreateOrConnectWithoutCourseInput[]
     createMany?: ModuleCreateManyCourseInputEnvelope
     connect?: ModuleWhereUniqueInput | ModuleWhereUniqueInput[]
+  }
+
+  export type SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutCourseInput, SyncCourseProgressUncheckedCreateWithoutCourseInput> | SyncCourseProgressCreateWithoutCourseInput[] | SyncCourseProgressUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutCourseInput | SyncCourseProgressCreateOrConnectWithoutCourseInput[]
+    createMany?: SyncCourseProgressCreateManyCourseInputEnvelope
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
   }
 
   export type EnumDeliveryModeFieldUpdateOperationsInput = {
@@ -56703,6 +58492,20 @@ export namespace Prisma {
     deleteMany?: ModuleScalarWhereInput | ModuleScalarWhereInput[]
   }
 
+  export type SyncCourseProgressUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutCourseInput, SyncCourseProgressUncheckedCreateWithoutCourseInput> | SyncCourseProgressCreateWithoutCourseInput[] | SyncCourseProgressUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutCourseInput | SyncCourseProgressCreateOrConnectWithoutCourseInput[]
+    upsert?: SyncCourseProgressUpsertWithWhereUniqueWithoutCourseInput | SyncCourseProgressUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: SyncCourseProgressCreateManyCourseInputEnvelope
+    set?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    disconnect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    delete?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    update?: SyncCourseProgressUpdateWithWhereUniqueWithoutCourseInput | SyncCourseProgressUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: SyncCourseProgressUpdateManyWithWhereWithoutCourseInput | SyncCourseProgressUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
+  }
+
   export type CertificateUncheckedUpdateManyWithoutCourseNestedInput = {
     create?: XOR<CertificateCreateWithoutCourseInput, CertificateUncheckedCreateWithoutCourseInput> | CertificateCreateWithoutCourseInput[] | CertificateUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: CertificateCreateOrConnectWithoutCourseInput | CertificateCreateOrConnectWithoutCourseInput[]
@@ -56771,6 +58574,20 @@ export namespace Prisma {
     update?: ModuleUpdateWithWhereUniqueWithoutCourseInput | ModuleUpdateWithWhereUniqueWithoutCourseInput[]
     updateMany?: ModuleUpdateManyWithWhereWithoutCourseInput | ModuleUpdateManyWithWhereWithoutCourseInput[]
     deleteMany?: ModuleScalarWhereInput | ModuleScalarWhereInput[]
+  }
+
+  export type SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutCourseInput, SyncCourseProgressUncheckedCreateWithoutCourseInput> | SyncCourseProgressCreateWithoutCourseInput[] | SyncCourseProgressUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutCourseInput | SyncCourseProgressCreateOrConnectWithoutCourseInput[]
+    upsert?: SyncCourseProgressUpsertWithWhereUniqueWithoutCourseInput | SyncCourseProgressUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: SyncCourseProgressCreateManyCourseInputEnvelope
+    set?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    disconnect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    delete?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    update?: SyncCourseProgressUpdateWithWhereUniqueWithoutCourseInput | SyncCourseProgressUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: SyncCourseProgressUpdateManyWithWhereWithoutCourseInput | SyncCourseProgressUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
   }
 
   export type AttendanceCreateNestedManyWithoutCourseSessionInput = {
@@ -57653,6 +59470,13 @@ export namespace Prisma {
     connect?: LearnerActivityWhereUniqueInput | LearnerActivityWhereUniqueInput[]
   }
 
+  export type SyncCourseProgressCreateNestedManyWithoutUserInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutUserInput, SyncCourseProgressUncheckedCreateWithoutUserInput> | SyncCourseProgressCreateWithoutUserInput[] | SyncCourseProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutUserInput | SyncCourseProgressCreateOrConnectWithoutUserInput[]
+    createMany?: SyncCourseProgressCreateManyUserInputEnvelope
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -57749,6 +59573,13 @@ export namespace Prisma {
     connectOrCreate?: LearnerActivityCreateOrConnectWithoutUserInput | LearnerActivityCreateOrConnectWithoutUserInput[]
     createMany?: LearnerActivityCreateManyUserInputEnvelope
     connect?: LearnerActivityWhereUniqueInput | LearnerActivityWhereUniqueInput[]
+  }
+
+  export type SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutUserInput, SyncCourseProgressUncheckedCreateWithoutUserInput> | SyncCourseProgressCreateWithoutUserInput[] | SyncCourseProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutUserInput | SyncCourseProgressCreateOrConnectWithoutUserInput[]
+    createMany?: SyncCourseProgressCreateManyUserInputEnvelope
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
   }
 
   export type EnumRoleFieldUpdateOperationsInput = {
@@ -57955,6 +59786,20 @@ export namespace Prisma {
     deleteMany?: LearnerActivityScalarWhereInput | LearnerActivityScalarWhereInput[]
   }
 
+  export type SyncCourseProgressUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutUserInput, SyncCourseProgressUncheckedCreateWithoutUserInput> | SyncCourseProgressCreateWithoutUserInput[] | SyncCourseProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutUserInput | SyncCourseProgressCreateOrConnectWithoutUserInput[]
+    upsert?: SyncCourseProgressUpsertWithWhereUniqueWithoutUserInput | SyncCourseProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SyncCourseProgressCreateManyUserInputEnvelope
+    set?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    disconnect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    delete?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    update?: SyncCourseProgressUpdateWithWhereUniqueWithoutUserInput | SyncCourseProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SyncCourseProgressUpdateManyWithWhereWithoutUserInput | SyncCourseProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -58151,6 +59996,20 @@ export namespace Prisma {
     deleteMany?: LearnerActivityScalarWhereInput | LearnerActivityScalarWhereInput[]
   }
 
+  export type SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SyncCourseProgressCreateWithoutUserInput, SyncCourseProgressUncheckedCreateWithoutUserInput> | SyncCourseProgressCreateWithoutUserInput[] | SyncCourseProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutUserInput | SyncCourseProgressCreateOrConnectWithoutUserInput[]
+    upsert?: SyncCourseProgressUpsertWithWhereUniqueWithoutUserInput | SyncCourseProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SyncCourseProgressCreateManyUserInputEnvelope
+    set?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    disconnect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    delete?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+    update?: SyncCourseProgressUpdateWithWhereUniqueWithoutUserInput | SyncCourseProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SyncCourseProgressUpdateManyWithWhereWithoutUserInput | SyncCourseProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutUserVerificationOTPInput = {
     create?: XOR<UserCreateWithoutUserVerificationOTPInput, UserUncheckedCreateWithoutUserVerificationOTPInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserVerificationOTPInput
@@ -58261,6 +60120,38 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutLearnerActivityInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLearnerActivityInput, UserUpdateWithoutLearnerActivityInput>, UserUncheckedUpdateWithoutLearnerActivityInput>
+  }
+
+  export type UserCreateNestedOneWithoutSyncCourseProgressInput = {
+    create?: XOR<UserCreateWithoutSyncCourseProgressInput, UserUncheckedCreateWithoutSyncCourseProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSyncCourseProgressInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CourseCreateNestedOneWithoutSyncCourseProgressInput = {
+    create?: XOR<CourseCreateWithoutSyncCourseProgressInput, CourseUncheckedCreateWithoutSyncCourseProgressInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutSyncCourseProgressInput
+    connect?: CourseWhereUniqueInput
+  }
+
+  export type EnumSyncCourseStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SyncCourseStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutSyncCourseProgressNestedInput = {
+    create?: XOR<UserCreateWithoutSyncCourseProgressInput, UserUncheckedCreateWithoutSyncCourseProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSyncCourseProgressInput
+    upsert?: UserUpsertWithoutSyncCourseProgressInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSyncCourseProgressInput, UserUpdateWithoutSyncCourseProgressInput>, UserUncheckedUpdateWithoutSyncCourseProgressInput>
+  }
+
+  export type CourseUpdateOneRequiredWithoutSyncCourseProgressNestedInput = {
+    create?: XOR<CourseCreateWithoutSyncCourseProgressInput, CourseUncheckedCreateWithoutSyncCourseProgressInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutSyncCourseProgressInput
+    upsert?: CourseUpsertWithoutSyncCourseProgressInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutSyncCourseProgressInput, CourseUpdateWithoutSyncCourseProgressInput>, CourseUncheckedUpdateWithoutSyncCourseProgressInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -58845,6 +60736,23 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedEnumSyncCourseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SyncCourseStatus | EnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSyncCourseStatusFilter<$PrismaModel> | $Enums.SyncCourseStatus
+  }
+
+  export type NestedEnumSyncCourseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SyncCourseStatus | EnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SyncCourseStatus[] | ListEnumSyncCourseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSyncCourseStatusWithAggregatesFilter<$PrismaModel> | $Enums.SyncCourseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSyncCourseStatusFilter<$PrismaModel>
+    _max?: NestedEnumSyncCourseStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id?: string
     nip?: string | null
@@ -58879,6 +60787,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -58915,6 +60824,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -58967,6 +60877,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -59003,6 +60914,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseSessionCreateWithoutAttendanceInput = {
@@ -59094,6 +61006,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAttendanceInput = {
@@ -59130,6 +61043,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAttendanceInput = {
@@ -59243,6 +61157,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAttendanceInput = {
@@ -59279,6 +61194,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseSessionCreateWithoutAttendanceTokenInput = {
@@ -59475,12 +61391,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCertificateInput = {
@@ -59515,10 +61433,12 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCertificateInput = {
@@ -59560,6 +61480,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCertificateInput = {
@@ -59596,6 +61517,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCertificateInput = {
@@ -59644,12 +61566,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCertificateInput = {
@@ -59684,10 +61608,12 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutCertificateInput = {
@@ -59735,6 +61661,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateInput = {
@@ -59771,6 +61698,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseCreateWithoutCategoryInput = {
@@ -59803,12 +61731,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCategoryInput = {
@@ -59842,11 +61772,13 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCategoryInput = {
@@ -59910,6 +61842,7 @@ export namespace Prisma {
     isProcessing?: BoolFilter<"Course"> | boolean
     processingStatus?: StringNullableFilter<"Course"> | string | null
     lastProcessedAt?: DateTimeNullableFilter<"Course"> | Date | string | null
+    syncConfig?: JsonNullableFilter<"Course">
   }
 
   export type CategoryCreateWithoutCourseInput = {
@@ -60003,6 +61936,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCourseInput = {
@@ -60039,6 +61973,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCourseInput = {
@@ -60194,6 +62129,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SyncCourseProgressCreateWithoutCourseInput = {
+    id?: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    User: UserCreateNestedOneWithoutSyncCourseProgressInput
+  }
+
+  export type SyncCourseProgressUncheckedCreateWithoutCourseInput = {
+    id?: string
+    userId: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SyncCourseProgressCreateOrConnectWithoutCourseInput = {
+    where: SyncCourseProgressWhereUniqueInput
+    create: XOR<SyncCourseProgressCreateWithoutCourseInput, SyncCourseProgressUncheckedCreateWithoutCourseInput>
+  }
+
+  export type SyncCourseProgressCreateManyCourseInputEnvelope = {
+    data: SyncCourseProgressCreateManyCourseInput | SyncCourseProgressCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CategoryUpsertWithoutCourseInput = {
     update: XOR<CategoryUpdateWithoutCourseInput, CategoryUncheckedUpdateWithoutCourseInput>
     create: XOR<CategoryCreateWithoutCourseInput, CategoryUncheckedCreateWithoutCourseInput>
@@ -60302,6 +62279,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCourseInput = {
@@ -60338,6 +62316,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseSessionUpsertWithWhereUniqueWithoutCourseInput = {
@@ -60469,6 +62448,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Module"> | Date | string
   }
 
+  export type SyncCourseProgressUpsertWithWhereUniqueWithoutCourseInput = {
+    where: SyncCourseProgressWhereUniqueInput
+    update: XOR<SyncCourseProgressUpdateWithoutCourseInput, SyncCourseProgressUncheckedUpdateWithoutCourseInput>
+    create: XOR<SyncCourseProgressCreateWithoutCourseInput, SyncCourseProgressUncheckedCreateWithoutCourseInput>
+  }
+
+  export type SyncCourseProgressUpdateWithWhereUniqueWithoutCourseInput = {
+    where: SyncCourseProgressWhereUniqueInput
+    data: XOR<SyncCourseProgressUpdateWithoutCourseInput, SyncCourseProgressUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type SyncCourseProgressUpdateManyWithWhereWithoutCourseInput = {
+    where: SyncCourseProgressScalarWhereInput
+    data: XOR<SyncCourseProgressUpdateManyMutationInput, SyncCourseProgressUncheckedUpdateManyWithoutCourseInput>
+  }
+
+  export type SyncCourseProgressScalarWhereInput = {
+    AND?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
+    OR?: SyncCourseProgressScalarWhereInput[]
+    NOT?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
+    id?: StringFilter<"SyncCourseProgress"> | string
+    userId?: StringFilter<"SyncCourseProgress"> | string
+    courseId?: StringFilter<"SyncCourseProgress"> | string
+    preLearnAccessedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    liveAccessedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    liveWatchDuration?: IntFilter<"SyncCourseProgress"> | number
+    conceptMarkers?: JsonNullableFilter<"SyncCourseProgress">
+    postLearnSubmittedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    assessmentScore?: FloatNullableFilter<"SyncCourseProgress"> | number | null
+    assessmentResponse?: JsonNullableFilter<"SyncCourseProgress">
+    status?: EnumSyncCourseStatusFilter<"SyncCourseProgress"> | $Enums.SyncCourseStatus
+    completedAt?: DateTimeNullableFilter<"SyncCourseProgress"> | Date | string | null
+    createdAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
+    updatedAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
+  }
+
   export type AttendanceCreateWithoutCourseSessionInput = {
     id: string
     status?: $Enums.AttendanceStatus
@@ -60563,12 +62578,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCourseSessionInput = {
@@ -60603,10 +62620,12 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCourseSessionInput = {
@@ -60717,12 +62736,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCourseSessionInput = {
@@ -60757,10 +62778,12 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateWithoutEnrollmentInput = {
@@ -60793,12 +62816,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutEnrollmentInput = {
@@ -60833,10 +62858,12 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutEnrollmentInput = {
@@ -60878,6 +62905,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEnrollmentInput = {
@@ -60914,6 +62942,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEnrollmentInput = {
@@ -60962,12 +62991,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutEnrollmentInput = {
@@ -61002,10 +63033,12 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutEnrollmentInput = {
@@ -61053,6 +63086,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEnrollmentInput = {
@@ -61089,6 +63123,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseCreateWithoutForumInput = {
@@ -61121,12 +63156,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutForumInput = {
@@ -61161,10 +63198,12 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutForumInput = {
@@ -61247,12 +63286,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutForumInput = {
@@ -61287,10 +63328,12 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type ForumPostUpsertWithWhereUniqueWithoutForumInput = {
@@ -61387,6 +63430,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForumCommentInput = {
@@ -61423,6 +63467,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForumCommentInput = {
@@ -61510,6 +63555,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForumCommentInput = {
@@ -61546,6 +63592,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ForumCommentCreateWithoutForumPostInput = {
@@ -61629,6 +63676,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForumPostInput = {
@@ -61665,6 +63713,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForumPostInput = {
@@ -61772,6 +63821,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForumPostInput = {
@@ -61808,6 +63858,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ModuleCreateWithoutLessonInput = {
@@ -62019,12 +64070,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     User: UserCreateNestedOneWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutModuleInput = {
@@ -62059,10 +64112,12 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutModuleInput = {
@@ -62199,12 +64254,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutModuleInput = {
@@ -62239,10 +64296,12 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type QuizUpsertWithWhereUniqueWithoutModuleInput = {
@@ -62315,6 +64374,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationInput = {
@@ -62351,6 +64411,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationInput = {
@@ -62403,6 +64464,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationInput = {
@@ -62439,6 +64501,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LessonCreateWithoutProgressInput = {
@@ -62526,6 +64589,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProgressInput = {
@@ -62562,6 +64626,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProgressInput = {
@@ -62671,6 +64736,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProgressInput = {
@@ -62707,6 +64773,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuizCreateWithoutQuestionInput = {
@@ -63280,6 +65347,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutQuizAttemptInput = {
@@ -63316,6 +65384,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuizAttemptInput = {
@@ -63431,6 +65500,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuizAttemptInput = {
@@ -63467,6 +65537,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -63503,6 +65574,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -63539,6 +65611,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -63591,6 +65664,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -63627,6 +65701,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -63767,12 +65842,14 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryCreateNestedOneWithoutCourseInput
     Certificate?: CertificateCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutUserInput = {
@@ -63806,11 +65883,13 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
     CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutUserInput = {
@@ -64109,6 +66188,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SyncCourseProgressCreateWithoutUserInput = {
+    id?: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Course: CourseCreateNestedOneWithoutSyncCourseProgressInput
+  }
+
+  export type SyncCourseProgressUncheckedCreateWithoutUserInput = {
+    id?: string
+    courseId: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SyncCourseProgressCreateOrConnectWithoutUserInput = {
+    where: SyncCourseProgressWhereUniqueInput
+    create: XOR<SyncCourseProgressCreateWithoutUserInput, SyncCourseProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type SyncCourseProgressCreateManyUserInputEnvelope = {
+    data: SyncCourseProgressCreateManyUserInput | SyncCourseProgressCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -64402,6 +66523,22 @@ export namespace Prisma {
     occurredAt?: DateTimeFilter<"LearnerActivity"> | Date | string
   }
 
+  export type SyncCourseProgressUpsertWithWhereUniqueWithoutUserInput = {
+    where: SyncCourseProgressWhereUniqueInput
+    update: XOR<SyncCourseProgressUpdateWithoutUserInput, SyncCourseProgressUncheckedUpdateWithoutUserInput>
+    create: XOR<SyncCourseProgressCreateWithoutUserInput, SyncCourseProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type SyncCourseProgressUpdateWithWhereUniqueWithoutUserInput = {
+    where: SyncCourseProgressWhereUniqueInput
+    data: XOR<SyncCourseProgressUpdateWithoutUserInput, SyncCourseProgressUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SyncCourseProgressUpdateManyWithWhereWithoutUserInput = {
+    where: SyncCourseProgressScalarWhereInput
+    data: XOR<SyncCourseProgressUpdateManyMutationInput, SyncCourseProgressUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type UserCreateWithoutUserVerificationOTPInput = {
     id?: string
     nip?: string | null
@@ -64436,6 +66573,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserVerificationOTPInput = {
@@ -64472,6 +66610,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserVerificationOTPInput = {
@@ -64524,6 +66663,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserVerificationOTPInput = {
@@ -64560,6 +66700,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type YtCurationCandidateCreateWithoutSessionInput = {
@@ -64792,6 +66933,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBadgeInput = {
@@ -64828,6 +66970,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBadgeInput = {
@@ -64913,6 +67056,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBadgeInput = {
@@ -64949,6 +67093,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutLearnerActivityInput = {
@@ -64985,6 +67130,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLearnerActivityInput = {
@@ -65021,6 +67167,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLearnerActivityInput = {
@@ -65073,6 +67220,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLearnerActivityInput = {
@@ -65109,6 +67257,347 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutSyncCourseProgressInput = {
+    id?: string
+    nip?: string | null
+    email: string
+    name?: string | null
+    password?: string | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    phoneVerified?: Date | string | null
+    unitKerja?: string | null
+    phone?: string | null
+    jabatan?: string | null
+    pangkat?: string | null
+    points?: number
+    level?: number
+    streak?: number
+    lastActiveAt?: Date | string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    Attendance?: AttendanceCreateNestedManyWithoutUserInput
+    Certificate?: CertificateCreateNestedManyWithoutUserInput
+    Course?: CourseCreateNestedManyWithoutUserInput
+    Enrollment?: EnrollmentCreateNestedManyWithoutUserInput
+    ForumComment?: ForumCommentCreateNestedManyWithoutUserInput
+    ForumPost?: ForumPostCreateNestedManyWithoutUserInput
+    Notification?: NotificationCreateNestedManyWithoutUserInput
+    Progress?: ProgressCreateNestedManyWithoutUserInput
+    QuizAttempt?: QuizAttemptCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
+    UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
+    LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSyncCourseProgressInput = {
+    id?: string
+    nip?: string | null
+    email: string
+    name?: string | null
+    password?: string | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    phoneVerified?: Date | string | null
+    unitKerja?: string | null
+    phone?: string | null
+    jabatan?: string | null
+    pangkat?: string | null
+    points?: number
+    level?: number
+    streak?: number
+    lastActiveAt?: Date | string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    Attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    Certificate?: CertificateUncheckedCreateNestedManyWithoutUserInput
+    Course?: CourseUncheckedCreateNestedManyWithoutUserInput
+    Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutUserInput
+    ForumComment?: ForumCommentUncheckedCreateNestedManyWithoutUserInput
+    ForumPost?: ForumPostUncheckedCreateNestedManyWithoutUserInput
+    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    Progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
+    QuizAttempt?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
+    UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
+    LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSyncCourseProgressInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSyncCourseProgressInput, UserUncheckedCreateWithoutSyncCourseProgressInput>
+  }
+
+  export type CourseCreateWithoutSyncCourseProgressInput = {
+    id: string
+    title: string
+    slug: string
+    description: string
+    thumbnail?: string | null
+    deliveryMode?: $Enums.DeliveryMode
+    difficulty?: $Enums.Difficulty
+    category?: string | null
+    tags?: CourseCreatetagsInput | string[]
+    capacity?: number | null
+    duration?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isPublished?: boolean
+    isFeatured?: boolean
+    createdAt?: Date | string
+    updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Category?: CategoryCreateNestedOneWithoutCourseInput
+    Certificate?: CertificateCreateNestedManyWithoutCourseInput
+    User: UserCreateNestedOneWithoutCourseInput
+    CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
+    Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
+    Forum?: ForumCreateNestedManyWithoutCourseInput
+    Module?: ModuleCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseUncheckedCreateWithoutSyncCourseProgressInput = {
+    id: string
+    title: string
+    slug: string
+    description: string
+    thumbnail?: string | null
+    deliveryMode?: $Enums.DeliveryMode
+    difficulty?: $Enums.Difficulty
+    category?: string | null
+    categoryId?: string | null
+    tags?: CourseCreatetagsInput | string[]
+    capacity?: number | null
+    duration?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isPublished?: boolean
+    isFeatured?: boolean
+    instructorId: string
+    createdAt?: Date | string
+    updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
+    CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
+    Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
+    Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
+    Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseCreateOrConnectWithoutSyncCourseProgressInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutSyncCourseProgressInput, CourseUncheckedCreateWithoutSyncCourseProgressInput>
+  }
+
+  export type UserUpsertWithoutSyncCourseProgressInput = {
+    update: XOR<UserUpdateWithoutSyncCourseProgressInput, UserUncheckedUpdateWithoutSyncCourseProgressInput>
+    create: XOR<UserCreateWithoutSyncCourseProgressInput, UserUncheckedCreateWithoutSyncCourseProgressInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSyncCourseProgressInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSyncCourseProgressInput, UserUncheckedUpdateWithoutSyncCourseProgressInput>
+  }
+
+  export type UserUpdateWithoutSyncCourseProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nip?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phoneVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unitKerja?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jabatan?: NullableStringFieldUpdateOperationsInput | string | null
+    pangkat?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    streak?: IntFieldUpdateOperationsInput | number
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    Attendance?: AttendanceUpdateManyWithoutUserNestedInput
+    Certificate?: CertificateUpdateManyWithoutUserNestedInput
+    Course?: CourseUpdateManyWithoutUserNestedInput
+    Enrollment?: EnrollmentUpdateManyWithoutUserNestedInput
+    ForumComment?: ForumCommentUpdateManyWithoutUserNestedInput
+    ForumPost?: ForumPostUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUpdateManyWithoutUserNestedInput
+    Progress?: ProgressUpdateManyWithoutUserNestedInput
+    QuizAttempt?: QuizAttemptUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
+    UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
+    LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSyncCourseProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nip?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phoneVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unitKerja?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jabatan?: NullableStringFieldUpdateOperationsInput | string | null
+    pangkat?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    streak?: IntFieldUpdateOperationsInput | number
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    Attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    Certificate?: CertificateUncheckedUpdateManyWithoutUserNestedInput
+    Course?: CourseUncheckedUpdateManyWithoutUserNestedInput
+    Enrollment?: EnrollmentUncheckedUpdateManyWithoutUserNestedInput
+    ForumComment?: ForumCommentUncheckedUpdateManyWithoutUserNestedInput
+    ForumPost?: ForumPostUncheckedUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    Progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
+    QuizAttempt?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
+    UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
+    LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type CourseUpsertWithoutSyncCourseProgressInput = {
+    update: XOR<CourseUpdateWithoutSyncCourseProgressInput, CourseUncheckedUpdateWithoutSyncCourseProgressInput>
+    create: XOR<CourseCreateWithoutSyncCourseProgressInput, CourseUncheckedCreateWithoutSyncCourseProgressInput>
+    where?: CourseWhereInput
+  }
+
+  export type CourseUpdateToOneWithWhereWithoutSyncCourseProgressInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutSyncCourseProgressInput, CourseUncheckedUpdateWithoutSyncCourseProgressInput>
+  }
+
+  export type CourseUpdateWithoutSyncCourseProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMode?: EnumDeliveryModeFieldUpdateOperationsInput | $Enums.DeliveryMode
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: CourseUpdatetagsInput | string[]
+    capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    isFeatured?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Category?: CategoryUpdateOneWithoutCourseNestedInput
+    Certificate?: CertificateUpdateManyWithoutCourseNestedInput
+    User?: UserUpdateOneRequiredWithoutCourseNestedInput
+    CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
+    Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
+    Forum?: ForumUpdateManyWithoutCourseNestedInput
+    Module?: ModuleUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseUncheckedUpdateWithoutSyncCourseProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMode?: EnumDeliveryModeFieldUpdateOperationsInput | $Enums.DeliveryMode
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: CourseUpdatetagsInput | string[]
+    capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    isFeatured?: BoolFieldUpdateOperationsInput | boolean
+    instructorId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
+    CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
+    Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
+    Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
+    Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserBadgeCreateManyBadgeInput = {
@@ -65166,6 +67655,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CourseUpdateWithoutCategoryInput = {
@@ -65198,12 +67688,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     User?: UserUpdateOneRequiredWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCategoryInput = {
@@ -65237,11 +67729,13 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutCategoryInput = {
@@ -65275,6 +67769,7 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CertificateCreateManyCourseInput = {
@@ -65334,6 +67829,22 @@ export namespace Prisma {
     order: number
     createdAt?: Date | string
     updatedAt: Date | string
+  }
+
+  export type SyncCourseProgressCreateManyCourseInput = {
+    id?: string
+    userId: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CertificateUpdateWithoutCourseInput = {
@@ -65519,6 +68030,54 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SyncCourseProgressUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutSyncCourseProgressNestedInput
+  }
+
+  export type SyncCourseProgressUncheckedUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SyncCourseProgressUncheckedUpdateManyWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66133,6 +68692,7 @@ export namespace Prisma {
     isProcessing?: boolean
     processingStatus?: string | null
     lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type EnrollmentCreateManyUserInput = {
@@ -66224,6 +68784,22 @@ export namespace Prisma {
     entityTitle?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     occurredAt?: Date | string
+  }
+
+  export type SyncCourseProgressCreateManyUserInput = {
+    id?: string
+    courseId: string
+    preLearnAccessedAt?: Date | string | null
+    liveAccessedAt?: Date | string | null
+    liveWatchDuration?: number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: Date | string | null
+    assessmentScore?: number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.SyncCourseStatus
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -66373,12 +68949,14 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Category?: CategoryUpdateOneWithoutCourseNestedInput
     Certificate?: CertificateUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutUserInput = {
@@ -66412,11 +68990,13 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
     Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
     CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutUserInput = {
@@ -66450,6 +69030,7 @@ export namespace Prisma {
     isProcessing?: BoolFieldUpdateOperationsInput | boolean
     processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type EnrollmentUpdateWithoutUserInput = {
@@ -66727,6 +69308,54 @@ export namespace Prisma {
     entityTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SyncCourseProgressUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Course?: CourseUpdateOneRequiredWithoutSyncCourseProgressNestedInput
+  }
+
+  export type SyncCourseProgressUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SyncCourseProgressUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    preLearnAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveAccessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    liveWatchDuration?: IntFieldUpdateOperationsInput | number
+    conceptMarkers?: NullableJsonNullValueInput | InputJsonValue
+    postLearnSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assessmentScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    assessmentResponse?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumSyncCourseStatusFieldUpdateOperationsInput | $Enums.SyncCourseStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type YtCurationCandidateCreateManySessionInput = {
