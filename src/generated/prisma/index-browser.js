@@ -637,6 +637,34 @@ exports.Prisma.SyncCourseProgressScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FeedbackSurveyScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  sessionId: 'sessionId',
+  title: 'title',
+  description: 'description',
+  isActive: 'isActive',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FeedbackResponseScalarFieldEnum = {
+  id: 'id',
+  surveyId: 'surveyId',
+  userId: 'userId',
+  instructorRating: 'instructorRating',
+  materialRating: 'materialRating',
+  facilityRating: 'facilityRating',
+  overallRating: 'overallRating',
+  strengths: 'strengths',
+  improvements: 'improvements',
+  suggestions: 'suggestions',
+  isAnonymous: 'isAnonymous',
+  submittedAt: 'submittedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -814,7 +842,9 @@ exports.Prisma.ModelName = {
   ProcessingJob: 'ProcessingJob',
   XapiOutbox: 'XapiOutbox',
   LearnerActivity: 'LearnerActivity',
-  SyncCourseProgress: 'SyncCourseProgress'
+  SyncCourseProgress: 'SyncCourseProgress',
+  FeedbackSurvey: 'FeedbackSurvey',
+  FeedbackResponse: 'FeedbackResponse'
 };
 
 /**

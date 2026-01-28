@@ -34,7 +34,12 @@ import {
     Loader2,
     ArrowLeft,
     Mail,
-    Key
+    Key,
+    Mic,
+    Wifi,
+    WifiOff,
+    AlertCircle,
+    RefreshCw
 } from "lucide-react"
 import { toast } from "sonner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -76,6 +81,155 @@ const SETTINGS_CONFIG: Record<string, SettingConfig> = {
 }
 
 type SettingKey = keyof typeof SETTINGS_CONFIG
+
+// Integration status types
+interface IntegrationStatus {
+    id: string
+    name: string
+    description: string
+    status: "connected" | "error" | "not_configured" | "checking"
+    message?: string
+}
+
+// Icon mapping for integrations
+const INTEGRATION_ICONS: Record<string, { icon: React.ReactNode; bgColor: string }> = {
+    youtube: { icon: <Youtube className="w-5 h-5 text-red-500" />, bgColor: "bg-red-100 dark:bg-red-950" },
+    ollama: { icon: <Sparkles className="w-5 h-5 text-purple-500" />, bgColor: "bg-purple-100 dark:bg-purple-950" },
+    elevenlabs: { icon: <Mic className="w-5 h-5 text-blue-500" />, bgColor: "bg-blue-100 dark:bg-blue-950" },
+    xapi: { icon: <GraduationCap className="w-5 h-5 text-orange-500" />, bgColor: "bg-orange-100 dark:bg-orange-950" },
+    minio: { icon: <Database className="w-5 h-5 text-cyan-500" />, bgColor: "bg-cyan-100 dark:bg-cyan-950" },
+    n8n: { icon: <Cpu className="w-5 h-5 text-green-500" />, bgColor: "bg-green-100 dark:bg-green-950" },
+    proxy: { icon: <Wifi className="w-5 h-5 text-indigo-500" />, bgColor: "bg-indigo-100 dark:bg-indigo-950" },
+}
+
+// Integration Status Panel Component
+function IntegrationStatusPanel() {
+    const [integrations, setIntegrations] = useState<IntegrationStatus[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [lastChecked, setLastChecked] = useState<string | null>(null)
+
+    async function checkIntegrations() {
+        setIsLoading(true)
+        try {
+            const response = await fetch("/api/integration-status")
+            const data = await response.json()
+            if (data.success) {
+                setIntegrations(data.integrations)
+                setLastChecked(data.checkedAt)
+            }
+        } catch (error) {
+            console.error("Failed to check integrations:", error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        checkIntegrations()
+    }, [])
+
+    const getStatusBadge = (status: IntegrationStatus["status"], message?: string) => {
+        switch (status) {
+            case "connected":
+                return (
+                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-4 h-4" /> Terkoneksi
+                    </span>
+                )
+            case "error":
+                return (
+                    <span className="text-xs text-red-600 dark:text-red-400 font-bold flex items-center gap-1" title={message}>
+                        <WifiOff className="w-4 h-4" /> Error
+                    </span>
+                )
+            case "not_configured":
+                return (
+                    <span className="text-xs text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1" title={message}>
+                        <AlertCircle className="w-4 h-4" /> Belum Dikonfigurasi
+                    </span>
+                )
+            case "checking":
+                return (
+                    <span className="text-xs text-slate-500 font-bold flex items-center gap-1">
+                        <Loader2 className="w-4 h-4 animate-spin" /> Memeriksa...
+                    </span>
+                )
+        }
+    }
+
+    return (
+        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
+            <CardHeader className="border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
+                            <Cpu className="w-5 h-5 text-blue-500" /> Status Integrasi
+                        </CardTitle>
+                        <CardDescription>
+                            Konfigurasi integrasi dikelola melalui file <code className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-mono">.env</code> pada server
+                        </CardDescription>
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={checkIntegrations}
+                        disabled={isLoading}
+                        className="flex items-center gap-2"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+                        Refresh
+                    </Button>
+                </div>
+                {lastChecked && (
+                    <p className="text-xs text-slate-400 mt-2">
+                        Terakhir diperiksa: {new Date(lastChecked).toLocaleString("id-ID")}
+                    </p>
+                )}
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+                {/* Info banner */}
+                <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 mb-6">
+                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                        <strong>ℹ️ Info:</strong> Status integrasi diperiksa secara real-time. Untuk mengubah konfigurasi, edit file <code className="px-1 bg-amber-100 dark:bg-amber-900 rounded">.env</code> dan restart container.
+                    </p>
+                </div>
+
+                {isLoading && integrations.length === 0 ? (
+                    <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                    </div>
+                ) : (
+                    integrations.map((integration) => {
+                        const iconConfig = INTEGRATION_ICONS[integration.id] || {
+                            icon: <Cpu className="w-5 h-5 text-slate-500" />,
+                            bgColor: "bg-slate-100 dark:bg-slate-950"
+                        }
+
+                        return (
+                            <div
+                                key={integration.id}
+                                className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={`p-2 rounded-xl ${iconConfig.bgColor}`}>
+                                        {iconConfig.icon}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">{integration.name}</h4>
+                                        <p className="text-xs text-slate-500">{integration.description}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    {getStatusBadge(integration.status, integration.message)}
+                                </div>
+                            </div>
+                        )
+                    })
+                )}
+            </CardContent>
+        </Card>
+    )
+}
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<any[]>([])
@@ -348,134 +502,9 @@ export default function SettingsPage() {
                     </Card>
                 </TabsContent>
 
-                {/* Integration Tab - Shows ENV status */}
+                {/* Integration Tab - Shows ENV status with real-time checks */}
                 <TabsContent value="integration" className="space-y-6">
-                    <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
-                        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
-                            <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
-                                <Cpu className="w-5 h-5 text-blue-500" /> Status Integrasi
-                            </CardTitle>
-                            <CardDescription>
-                                Konfigurasi integrasi dikelola melalui file <code className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-mono">.env</code> pada server
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-6 space-y-4">
-                            {/* Info banner */}
-                            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 mb-6">
-                                <p className="text-sm text-amber-800 dark:text-amber-200">
-                                    <strong>ℹ️ Info:</strong> Nilai integrasi dibaca dari environment variables. Untuk mengubah, edit file <code className="px-1 bg-amber-100 dark:bg-amber-900 rounded">.env</code> dan restart container.
-                                </p>
-                            </div>
-
-                            {/* YouTube */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-red-100 dark:bg-red-950">
-                                        <Youtube className="w-5 h-5 text-red-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">YouTube API</h4>
-                                        <p className="text-xs text-slate-500">Import playlist dan metadata video</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
-                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Ollama AI */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-950">
-                                        <Sparkles className="w-5 h-5 text-purple-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">Ollama AI (Local LLM)</h4>
-                                        <p className="text-xs text-slate-500">Generate konten dengan model lokal</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
-                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Whisper STT */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-blue-100 dark:bg-blue-950">
-                                        <Database className="w-5 h-5 text-blue-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">Whisper STT</h4>
-                                        <p className="text-xs text-slate-500">Speech-to-text untuk transkrip video</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
-                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* xAPI LRS */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-950">
-                                        <GraduationCap className="w-5 h-5 text-orange-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">xAPI LRS</h4>
-                                        <p className="text-xs text-slate-500">Learning Record Store untuk analytics</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
-                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* MinIO Storage */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-cyan-100 dark:bg-cyan-950">
-                                        <Database className="w-5 h-5 text-cyan-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">MinIO / S3 Storage</h4>
-                                        <p className="text-xs text-slate-500">Object storage untuk file dan media</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
-                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* n8n Webhooks */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-green-100 dark:bg-green-950">
-                                        <Cpu className="w-5 h-5 text-green-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">n8n Automation</h4>
-                                        <p className="text-xs text-slate-500">Workflow automation dan webhooks</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
-                                        <CheckCircle2 className="w-4 h-4" /> Terkonfigurasi
-                                    </span>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <IntegrationStatusPanel />
                 </TabsContent>
 
                 {/* Appearance Tab */}

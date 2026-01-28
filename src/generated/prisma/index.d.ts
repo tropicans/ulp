@@ -194,6 +194,16 @@ export type LearnerActivity = $Result.DefaultSelection<Prisma.$LearnerActivityPa
  * Tracks pre-learning, live session, and post-learning completion
  */
 export type SyncCourseProgress = $Result.DefaultSelection<Prisma.$SyncCourseProgressPayload>
+/**
+ * Model FeedbackSurvey
+ * Feedback Survey for ON_CLASSROOM courses
+ */
+export type FeedbackSurvey = $Result.DefaultSelection<Prisma.$FeedbackSurveyPayload>
+/**
+ * Model FeedbackResponse
+ * Feedback Response from learners
+ */
+export type FeedbackResponse = $Result.DefaultSelection<Prisma.$FeedbackResponsePayload>
 
 /**
  * Enums
@@ -894,6 +904,26 @@ export class PrismaClient<
     * ```
     */
   get syncCourseProgress(): Prisma.SyncCourseProgressDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.feedbackSurvey`: Exposes CRUD operations for the **FeedbackSurvey** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeedbackSurveys
+    * const feedbackSurveys = await prisma.feedbackSurvey.findMany()
+    * ```
+    */
+  get feedbackSurvey(): Prisma.FeedbackSurveyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.feedbackResponse`: Exposes CRUD operations for the **FeedbackResponse** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeedbackResponses
+    * const feedbackResponses = await prisma.feedbackResponse.findMany()
+    * ```
+    */
+  get feedbackResponse(): Prisma.FeedbackResponseDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1370,7 +1400,9 @@ export namespace Prisma {
     ProcessingJob: 'ProcessingJob',
     XapiOutbox: 'XapiOutbox',
     LearnerActivity: 'LearnerActivity',
-    SyncCourseProgress: 'SyncCourseProgress'
+    SyncCourseProgress: 'SyncCourseProgress',
+    FeedbackSurvey: 'FeedbackSurvey',
+    FeedbackResponse: 'FeedbackResponse'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1389,7 +1421,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendance" | "attendanceToken" | "auditLog" | "badge" | "certificate" | "category" | "course" | "courseSession" | "enrollment" | "forum" | "forumComment" | "forumPost" | "lesson" | "module" | "notification" | "progress" | "question" | "questionAnswer" | "quiz" | "quizAttempt" | "session" | "systemSetting" | "user" | "userVerificationOTP" | "ytPlaylist" | "ytPlaylistItem" | "ytUserSettings" | "ytCurationSession" | "ytCurationCandidate" | "userBadge" | "verificationToken" | "processingJob" | "xapiOutbox" | "learnerActivity" | "syncCourseProgress"
+      modelProps: "account" | "attendance" | "attendanceToken" | "auditLog" | "badge" | "certificate" | "category" | "course" | "courseSession" | "enrollment" | "forum" | "forumComment" | "forumPost" | "lesson" | "module" | "notification" | "progress" | "question" | "questionAnswer" | "quiz" | "quizAttempt" | "session" | "systemSetting" | "user" | "userVerificationOTP" | "ytPlaylist" | "ytPlaylistItem" | "ytUserSettings" | "ytCurationSession" | "ytCurationCandidate" | "userBadge" | "verificationToken" | "processingJob" | "xapiOutbox" | "learnerActivity" | "syncCourseProgress" | "feedbackSurvey" | "feedbackResponse"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4057,6 +4089,154 @@ export namespace Prisma {
           }
         }
       }
+      FeedbackSurvey: {
+        payload: Prisma.$FeedbackSurveyPayload<ExtArgs>
+        fields: Prisma.FeedbackSurveyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeedbackSurveyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeedbackSurveyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>
+          }
+          findFirst: {
+            args: Prisma.FeedbackSurveyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeedbackSurveyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>
+          }
+          findMany: {
+            args: Prisma.FeedbackSurveyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>[]
+          }
+          create: {
+            args: Prisma.FeedbackSurveyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>
+          }
+          createMany: {
+            args: Prisma.FeedbackSurveyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeedbackSurveyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>[]
+          }
+          delete: {
+            args: Prisma.FeedbackSurveyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>
+          }
+          update: {
+            args: Prisma.FeedbackSurveyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeedbackSurveyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeedbackSurveyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeedbackSurveyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeedbackSurveyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSurveyPayload>
+          }
+          aggregate: {
+            args: Prisma.FeedbackSurveyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeedbackSurvey>
+          }
+          groupBy: {
+            args: Prisma.FeedbackSurveyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackSurveyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeedbackSurveyCountArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackSurveyCountAggregateOutputType> | number
+          }
+        }
+      }
+      FeedbackResponse: {
+        payload: Prisma.$FeedbackResponsePayload<ExtArgs>
+        fields: Prisma.FeedbackResponseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeedbackResponseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeedbackResponseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>
+          }
+          findFirst: {
+            args: Prisma.FeedbackResponseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeedbackResponseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>
+          }
+          findMany: {
+            args: Prisma.FeedbackResponseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>[]
+          }
+          create: {
+            args: Prisma.FeedbackResponseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>
+          }
+          createMany: {
+            args: Prisma.FeedbackResponseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeedbackResponseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>[]
+          }
+          delete: {
+            args: Prisma.FeedbackResponseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>
+          }
+          update: {
+            args: Prisma.FeedbackResponseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>
+          }
+          deleteMany: {
+            args: Prisma.FeedbackResponseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeedbackResponseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeedbackResponseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>[]
+          }
+          upsert: {
+            args: Prisma.FeedbackResponseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackResponsePayload>
+          }
+          aggregate: {
+            args: Prisma.FeedbackResponseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeedbackResponse>
+          }
+          groupBy: {
+            args: Prisma.FeedbackResponseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackResponseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeedbackResponseCountArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackResponseCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4189,6 +4369,8 @@ export namespace Prisma {
     xapiOutbox?: XapiOutboxOmit
     learnerActivity?: LearnerActivityOmit
     syncCourseProgress?: SyncCourseProgressOmit
+    feedbackSurvey?: FeedbackSurveyOmit
+    feedbackResponse?: FeedbackResponseOmit
   }
 
   /* Types for Logging */
@@ -4337,6 +4519,7 @@ export namespace Prisma {
     Forum: number
     Module: number
     SyncCourseProgress: number
+    FeedbackSurvey: number
   }
 
   export type CourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4346,6 +4529,7 @@ export namespace Prisma {
     Forum?: boolean | CourseCountOutputTypeCountForumArgs
     Module?: boolean | CourseCountOutputTypeCountModuleArgs
     SyncCourseProgress?: boolean | CourseCountOutputTypeCountSyncCourseProgressArgs
+    FeedbackSurvey?: boolean | CourseCountOutputTypeCountFeedbackSurveyArgs
   }
 
   // Custom InputTypes
@@ -4401,6 +4585,13 @@ export namespace Prisma {
     where?: SyncCourseProgressWhereInput
   }
 
+  /**
+   * CourseCountOutputType without action
+   */
+  export type CourseCountOutputTypeCountFeedbackSurveyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackSurveyWhereInput
+  }
+
 
   /**
    * Count Type CourseSessionCountOutputType
@@ -4409,11 +4600,13 @@ export namespace Prisma {
   export type CourseSessionCountOutputType = {
     Attendance: number
     AttendanceToken: number
+    FeedbackSurvey: number
   }
 
   export type CourseSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Attendance?: boolean | CourseSessionCountOutputTypeCountAttendanceArgs
     AttendanceToken?: boolean | CourseSessionCountOutputTypeCountAttendanceTokenArgs
+    FeedbackSurvey?: boolean | CourseSessionCountOutputTypeCountFeedbackSurveyArgs
   }
 
   // Custom InputTypes
@@ -4439,6 +4632,13 @@ export namespace Prisma {
    */
   export type CourseSessionCountOutputTypeCountAttendanceTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AttendanceTokenWhereInput
+  }
+
+  /**
+   * CourseSessionCountOutputType without action
+   */
+  export type CourseSessionCountOutputTypeCountFeedbackSurveyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackSurveyWhereInput
   }
 
 
@@ -4697,6 +4897,7 @@ export namespace Prisma {
     UserVerificationOTP: number
     LearnerActivity: number
     SyncCourseProgress: number
+    FeedbackResponse: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4715,6 +4916,7 @@ export namespace Prisma {
     UserVerificationOTP?: boolean | UserCountOutputTypeCountUserVerificationOTPArgs
     LearnerActivity?: boolean | UserCountOutputTypeCountLearnerActivityArgs
     SyncCourseProgress?: boolean | UserCountOutputTypeCountSyncCourseProgressArgs
+    FeedbackResponse?: boolean | UserCountOutputTypeCountFeedbackResponseArgs
   }
 
   // Custom InputTypes
@@ -4833,6 +5035,13 @@ export namespace Prisma {
     where?: SyncCourseProgressWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeedbackResponseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackResponseWhereInput
+  }
+
 
   /**
    * Count Type YtCurationSessionCountOutputType
@@ -4862,6 +5071,37 @@ export namespace Prisma {
    */
   export type YtCurationSessionCountOutputTypeCountCandidatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: YtCurationCandidateWhereInput
+  }
+
+
+  /**
+   * Count Type FeedbackSurveyCountOutputType
+   */
+
+  export type FeedbackSurveyCountOutputType = {
+    FeedbackResponse: number
+  }
+
+  export type FeedbackSurveyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    FeedbackResponse?: boolean | FeedbackSurveyCountOutputTypeCountFeedbackResponseArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FeedbackSurveyCountOutputType without action
+   */
+  export type FeedbackSurveyCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurveyCountOutputType
+     */
+    select?: FeedbackSurveyCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackSurveyCountOutputType without action
+   */
+  export type FeedbackSurveyCountOutputTypeCountFeedbackResponseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackResponseWhereInput
   }
 
 
@@ -13174,6 +13414,7 @@ export namespace Prisma {
     Forum?: boolean | Course$ForumArgs<ExtArgs>
     Module?: boolean | Course$ModuleArgs<ExtArgs>
     SyncCourseProgress?: boolean | Course$SyncCourseProgressArgs<ExtArgs>
+    FeedbackSurvey?: boolean | Course$FeedbackSurveyArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -13296,6 +13537,7 @@ export namespace Prisma {
     Forum?: boolean | Course$ForumArgs<ExtArgs>
     Module?: boolean | Course$ModuleArgs<ExtArgs>
     SyncCourseProgress?: boolean | Course$SyncCourseProgressArgs<ExtArgs>
+    FeedbackSurvey?: boolean | Course$FeedbackSurveyArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CourseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13318,6 +13560,7 @@ export namespace Prisma {
       Forum: Prisma.$ForumPayload<ExtArgs>[]
       Module: Prisma.$ModulePayload<ExtArgs>[]
       SyncCourseProgress: Prisma.$SyncCourseProgressPayload<ExtArgs>[]
+      FeedbackSurvey: Prisma.$FeedbackSurveyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13754,6 +13997,7 @@ export namespace Prisma {
     Forum<T extends Course$ForumArgs<ExtArgs> = {}>(args?: Subset<T, Course$ForumArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ForumPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Module<T extends Course$ModuleArgs<ExtArgs> = {}>(args?: Subset<T, Course$ModuleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     SyncCourseProgress<T extends Course$SyncCourseProgressArgs<ExtArgs> = {}>(args?: Subset<T, Course$SyncCourseProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FeedbackSurvey<T extends Course$FeedbackSurveyArgs<ExtArgs> = {}>(args?: Subset<T, Course$FeedbackSurveyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14374,6 +14618,30 @@ export namespace Prisma {
   }
 
   /**
+   * Course.FeedbackSurvey
+   */
+  export type Course$FeedbackSurveyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    where?: FeedbackSurveyWhereInput
+    orderBy?: FeedbackSurveyOrderByWithRelationInput | FeedbackSurveyOrderByWithRelationInput[]
+    cursor?: FeedbackSurveyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackSurveyScalarFieldEnum | FeedbackSurveyScalarFieldEnum[]
+  }
+
+  /**
    * Course without action
    */
   export type CourseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14732,6 +15000,7 @@ export namespace Prisma {
     updatedAt?: boolean
     Attendance?: boolean | CourseSession$AttendanceArgs<ExtArgs>
     AttendanceToken?: boolean | CourseSession$AttendanceTokenArgs<ExtArgs>
+    FeedbackSurvey?: boolean | CourseSession$FeedbackSurveyArgs<ExtArgs>
     Course?: boolean | CourseDefaultArgs<ExtArgs>
     _count?: boolean | CourseSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["courseSession"]>
@@ -14814,6 +15083,7 @@ export namespace Prisma {
   export type CourseSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Attendance?: boolean | CourseSession$AttendanceArgs<ExtArgs>
     AttendanceToken?: boolean | CourseSession$AttendanceTokenArgs<ExtArgs>
+    FeedbackSurvey?: boolean | CourseSession$FeedbackSurveyArgs<ExtArgs>
     Course?: boolean | CourseDefaultArgs<ExtArgs>
     _count?: boolean | CourseSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -14829,6 +15099,7 @@ export namespace Prisma {
     objects: {
       Attendance: Prisma.$AttendancePayload<ExtArgs>[]
       AttendanceToken: Prisma.$AttendanceTokenPayload<ExtArgs>[]
+      FeedbackSurvey: Prisma.$FeedbackSurveyPayload<ExtArgs>[]
       Course: Prisma.$CoursePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -15249,6 +15520,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Attendance<T extends CourseSession$AttendanceArgs<ExtArgs> = {}>(args?: Subset<T, CourseSession$AttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     AttendanceToken<T extends CourseSession$AttendanceTokenArgs<ExtArgs> = {}>(args?: Subset<T, CourseSession$AttendanceTokenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FeedbackSurvey<T extends CourseSession$FeedbackSurveyArgs<ExtArgs> = {}>(args?: Subset<T, CourseSession$FeedbackSurveyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -15741,6 +16013,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AttendanceTokenScalarFieldEnum | AttendanceTokenScalarFieldEnum[]
+  }
+
+  /**
+   * CourseSession.FeedbackSurvey
+   */
+  export type CourseSession$FeedbackSurveyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    where?: FeedbackSurveyWhereInput
+    orderBy?: FeedbackSurveyOrderByWithRelationInput | FeedbackSurveyOrderByWithRelationInput[]
+    cursor?: FeedbackSurveyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackSurveyScalarFieldEnum | FeedbackSurveyScalarFieldEnum[]
   }
 
   /**
@@ -32109,6 +32405,7 @@ export namespace Prisma {
     UserVerificationOTP?: boolean | User$UserVerificationOTPArgs<ExtArgs>
     LearnerActivity?: boolean | User$LearnerActivityArgs<ExtArgs>
     SyncCourseProgress?: boolean | User$SyncCourseProgressArgs<ExtArgs>
+    FeedbackResponse?: boolean | User$FeedbackResponseArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -32198,6 +32495,7 @@ export namespace Prisma {
     UserVerificationOTP?: boolean | User$UserVerificationOTPArgs<ExtArgs>
     LearnerActivity?: boolean | User$LearnerActivityArgs<ExtArgs>
     SyncCourseProgress?: boolean | User$SyncCourseProgressArgs<ExtArgs>
+    FeedbackResponse?: boolean | User$FeedbackResponseArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -32221,6 +32519,7 @@ export namespace Prisma {
       UserVerificationOTP: Prisma.$UserVerificationOTPPayload<ExtArgs>[]
       LearnerActivity: Prisma.$LearnerActivityPayload<ExtArgs>[]
       SyncCourseProgress: Prisma.$SyncCourseProgressPayload<ExtArgs>[]
+      FeedbackResponse: Prisma.$FeedbackResponsePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -32652,6 +32951,7 @@ export namespace Prisma {
     UserVerificationOTP<T extends User$UserVerificationOTPArgs<ExtArgs> = {}>(args?: Subset<T, User$UserVerificationOTPArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserVerificationOTPPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     LearnerActivity<T extends User$LearnerActivityArgs<ExtArgs> = {}>(args?: Subset<T, User$LearnerActivityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LearnerActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     SyncCourseProgress<T extends User$SyncCourseProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$SyncCourseProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncCourseProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FeedbackResponse<T extends User$FeedbackResponseArgs<ExtArgs> = {}>(args?: Subset<T, User$FeedbackResponseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -33446,6 +33746,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SyncCourseProgressScalarFieldEnum | SyncCourseProgressScalarFieldEnum[]
+  }
+
+  /**
+   * User.FeedbackResponse
+   */
+  export type User$FeedbackResponseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    where?: FeedbackResponseWhereInput
+    orderBy?: FeedbackResponseOrderByWithRelationInput | FeedbackResponseOrderByWithRelationInput[]
+    cursor?: FeedbackResponseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackResponseScalarFieldEnum | FeedbackResponseScalarFieldEnum[]
   }
 
   /**
@@ -47293,6 +47617,2389 @@ export namespace Prisma {
 
 
   /**
+   * Model FeedbackSurvey
+   */
+
+  export type AggregateFeedbackSurvey = {
+    _count: FeedbackSurveyCountAggregateOutputType | null
+    _min: FeedbackSurveyMinAggregateOutputType | null
+    _max: FeedbackSurveyMaxAggregateOutputType | null
+  }
+
+  export type FeedbackSurveyMinAggregateOutputType = {
+    id: string | null
+    courseId: string | null
+    sessionId: string | null
+    title: string | null
+    description: string | null
+    isActive: boolean | null
+    startsAt: Date | null
+    endsAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FeedbackSurveyMaxAggregateOutputType = {
+    id: string | null
+    courseId: string | null
+    sessionId: string | null
+    title: string | null
+    description: string | null
+    isActive: boolean | null
+    startsAt: Date | null
+    endsAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FeedbackSurveyCountAggregateOutputType = {
+    id: number
+    courseId: number
+    sessionId: number
+    title: number
+    description: number
+    isActive: number
+    startsAt: number
+    endsAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FeedbackSurveyMinAggregateInputType = {
+    id?: true
+    courseId?: true
+    sessionId?: true
+    title?: true
+    description?: true
+    isActive?: true
+    startsAt?: true
+    endsAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FeedbackSurveyMaxAggregateInputType = {
+    id?: true
+    courseId?: true
+    sessionId?: true
+    title?: true
+    description?: true
+    isActive?: true
+    startsAt?: true
+    endsAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FeedbackSurveyCountAggregateInputType = {
+    id?: true
+    courseId?: true
+    sessionId?: true
+    title?: true
+    description?: true
+    isActive?: true
+    startsAt?: true
+    endsAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FeedbackSurveyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackSurvey to aggregate.
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSurveys to fetch.
+     */
+    orderBy?: FeedbackSurveyOrderByWithRelationInput | FeedbackSurveyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeedbackSurveyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSurveys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSurveys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeedbackSurveys
+    **/
+    _count?: true | FeedbackSurveyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeedbackSurveyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeedbackSurveyMaxAggregateInputType
+  }
+
+  export type GetFeedbackSurveyAggregateType<T extends FeedbackSurveyAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeedbackSurvey]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeedbackSurvey[P]>
+      : GetScalarType<T[P], AggregateFeedbackSurvey[P]>
+  }
+
+
+
+
+  export type FeedbackSurveyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackSurveyWhereInput
+    orderBy?: FeedbackSurveyOrderByWithAggregationInput | FeedbackSurveyOrderByWithAggregationInput[]
+    by: FeedbackSurveyScalarFieldEnum[] | FeedbackSurveyScalarFieldEnum
+    having?: FeedbackSurveyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeedbackSurveyCountAggregateInputType | true
+    _min?: FeedbackSurveyMinAggregateInputType
+    _max?: FeedbackSurveyMaxAggregateInputType
+  }
+
+  export type FeedbackSurveyGroupByOutputType = {
+    id: string
+    courseId: string
+    sessionId: string | null
+    title: string
+    description: string | null
+    isActive: boolean
+    startsAt: Date | null
+    endsAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FeedbackSurveyCountAggregateOutputType | null
+    _min: FeedbackSurveyMinAggregateOutputType | null
+    _max: FeedbackSurveyMaxAggregateOutputType | null
+  }
+
+  type GetFeedbackSurveyGroupByPayload<T extends FeedbackSurveyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeedbackSurveyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeedbackSurveyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeedbackSurveyGroupByOutputType[P]>
+            : GetScalarType<T[P], FeedbackSurveyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeedbackSurveySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    sessionId?: boolean
+    title?: boolean
+    description?: boolean
+    isActive?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+    CourseSession?: boolean | FeedbackSurvey$CourseSessionArgs<ExtArgs>
+    FeedbackResponse?: boolean | FeedbackSurvey$FeedbackResponseArgs<ExtArgs>
+    _count?: boolean | FeedbackSurveyCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackSurvey"]>
+
+  export type FeedbackSurveySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    sessionId?: boolean
+    title?: boolean
+    description?: boolean
+    isActive?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+    CourseSession?: boolean | FeedbackSurvey$CourseSessionArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackSurvey"]>
+
+  export type FeedbackSurveySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    sessionId?: boolean
+    title?: boolean
+    description?: boolean
+    isActive?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+    CourseSession?: boolean | FeedbackSurvey$CourseSessionArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackSurvey"]>
+
+  export type FeedbackSurveySelectScalar = {
+    id?: boolean
+    courseId?: boolean
+    sessionId?: boolean
+    title?: boolean
+    description?: boolean
+    isActive?: boolean
+    startsAt?: boolean
+    endsAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FeedbackSurveyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "sessionId" | "title" | "description" | "isActive" | "startsAt" | "endsAt" | "createdAt" | "updatedAt", ExtArgs["result"]["feedbackSurvey"]>
+  export type FeedbackSurveyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+    CourseSession?: boolean | FeedbackSurvey$CourseSessionArgs<ExtArgs>
+    FeedbackResponse?: boolean | FeedbackSurvey$FeedbackResponseArgs<ExtArgs>
+    _count?: boolean | FeedbackSurveyCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FeedbackSurveyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+    CourseSession?: boolean | FeedbackSurvey$CourseSessionArgs<ExtArgs>
+  }
+  export type FeedbackSurveyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Course?: boolean | CourseDefaultArgs<ExtArgs>
+    CourseSession?: boolean | FeedbackSurvey$CourseSessionArgs<ExtArgs>
+  }
+
+  export type $FeedbackSurveyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeedbackSurvey"
+    objects: {
+      Course: Prisma.$CoursePayload<ExtArgs>
+      CourseSession: Prisma.$CourseSessionPayload<ExtArgs> | null
+      FeedbackResponse: Prisma.$FeedbackResponsePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      courseId: string
+      sessionId: string | null
+      title: string
+      description: string | null
+      isActive: boolean
+      startsAt: Date | null
+      endsAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["feedbackSurvey"]>
+    composites: {}
+  }
+
+  type FeedbackSurveyGetPayload<S extends boolean | null | undefined | FeedbackSurveyDefaultArgs> = $Result.GetResult<Prisma.$FeedbackSurveyPayload, S>
+
+  type FeedbackSurveyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeedbackSurveyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeedbackSurveyCountAggregateInputType | true
+    }
+
+  export interface FeedbackSurveyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeedbackSurvey'], meta: { name: 'FeedbackSurvey' } }
+    /**
+     * Find zero or one FeedbackSurvey that matches the filter.
+     * @param {FeedbackSurveyFindUniqueArgs} args - Arguments to find a FeedbackSurvey
+     * @example
+     * // Get one FeedbackSurvey
+     * const feedbackSurvey = await prisma.feedbackSurvey.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeedbackSurveyFindUniqueArgs>(args: SelectSubset<T, FeedbackSurveyFindUniqueArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeedbackSurvey that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeedbackSurveyFindUniqueOrThrowArgs} args - Arguments to find a FeedbackSurvey
+     * @example
+     * // Get one FeedbackSurvey
+     * const feedbackSurvey = await prisma.feedbackSurvey.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeedbackSurveyFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedbackSurveyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackSurvey that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyFindFirstArgs} args - Arguments to find a FeedbackSurvey
+     * @example
+     * // Get one FeedbackSurvey
+     * const feedbackSurvey = await prisma.feedbackSurvey.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeedbackSurveyFindFirstArgs>(args?: SelectSubset<T, FeedbackSurveyFindFirstArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackSurvey that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyFindFirstOrThrowArgs} args - Arguments to find a FeedbackSurvey
+     * @example
+     * // Get one FeedbackSurvey
+     * const feedbackSurvey = await prisma.feedbackSurvey.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeedbackSurveyFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedbackSurveyFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeedbackSurveys that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeedbackSurveys
+     * const feedbackSurveys = await prisma.feedbackSurvey.findMany()
+     * 
+     * // Get first 10 FeedbackSurveys
+     * const feedbackSurveys = await prisma.feedbackSurvey.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feedbackSurveyWithIdOnly = await prisma.feedbackSurvey.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeedbackSurveyFindManyArgs>(args?: SelectSubset<T, FeedbackSurveyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeedbackSurvey.
+     * @param {FeedbackSurveyCreateArgs} args - Arguments to create a FeedbackSurvey.
+     * @example
+     * // Create one FeedbackSurvey
+     * const FeedbackSurvey = await prisma.feedbackSurvey.create({
+     *   data: {
+     *     // ... data to create a FeedbackSurvey
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeedbackSurveyCreateArgs>(args: SelectSubset<T, FeedbackSurveyCreateArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeedbackSurveys.
+     * @param {FeedbackSurveyCreateManyArgs} args - Arguments to create many FeedbackSurveys.
+     * @example
+     * // Create many FeedbackSurveys
+     * const feedbackSurvey = await prisma.feedbackSurvey.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeedbackSurveyCreateManyArgs>(args?: SelectSubset<T, FeedbackSurveyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeedbackSurveys and returns the data saved in the database.
+     * @param {FeedbackSurveyCreateManyAndReturnArgs} args - Arguments to create many FeedbackSurveys.
+     * @example
+     * // Create many FeedbackSurveys
+     * const feedbackSurvey = await prisma.feedbackSurvey.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeedbackSurveys and only return the `id`
+     * const feedbackSurveyWithIdOnly = await prisma.feedbackSurvey.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeedbackSurveyCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedbackSurveyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeedbackSurvey.
+     * @param {FeedbackSurveyDeleteArgs} args - Arguments to delete one FeedbackSurvey.
+     * @example
+     * // Delete one FeedbackSurvey
+     * const FeedbackSurvey = await prisma.feedbackSurvey.delete({
+     *   where: {
+     *     // ... filter to delete one FeedbackSurvey
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeedbackSurveyDeleteArgs>(args: SelectSubset<T, FeedbackSurveyDeleteArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeedbackSurvey.
+     * @param {FeedbackSurveyUpdateArgs} args - Arguments to update one FeedbackSurvey.
+     * @example
+     * // Update one FeedbackSurvey
+     * const feedbackSurvey = await prisma.feedbackSurvey.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeedbackSurveyUpdateArgs>(args: SelectSubset<T, FeedbackSurveyUpdateArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeedbackSurveys.
+     * @param {FeedbackSurveyDeleteManyArgs} args - Arguments to filter FeedbackSurveys to delete.
+     * @example
+     * // Delete a few FeedbackSurveys
+     * const { count } = await prisma.feedbackSurvey.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeedbackSurveyDeleteManyArgs>(args?: SelectSubset<T, FeedbackSurveyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackSurveys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeedbackSurveys
+     * const feedbackSurvey = await prisma.feedbackSurvey.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeedbackSurveyUpdateManyArgs>(args: SelectSubset<T, FeedbackSurveyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackSurveys and returns the data updated in the database.
+     * @param {FeedbackSurveyUpdateManyAndReturnArgs} args - Arguments to update many FeedbackSurveys.
+     * @example
+     * // Update many FeedbackSurveys
+     * const feedbackSurvey = await prisma.feedbackSurvey.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeedbackSurveys and only return the `id`
+     * const feedbackSurveyWithIdOnly = await prisma.feedbackSurvey.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeedbackSurveyUpdateManyAndReturnArgs>(args: SelectSubset<T, FeedbackSurveyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeedbackSurvey.
+     * @param {FeedbackSurveyUpsertArgs} args - Arguments to update or create a FeedbackSurvey.
+     * @example
+     * // Update or create a FeedbackSurvey
+     * const feedbackSurvey = await prisma.feedbackSurvey.upsert({
+     *   create: {
+     *     // ... data to create a FeedbackSurvey
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeedbackSurvey we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeedbackSurveyUpsertArgs>(args: SelectSubset<T, FeedbackSurveyUpsertArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeedbackSurveys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyCountArgs} args - Arguments to filter FeedbackSurveys to count.
+     * @example
+     * // Count the number of FeedbackSurveys
+     * const count = await prisma.feedbackSurvey.count({
+     *   where: {
+     *     // ... the filter for the FeedbackSurveys we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeedbackSurveyCountArgs>(
+      args?: Subset<T, FeedbackSurveyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeedbackSurveyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeedbackSurvey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeedbackSurveyAggregateArgs>(args: Subset<T, FeedbackSurveyAggregateArgs>): Prisma.PrismaPromise<GetFeedbackSurveyAggregateType<T>>
+
+    /**
+     * Group by FeedbackSurvey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSurveyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeedbackSurveyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeedbackSurveyGroupByArgs['orderBy'] }
+        : { orderBy?: FeedbackSurveyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeedbackSurveyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedbackSurveyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeedbackSurvey model
+   */
+  readonly fields: FeedbackSurveyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeedbackSurvey.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeedbackSurveyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    CourseSession<T extends FeedbackSurvey$CourseSessionArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackSurvey$CourseSessionArgs<ExtArgs>>): Prisma__CourseSessionClient<$Result.GetResult<Prisma.$CourseSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    FeedbackResponse<T extends FeedbackSurvey$FeedbackResponseArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackSurvey$FeedbackResponseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeedbackSurvey model
+   */
+  interface FeedbackSurveyFieldRefs {
+    readonly id: FieldRef<"FeedbackSurvey", 'String'>
+    readonly courseId: FieldRef<"FeedbackSurvey", 'String'>
+    readonly sessionId: FieldRef<"FeedbackSurvey", 'String'>
+    readonly title: FieldRef<"FeedbackSurvey", 'String'>
+    readonly description: FieldRef<"FeedbackSurvey", 'String'>
+    readonly isActive: FieldRef<"FeedbackSurvey", 'Boolean'>
+    readonly startsAt: FieldRef<"FeedbackSurvey", 'DateTime'>
+    readonly endsAt: FieldRef<"FeedbackSurvey", 'DateTime'>
+    readonly createdAt: FieldRef<"FeedbackSurvey", 'DateTime'>
+    readonly updatedAt: FieldRef<"FeedbackSurvey", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeedbackSurvey findUnique
+   */
+  export type FeedbackSurveyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSurvey to fetch.
+     */
+    where: FeedbackSurveyWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSurvey findUniqueOrThrow
+   */
+  export type FeedbackSurveyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSurvey to fetch.
+     */
+    where: FeedbackSurveyWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSurvey findFirst
+   */
+  export type FeedbackSurveyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSurvey to fetch.
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSurveys to fetch.
+     */
+    orderBy?: FeedbackSurveyOrderByWithRelationInput | FeedbackSurveyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackSurveys.
+     */
+    cursor?: FeedbackSurveyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSurveys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSurveys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackSurveys.
+     */
+    distinct?: FeedbackSurveyScalarFieldEnum | FeedbackSurveyScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSurvey findFirstOrThrow
+   */
+  export type FeedbackSurveyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSurvey to fetch.
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSurveys to fetch.
+     */
+    orderBy?: FeedbackSurveyOrderByWithRelationInput | FeedbackSurveyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackSurveys.
+     */
+    cursor?: FeedbackSurveyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSurveys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSurveys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackSurveys.
+     */
+    distinct?: FeedbackSurveyScalarFieldEnum | FeedbackSurveyScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSurvey findMany
+   */
+  export type FeedbackSurveyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSurveys to fetch.
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSurveys to fetch.
+     */
+    orderBy?: FeedbackSurveyOrderByWithRelationInput | FeedbackSurveyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeedbackSurveys.
+     */
+    cursor?: FeedbackSurveyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSurveys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSurveys.
+     */
+    skip?: number
+    distinct?: FeedbackSurveyScalarFieldEnum | FeedbackSurveyScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSurvey create
+   */
+  export type FeedbackSurveyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FeedbackSurvey.
+     */
+    data: XOR<FeedbackSurveyCreateInput, FeedbackSurveyUncheckedCreateInput>
+  }
+
+  /**
+   * FeedbackSurvey createMany
+   */
+  export type FeedbackSurveyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeedbackSurveys.
+     */
+    data: FeedbackSurveyCreateManyInput | FeedbackSurveyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackSurvey createManyAndReturn
+   */
+  export type FeedbackSurveyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeedbackSurveys.
+     */
+    data: FeedbackSurveyCreateManyInput | FeedbackSurveyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackSurvey update
+   */
+  export type FeedbackSurveyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FeedbackSurvey.
+     */
+    data: XOR<FeedbackSurveyUpdateInput, FeedbackSurveyUncheckedUpdateInput>
+    /**
+     * Choose, which FeedbackSurvey to update.
+     */
+    where: FeedbackSurveyWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSurvey updateMany
+   */
+  export type FeedbackSurveyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeedbackSurveys.
+     */
+    data: XOR<FeedbackSurveyUpdateManyMutationInput, FeedbackSurveyUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackSurveys to update
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * Limit how many FeedbackSurveys to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackSurvey updateManyAndReturn
+   */
+  export type FeedbackSurveyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * The data used to update FeedbackSurveys.
+     */
+    data: XOR<FeedbackSurveyUpdateManyMutationInput, FeedbackSurveyUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackSurveys to update
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * Limit how many FeedbackSurveys to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackSurvey upsert
+   */
+  export type FeedbackSurveyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FeedbackSurvey to update in case it exists.
+     */
+    where: FeedbackSurveyWhereUniqueInput
+    /**
+     * In case the FeedbackSurvey found by the `where` argument doesn't exist, create a new FeedbackSurvey with this data.
+     */
+    create: XOR<FeedbackSurveyCreateInput, FeedbackSurveyUncheckedCreateInput>
+    /**
+     * In case the FeedbackSurvey was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeedbackSurveyUpdateInput, FeedbackSurveyUncheckedUpdateInput>
+  }
+
+  /**
+   * FeedbackSurvey delete
+   */
+  export type FeedbackSurveyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+    /**
+     * Filter which FeedbackSurvey to delete.
+     */
+    where: FeedbackSurveyWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSurvey deleteMany
+   */
+  export type FeedbackSurveyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackSurveys to delete
+     */
+    where?: FeedbackSurveyWhereInput
+    /**
+     * Limit how many FeedbackSurveys to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackSurvey.CourseSession
+   */
+  export type FeedbackSurvey$CourseSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CourseSession
+     */
+    select?: CourseSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CourseSession
+     */
+    omit?: CourseSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CourseSessionInclude<ExtArgs> | null
+    where?: CourseSessionWhereInput
+  }
+
+  /**
+   * FeedbackSurvey.FeedbackResponse
+   */
+  export type FeedbackSurvey$FeedbackResponseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    where?: FeedbackResponseWhereInput
+    orderBy?: FeedbackResponseOrderByWithRelationInput | FeedbackResponseOrderByWithRelationInput[]
+    cursor?: FeedbackResponseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackResponseScalarFieldEnum | FeedbackResponseScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSurvey without action
+   */
+  export type FeedbackSurveyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSurvey
+     */
+    select?: FeedbackSurveySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSurvey
+     */
+    omit?: FeedbackSurveyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackSurveyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FeedbackResponse
+   */
+
+  export type AggregateFeedbackResponse = {
+    _count: FeedbackResponseCountAggregateOutputType | null
+    _avg: FeedbackResponseAvgAggregateOutputType | null
+    _sum: FeedbackResponseSumAggregateOutputType | null
+    _min: FeedbackResponseMinAggregateOutputType | null
+    _max: FeedbackResponseMaxAggregateOutputType | null
+  }
+
+  export type FeedbackResponseAvgAggregateOutputType = {
+    instructorRating: number | null
+    materialRating: number | null
+    facilityRating: number | null
+    overallRating: number | null
+  }
+
+  export type FeedbackResponseSumAggregateOutputType = {
+    instructorRating: number | null
+    materialRating: number | null
+    facilityRating: number | null
+    overallRating: number | null
+  }
+
+  export type FeedbackResponseMinAggregateOutputType = {
+    id: string | null
+    surveyId: string | null
+    userId: string | null
+    instructorRating: number | null
+    materialRating: number | null
+    facilityRating: number | null
+    overallRating: number | null
+    strengths: string | null
+    improvements: string | null
+    suggestions: string | null
+    isAnonymous: boolean | null
+    submittedAt: Date | null
+  }
+
+  export type FeedbackResponseMaxAggregateOutputType = {
+    id: string | null
+    surveyId: string | null
+    userId: string | null
+    instructorRating: number | null
+    materialRating: number | null
+    facilityRating: number | null
+    overallRating: number | null
+    strengths: string | null
+    improvements: string | null
+    suggestions: string | null
+    isAnonymous: boolean | null
+    submittedAt: Date | null
+  }
+
+  export type FeedbackResponseCountAggregateOutputType = {
+    id: number
+    surveyId: number
+    userId: number
+    instructorRating: number
+    materialRating: number
+    facilityRating: number
+    overallRating: number
+    strengths: number
+    improvements: number
+    suggestions: number
+    isAnonymous: number
+    submittedAt: number
+    _all: number
+  }
+
+
+  export type FeedbackResponseAvgAggregateInputType = {
+    instructorRating?: true
+    materialRating?: true
+    facilityRating?: true
+    overallRating?: true
+  }
+
+  export type FeedbackResponseSumAggregateInputType = {
+    instructorRating?: true
+    materialRating?: true
+    facilityRating?: true
+    overallRating?: true
+  }
+
+  export type FeedbackResponseMinAggregateInputType = {
+    id?: true
+    surveyId?: true
+    userId?: true
+    instructorRating?: true
+    materialRating?: true
+    facilityRating?: true
+    overallRating?: true
+    strengths?: true
+    improvements?: true
+    suggestions?: true
+    isAnonymous?: true
+    submittedAt?: true
+  }
+
+  export type FeedbackResponseMaxAggregateInputType = {
+    id?: true
+    surveyId?: true
+    userId?: true
+    instructorRating?: true
+    materialRating?: true
+    facilityRating?: true
+    overallRating?: true
+    strengths?: true
+    improvements?: true
+    suggestions?: true
+    isAnonymous?: true
+    submittedAt?: true
+  }
+
+  export type FeedbackResponseCountAggregateInputType = {
+    id?: true
+    surveyId?: true
+    userId?: true
+    instructorRating?: true
+    materialRating?: true
+    facilityRating?: true
+    overallRating?: true
+    strengths?: true
+    improvements?: true
+    suggestions?: true
+    isAnonymous?: true
+    submittedAt?: true
+    _all?: true
+  }
+
+  export type FeedbackResponseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackResponse to aggregate.
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackResponses to fetch.
+     */
+    orderBy?: FeedbackResponseOrderByWithRelationInput | FeedbackResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeedbackResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackResponses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeedbackResponses
+    **/
+    _count?: true | FeedbackResponseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FeedbackResponseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FeedbackResponseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeedbackResponseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeedbackResponseMaxAggregateInputType
+  }
+
+  export type GetFeedbackResponseAggregateType<T extends FeedbackResponseAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeedbackResponse]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeedbackResponse[P]>
+      : GetScalarType<T[P], AggregateFeedbackResponse[P]>
+  }
+
+
+
+
+  export type FeedbackResponseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackResponseWhereInput
+    orderBy?: FeedbackResponseOrderByWithAggregationInput | FeedbackResponseOrderByWithAggregationInput[]
+    by: FeedbackResponseScalarFieldEnum[] | FeedbackResponseScalarFieldEnum
+    having?: FeedbackResponseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeedbackResponseCountAggregateInputType | true
+    _avg?: FeedbackResponseAvgAggregateInputType
+    _sum?: FeedbackResponseSumAggregateInputType
+    _min?: FeedbackResponseMinAggregateInputType
+    _max?: FeedbackResponseMaxAggregateInputType
+  }
+
+  export type FeedbackResponseGroupByOutputType = {
+    id: string
+    surveyId: string
+    userId: string
+    instructorRating: number | null
+    materialRating: number | null
+    facilityRating: number | null
+    overallRating: number
+    strengths: string | null
+    improvements: string | null
+    suggestions: string | null
+    isAnonymous: boolean
+    submittedAt: Date
+    _count: FeedbackResponseCountAggregateOutputType | null
+    _avg: FeedbackResponseAvgAggregateOutputType | null
+    _sum: FeedbackResponseSumAggregateOutputType | null
+    _min: FeedbackResponseMinAggregateOutputType | null
+    _max: FeedbackResponseMaxAggregateOutputType | null
+  }
+
+  type GetFeedbackResponseGroupByPayload<T extends FeedbackResponseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeedbackResponseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeedbackResponseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeedbackResponseGroupByOutputType[P]>
+            : GetScalarType<T[P], FeedbackResponseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeedbackResponseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    surveyId?: boolean
+    userId?: boolean
+    instructorRating?: boolean
+    materialRating?: boolean
+    facilityRating?: boolean
+    overallRating?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    suggestions?: boolean
+    isAnonymous?: boolean
+    submittedAt?: boolean
+    Survey?: boolean | FeedbackSurveyDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackResponse"]>
+
+  export type FeedbackResponseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    surveyId?: boolean
+    userId?: boolean
+    instructorRating?: boolean
+    materialRating?: boolean
+    facilityRating?: boolean
+    overallRating?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    suggestions?: boolean
+    isAnonymous?: boolean
+    submittedAt?: boolean
+    Survey?: boolean | FeedbackSurveyDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackResponse"]>
+
+  export type FeedbackResponseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    surveyId?: boolean
+    userId?: boolean
+    instructorRating?: boolean
+    materialRating?: boolean
+    facilityRating?: boolean
+    overallRating?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    suggestions?: boolean
+    isAnonymous?: boolean
+    submittedAt?: boolean
+    Survey?: boolean | FeedbackSurveyDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackResponse"]>
+
+  export type FeedbackResponseSelectScalar = {
+    id?: boolean
+    surveyId?: boolean
+    userId?: boolean
+    instructorRating?: boolean
+    materialRating?: boolean
+    facilityRating?: boolean
+    overallRating?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    suggestions?: boolean
+    isAnonymous?: boolean
+    submittedAt?: boolean
+  }
+
+  export type FeedbackResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "surveyId" | "userId" | "instructorRating" | "materialRating" | "facilityRating" | "overallRating" | "strengths" | "improvements" | "suggestions" | "isAnonymous" | "submittedAt", ExtArgs["result"]["feedbackResponse"]>
+  export type FeedbackResponseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Survey?: boolean | FeedbackSurveyDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FeedbackResponseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Survey?: boolean | FeedbackSurveyDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FeedbackResponseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Survey?: boolean | FeedbackSurveyDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FeedbackResponsePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeedbackResponse"
+    objects: {
+      Survey: Prisma.$FeedbackSurveyPayload<ExtArgs>
+      User: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      surveyId: string
+      userId: string
+      instructorRating: number | null
+      materialRating: number | null
+      facilityRating: number | null
+      overallRating: number
+      strengths: string | null
+      improvements: string | null
+      suggestions: string | null
+      isAnonymous: boolean
+      submittedAt: Date
+    }, ExtArgs["result"]["feedbackResponse"]>
+    composites: {}
+  }
+
+  type FeedbackResponseGetPayload<S extends boolean | null | undefined | FeedbackResponseDefaultArgs> = $Result.GetResult<Prisma.$FeedbackResponsePayload, S>
+
+  type FeedbackResponseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeedbackResponseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeedbackResponseCountAggregateInputType | true
+    }
+
+  export interface FeedbackResponseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeedbackResponse'], meta: { name: 'FeedbackResponse' } }
+    /**
+     * Find zero or one FeedbackResponse that matches the filter.
+     * @param {FeedbackResponseFindUniqueArgs} args - Arguments to find a FeedbackResponse
+     * @example
+     * // Get one FeedbackResponse
+     * const feedbackResponse = await prisma.feedbackResponse.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeedbackResponseFindUniqueArgs>(args: SelectSubset<T, FeedbackResponseFindUniqueArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeedbackResponse that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeedbackResponseFindUniqueOrThrowArgs} args - Arguments to find a FeedbackResponse
+     * @example
+     * // Get one FeedbackResponse
+     * const feedbackResponse = await prisma.feedbackResponse.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeedbackResponseFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedbackResponseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackResponse that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseFindFirstArgs} args - Arguments to find a FeedbackResponse
+     * @example
+     * // Get one FeedbackResponse
+     * const feedbackResponse = await prisma.feedbackResponse.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeedbackResponseFindFirstArgs>(args?: SelectSubset<T, FeedbackResponseFindFirstArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackResponse that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseFindFirstOrThrowArgs} args - Arguments to find a FeedbackResponse
+     * @example
+     * // Get one FeedbackResponse
+     * const feedbackResponse = await prisma.feedbackResponse.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeedbackResponseFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedbackResponseFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeedbackResponses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeedbackResponses
+     * const feedbackResponses = await prisma.feedbackResponse.findMany()
+     * 
+     * // Get first 10 FeedbackResponses
+     * const feedbackResponses = await prisma.feedbackResponse.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feedbackResponseWithIdOnly = await prisma.feedbackResponse.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeedbackResponseFindManyArgs>(args?: SelectSubset<T, FeedbackResponseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeedbackResponse.
+     * @param {FeedbackResponseCreateArgs} args - Arguments to create a FeedbackResponse.
+     * @example
+     * // Create one FeedbackResponse
+     * const FeedbackResponse = await prisma.feedbackResponse.create({
+     *   data: {
+     *     // ... data to create a FeedbackResponse
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeedbackResponseCreateArgs>(args: SelectSubset<T, FeedbackResponseCreateArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeedbackResponses.
+     * @param {FeedbackResponseCreateManyArgs} args - Arguments to create many FeedbackResponses.
+     * @example
+     * // Create many FeedbackResponses
+     * const feedbackResponse = await prisma.feedbackResponse.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeedbackResponseCreateManyArgs>(args?: SelectSubset<T, FeedbackResponseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeedbackResponses and returns the data saved in the database.
+     * @param {FeedbackResponseCreateManyAndReturnArgs} args - Arguments to create many FeedbackResponses.
+     * @example
+     * // Create many FeedbackResponses
+     * const feedbackResponse = await prisma.feedbackResponse.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeedbackResponses and only return the `id`
+     * const feedbackResponseWithIdOnly = await prisma.feedbackResponse.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeedbackResponseCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedbackResponseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeedbackResponse.
+     * @param {FeedbackResponseDeleteArgs} args - Arguments to delete one FeedbackResponse.
+     * @example
+     * // Delete one FeedbackResponse
+     * const FeedbackResponse = await prisma.feedbackResponse.delete({
+     *   where: {
+     *     // ... filter to delete one FeedbackResponse
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeedbackResponseDeleteArgs>(args: SelectSubset<T, FeedbackResponseDeleteArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeedbackResponse.
+     * @param {FeedbackResponseUpdateArgs} args - Arguments to update one FeedbackResponse.
+     * @example
+     * // Update one FeedbackResponse
+     * const feedbackResponse = await prisma.feedbackResponse.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeedbackResponseUpdateArgs>(args: SelectSubset<T, FeedbackResponseUpdateArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeedbackResponses.
+     * @param {FeedbackResponseDeleteManyArgs} args - Arguments to filter FeedbackResponses to delete.
+     * @example
+     * // Delete a few FeedbackResponses
+     * const { count } = await prisma.feedbackResponse.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeedbackResponseDeleteManyArgs>(args?: SelectSubset<T, FeedbackResponseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackResponses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeedbackResponses
+     * const feedbackResponse = await prisma.feedbackResponse.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeedbackResponseUpdateManyArgs>(args: SelectSubset<T, FeedbackResponseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackResponses and returns the data updated in the database.
+     * @param {FeedbackResponseUpdateManyAndReturnArgs} args - Arguments to update many FeedbackResponses.
+     * @example
+     * // Update many FeedbackResponses
+     * const feedbackResponse = await prisma.feedbackResponse.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeedbackResponses and only return the `id`
+     * const feedbackResponseWithIdOnly = await prisma.feedbackResponse.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeedbackResponseUpdateManyAndReturnArgs>(args: SelectSubset<T, FeedbackResponseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeedbackResponse.
+     * @param {FeedbackResponseUpsertArgs} args - Arguments to update or create a FeedbackResponse.
+     * @example
+     * // Update or create a FeedbackResponse
+     * const feedbackResponse = await prisma.feedbackResponse.upsert({
+     *   create: {
+     *     // ... data to create a FeedbackResponse
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeedbackResponse we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeedbackResponseUpsertArgs>(args: SelectSubset<T, FeedbackResponseUpsertArgs<ExtArgs>>): Prisma__FeedbackResponseClient<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeedbackResponses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseCountArgs} args - Arguments to filter FeedbackResponses to count.
+     * @example
+     * // Count the number of FeedbackResponses
+     * const count = await prisma.feedbackResponse.count({
+     *   where: {
+     *     // ... the filter for the FeedbackResponses we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeedbackResponseCountArgs>(
+      args?: Subset<T, FeedbackResponseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeedbackResponseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeedbackResponse.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeedbackResponseAggregateArgs>(args: Subset<T, FeedbackResponseAggregateArgs>): Prisma.PrismaPromise<GetFeedbackResponseAggregateType<T>>
+
+    /**
+     * Group by FeedbackResponse.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackResponseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeedbackResponseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeedbackResponseGroupByArgs['orderBy'] }
+        : { orderBy?: FeedbackResponseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeedbackResponseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedbackResponseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeedbackResponse model
+   */
+  readonly fields: FeedbackResponseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeedbackResponse.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeedbackResponseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Survey<T extends FeedbackSurveyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackSurveyDefaultArgs<ExtArgs>>): Prisma__FeedbackSurveyClient<$Result.GetResult<Prisma.$FeedbackSurveyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeedbackResponse model
+   */
+  interface FeedbackResponseFieldRefs {
+    readonly id: FieldRef<"FeedbackResponse", 'String'>
+    readonly surveyId: FieldRef<"FeedbackResponse", 'String'>
+    readonly userId: FieldRef<"FeedbackResponse", 'String'>
+    readonly instructorRating: FieldRef<"FeedbackResponse", 'Int'>
+    readonly materialRating: FieldRef<"FeedbackResponse", 'Int'>
+    readonly facilityRating: FieldRef<"FeedbackResponse", 'Int'>
+    readonly overallRating: FieldRef<"FeedbackResponse", 'Int'>
+    readonly strengths: FieldRef<"FeedbackResponse", 'String'>
+    readonly improvements: FieldRef<"FeedbackResponse", 'String'>
+    readonly suggestions: FieldRef<"FeedbackResponse", 'String'>
+    readonly isAnonymous: FieldRef<"FeedbackResponse", 'Boolean'>
+    readonly submittedAt: FieldRef<"FeedbackResponse", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeedbackResponse findUnique
+   */
+  export type FeedbackResponseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackResponse to fetch.
+     */
+    where: FeedbackResponseWhereUniqueInput
+  }
+
+  /**
+   * FeedbackResponse findUniqueOrThrow
+   */
+  export type FeedbackResponseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackResponse to fetch.
+     */
+    where: FeedbackResponseWhereUniqueInput
+  }
+
+  /**
+   * FeedbackResponse findFirst
+   */
+  export type FeedbackResponseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackResponse to fetch.
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackResponses to fetch.
+     */
+    orderBy?: FeedbackResponseOrderByWithRelationInput | FeedbackResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackResponses.
+     */
+    cursor?: FeedbackResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackResponses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackResponses.
+     */
+    distinct?: FeedbackResponseScalarFieldEnum | FeedbackResponseScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackResponse findFirstOrThrow
+   */
+  export type FeedbackResponseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackResponse to fetch.
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackResponses to fetch.
+     */
+    orderBy?: FeedbackResponseOrderByWithRelationInput | FeedbackResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackResponses.
+     */
+    cursor?: FeedbackResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackResponses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackResponses.
+     */
+    distinct?: FeedbackResponseScalarFieldEnum | FeedbackResponseScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackResponse findMany
+   */
+  export type FeedbackResponseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackResponses to fetch.
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackResponses to fetch.
+     */
+    orderBy?: FeedbackResponseOrderByWithRelationInput | FeedbackResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeedbackResponses.
+     */
+    cursor?: FeedbackResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackResponses.
+     */
+    skip?: number
+    distinct?: FeedbackResponseScalarFieldEnum | FeedbackResponseScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackResponse create
+   */
+  export type FeedbackResponseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FeedbackResponse.
+     */
+    data: XOR<FeedbackResponseCreateInput, FeedbackResponseUncheckedCreateInput>
+  }
+
+  /**
+   * FeedbackResponse createMany
+   */
+  export type FeedbackResponseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeedbackResponses.
+     */
+    data: FeedbackResponseCreateManyInput | FeedbackResponseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackResponse createManyAndReturn
+   */
+  export type FeedbackResponseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeedbackResponses.
+     */
+    data: FeedbackResponseCreateManyInput | FeedbackResponseCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackResponse update
+   */
+  export type FeedbackResponseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FeedbackResponse.
+     */
+    data: XOR<FeedbackResponseUpdateInput, FeedbackResponseUncheckedUpdateInput>
+    /**
+     * Choose, which FeedbackResponse to update.
+     */
+    where: FeedbackResponseWhereUniqueInput
+  }
+
+  /**
+   * FeedbackResponse updateMany
+   */
+  export type FeedbackResponseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeedbackResponses.
+     */
+    data: XOR<FeedbackResponseUpdateManyMutationInput, FeedbackResponseUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackResponses to update
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * Limit how many FeedbackResponses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackResponse updateManyAndReturn
+   */
+  export type FeedbackResponseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * The data used to update FeedbackResponses.
+     */
+    data: XOR<FeedbackResponseUpdateManyMutationInput, FeedbackResponseUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackResponses to update
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * Limit how many FeedbackResponses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackResponse upsert
+   */
+  export type FeedbackResponseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FeedbackResponse to update in case it exists.
+     */
+    where: FeedbackResponseWhereUniqueInput
+    /**
+     * In case the FeedbackResponse found by the `where` argument doesn't exist, create a new FeedbackResponse with this data.
+     */
+    create: XOR<FeedbackResponseCreateInput, FeedbackResponseUncheckedCreateInput>
+    /**
+     * In case the FeedbackResponse was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeedbackResponseUpdateInput, FeedbackResponseUncheckedUpdateInput>
+  }
+
+  /**
+   * FeedbackResponse delete
+   */
+  export type FeedbackResponseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+    /**
+     * Filter which FeedbackResponse to delete.
+     */
+    where: FeedbackResponseWhereUniqueInput
+  }
+
+  /**
+   * FeedbackResponse deleteMany
+   */
+  export type FeedbackResponseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackResponses to delete
+     */
+    where?: FeedbackResponseWhereInput
+    /**
+     * Limit how many FeedbackResponses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackResponse without action
+   */
+  export type FeedbackResponseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackResponse
+     */
+    select?: FeedbackResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackResponse
+     */
+    omit?: FeedbackResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackResponseInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -47928,6 +50635,40 @@ export namespace Prisma {
   };
 
   export type SyncCourseProgressScalarFieldEnum = (typeof SyncCourseProgressScalarFieldEnum)[keyof typeof SyncCourseProgressScalarFieldEnum]
+
+
+  export const FeedbackSurveyScalarFieldEnum: {
+    id: 'id',
+    courseId: 'courseId',
+    sessionId: 'sessionId',
+    title: 'title',
+    description: 'description',
+    isActive: 'isActive',
+    startsAt: 'startsAt',
+    endsAt: 'endsAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FeedbackSurveyScalarFieldEnum = (typeof FeedbackSurveyScalarFieldEnum)[keyof typeof FeedbackSurveyScalarFieldEnum]
+
+
+  export const FeedbackResponseScalarFieldEnum: {
+    id: 'id',
+    surveyId: 'surveyId',
+    userId: 'userId',
+    instructorRating: 'instructorRating',
+    materialRating: 'materialRating',
+    facilityRating: 'facilityRating',
+    overallRating: 'overallRating',
+    strengths: 'strengths',
+    improvements: 'improvements',
+    suggestions: 'suggestions',
+    isAnonymous: 'isAnonymous',
+    submittedAt: 'submittedAt'
+  };
+
+  export type FeedbackResponseScalarFieldEnum = (typeof FeedbackResponseScalarFieldEnum)[keyof typeof FeedbackResponseScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -48869,6 +51610,7 @@ export namespace Prisma {
     Forum?: ForumListRelationFilter
     Module?: ModuleListRelationFilter
     SyncCourseProgress?: SyncCourseProgressListRelationFilter
+    FeedbackSurvey?: FeedbackSurveyListRelationFilter
   }
 
   export type CourseOrderByWithRelationInput = {
@@ -48912,6 +51654,7 @@ export namespace Prisma {
     Forum?: ForumOrderByRelationAggregateInput
     Module?: ModuleOrderByRelationAggregateInput
     SyncCourseProgress?: SyncCourseProgressOrderByRelationAggregateInput
+    FeedbackSurvey?: FeedbackSurveyOrderByRelationAggregateInput
   }
 
   export type CourseWhereUniqueInput = Prisma.AtLeast<{
@@ -48958,6 +51701,7 @@ export namespace Prisma {
     Forum?: ForumListRelationFilter
     Module?: ModuleListRelationFilter
     SyncCourseProgress?: SyncCourseProgressListRelationFilter
+    FeedbackSurvey?: FeedbackSurveyListRelationFilter
   }, "id" | "slug" | "ytPlaylistId">
 
   export type CourseOrderByWithAggregationInput = {
@@ -49065,6 +51809,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CourseSession"> | Date | string
     Attendance?: AttendanceListRelationFilter
     AttendanceToken?: AttendanceTokenListRelationFilter
+    FeedbackSurvey?: FeedbackSurveyListRelationFilter
     Course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
   }
 
@@ -49092,6 +51837,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     Attendance?: AttendanceOrderByRelationAggregateInput
     AttendanceToken?: AttendanceTokenOrderByRelationAggregateInput
+    FeedbackSurvey?: FeedbackSurveyOrderByRelationAggregateInput
     Course?: CourseOrderByWithRelationInput
   }
 
@@ -49122,6 +51868,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CourseSession"> | Date | string
     Attendance?: AttendanceListRelationFilter
     AttendanceToken?: AttendanceTokenListRelationFilter
+    FeedbackSurvey?: FeedbackSurveyListRelationFilter
     Course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
   }, "id">
 
@@ -50306,6 +53053,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPListRelationFilter
     LearnerActivity?: LearnerActivityListRelationFilter
     SyncCourseProgress?: SyncCourseProgressListRelationFilter
+    FeedbackResponse?: FeedbackResponseListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -50344,6 +53092,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPOrderByRelationAggregateInput
     LearnerActivity?: LearnerActivityOrderByRelationAggregateInput
     SyncCourseProgress?: SyncCourseProgressOrderByRelationAggregateInput
+    FeedbackResponse?: FeedbackResponseOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -50385,6 +53134,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPListRelationFilter
     LearnerActivity?: LearnerActivityListRelationFilter
     SyncCourseProgress?: SyncCourseProgressListRelationFilter
+    FeedbackResponse?: FeedbackResponseListRelationFilter
   }, "id" | "nip" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -51564,6 +54314,188 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SyncCourseProgress"> | Date | string
   }
 
+  export type FeedbackSurveyWhereInput = {
+    AND?: FeedbackSurveyWhereInput | FeedbackSurveyWhereInput[]
+    OR?: FeedbackSurveyWhereInput[]
+    NOT?: FeedbackSurveyWhereInput | FeedbackSurveyWhereInput[]
+    id?: StringFilter<"FeedbackSurvey"> | string
+    courseId?: StringFilter<"FeedbackSurvey"> | string
+    sessionId?: StringNullableFilter<"FeedbackSurvey"> | string | null
+    title?: StringFilter<"FeedbackSurvey"> | string
+    description?: StringNullableFilter<"FeedbackSurvey"> | string | null
+    isActive?: BoolFilter<"FeedbackSurvey"> | boolean
+    startsAt?: DateTimeNullableFilter<"FeedbackSurvey"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"FeedbackSurvey"> | Date | string | null
+    createdAt?: DateTimeFilter<"FeedbackSurvey"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackSurvey"> | Date | string
+    Course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    CourseSession?: XOR<CourseSessionNullableScalarRelationFilter, CourseSessionWhereInput> | null
+    FeedbackResponse?: FeedbackResponseListRelationFilter
+  }
+
+  export type FeedbackSurveyOrderByWithRelationInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    Course?: CourseOrderByWithRelationInput
+    CourseSession?: CourseSessionOrderByWithRelationInput
+    FeedbackResponse?: FeedbackResponseOrderByRelationAggregateInput
+  }
+
+  export type FeedbackSurveyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeedbackSurveyWhereInput | FeedbackSurveyWhereInput[]
+    OR?: FeedbackSurveyWhereInput[]
+    NOT?: FeedbackSurveyWhereInput | FeedbackSurveyWhereInput[]
+    courseId?: StringFilter<"FeedbackSurvey"> | string
+    sessionId?: StringNullableFilter<"FeedbackSurvey"> | string | null
+    title?: StringFilter<"FeedbackSurvey"> | string
+    description?: StringNullableFilter<"FeedbackSurvey"> | string | null
+    isActive?: BoolFilter<"FeedbackSurvey"> | boolean
+    startsAt?: DateTimeNullableFilter<"FeedbackSurvey"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"FeedbackSurvey"> | Date | string | null
+    createdAt?: DateTimeFilter<"FeedbackSurvey"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackSurvey"> | Date | string
+    Course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    CourseSession?: XOR<CourseSessionNullableScalarRelationFilter, CourseSessionWhereInput> | null
+    FeedbackResponse?: FeedbackResponseListRelationFilter
+  }, "id">
+
+  export type FeedbackSurveyOrderByWithAggregationInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    startsAt?: SortOrderInput | SortOrder
+    endsAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FeedbackSurveyCountOrderByAggregateInput
+    _max?: FeedbackSurveyMaxOrderByAggregateInput
+    _min?: FeedbackSurveyMinOrderByAggregateInput
+  }
+
+  export type FeedbackSurveyScalarWhereWithAggregatesInput = {
+    AND?: FeedbackSurveyScalarWhereWithAggregatesInput | FeedbackSurveyScalarWhereWithAggregatesInput[]
+    OR?: FeedbackSurveyScalarWhereWithAggregatesInput[]
+    NOT?: FeedbackSurveyScalarWhereWithAggregatesInput | FeedbackSurveyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeedbackSurvey"> | string
+    courseId?: StringWithAggregatesFilter<"FeedbackSurvey"> | string
+    sessionId?: StringNullableWithAggregatesFilter<"FeedbackSurvey"> | string | null
+    title?: StringWithAggregatesFilter<"FeedbackSurvey"> | string
+    description?: StringNullableWithAggregatesFilter<"FeedbackSurvey"> | string | null
+    isActive?: BoolWithAggregatesFilter<"FeedbackSurvey"> | boolean
+    startsAt?: DateTimeNullableWithAggregatesFilter<"FeedbackSurvey"> | Date | string | null
+    endsAt?: DateTimeNullableWithAggregatesFilter<"FeedbackSurvey"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FeedbackSurvey"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FeedbackSurvey"> | Date | string
+  }
+
+  export type FeedbackResponseWhereInput = {
+    AND?: FeedbackResponseWhereInput | FeedbackResponseWhereInput[]
+    OR?: FeedbackResponseWhereInput[]
+    NOT?: FeedbackResponseWhereInput | FeedbackResponseWhereInput[]
+    id?: StringFilter<"FeedbackResponse"> | string
+    surveyId?: StringFilter<"FeedbackResponse"> | string
+    userId?: StringFilter<"FeedbackResponse"> | string
+    instructorRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    materialRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    facilityRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    overallRating?: IntFilter<"FeedbackResponse"> | number
+    strengths?: StringNullableFilter<"FeedbackResponse"> | string | null
+    improvements?: StringNullableFilter<"FeedbackResponse"> | string | null
+    suggestions?: StringNullableFilter<"FeedbackResponse"> | string | null
+    isAnonymous?: BoolFilter<"FeedbackResponse"> | boolean
+    submittedAt?: DateTimeFilter<"FeedbackResponse"> | Date | string
+    Survey?: XOR<FeedbackSurveyScalarRelationFilter, FeedbackSurveyWhereInput>
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FeedbackResponseOrderByWithRelationInput = {
+    id?: SortOrder
+    surveyId?: SortOrder
+    userId?: SortOrder
+    instructorRating?: SortOrderInput | SortOrder
+    materialRating?: SortOrderInput | SortOrder
+    facilityRating?: SortOrderInput | SortOrder
+    overallRating?: SortOrder
+    strengths?: SortOrderInput | SortOrder
+    improvements?: SortOrderInput | SortOrder
+    suggestions?: SortOrderInput | SortOrder
+    isAnonymous?: SortOrder
+    submittedAt?: SortOrder
+    Survey?: FeedbackSurveyOrderByWithRelationInput
+    User?: UserOrderByWithRelationInput
+  }
+
+  export type FeedbackResponseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    surveyId_userId?: FeedbackResponseSurveyIdUserIdCompoundUniqueInput
+    AND?: FeedbackResponseWhereInput | FeedbackResponseWhereInput[]
+    OR?: FeedbackResponseWhereInput[]
+    NOT?: FeedbackResponseWhereInput | FeedbackResponseWhereInput[]
+    surveyId?: StringFilter<"FeedbackResponse"> | string
+    userId?: StringFilter<"FeedbackResponse"> | string
+    instructorRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    materialRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    facilityRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    overallRating?: IntFilter<"FeedbackResponse"> | number
+    strengths?: StringNullableFilter<"FeedbackResponse"> | string | null
+    improvements?: StringNullableFilter<"FeedbackResponse"> | string | null
+    suggestions?: StringNullableFilter<"FeedbackResponse"> | string | null
+    isAnonymous?: BoolFilter<"FeedbackResponse"> | boolean
+    submittedAt?: DateTimeFilter<"FeedbackResponse"> | Date | string
+    Survey?: XOR<FeedbackSurveyScalarRelationFilter, FeedbackSurveyWhereInput>
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "surveyId_userId">
+
+  export type FeedbackResponseOrderByWithAggregationInput = {
+    id?: SortOrder
+    surveyId?: SortOrder
+    userId?: SortOrder
+    instructorRating?: SortOrderInput | SortOrder
+    materialRating?: SortOrderInput | SortOrder
+    facilityRating?: SortOrderInput | SortOrder
+    overallRating?: SortOrder
+    strengths?: SortOrderInput | SortOrder
+    improvements?: SortOrderInput | SortOrder
+    suggestions?: SortOrderInput | SortOrder
+    isAnonymous?: SortOrder
+    submittedAt?: SortOrder
+    _count?: FeedbackResponseCountOrderByAggregateInput
+    _avg?: FeedbackResponseAvgOrderByAggregateInput
+    _max?: FeedbackResponseMaxOrderByAggregateInput
+    _min?: FeedbackResponseMinOrderByAggregateInput
+    _sum?: FeedbackResponseSumOrderByAggregateInput
+  }
+
+  export type FeedbackResponseScalarWhereWithAggregatesInput = {
+    AND?: FeedbackResponseScalarWhereWithAggregatesInput | FeedbackResponseScalarWhereWithAggregatesInput[]
+    OR?: FeedbackResponseScalarWhereWithAggregatesInput[]
+    NOT?: FeedbackResponseScalarWhereWithAggregatesInput | FeedbackResponseScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeedbackResponse"> | string
+    surveyId?: StringWithAggregatesFilter<"FeedbackResponse"> | string
+    userId?: StringWithAggregatesFilter<"FeedbackResponse"> | string
+    instructorRating?: IntNullableWithAggregatesFilter<"FeedbackResponse"> | number | null
+    materialRating?: IntNullableWithAggregatesFilter<"FeedbackResponse"> | number | null
+    facilityRating?: IntNullableWithAggregatesFilter<"FeedbackResponse"> | number | null
+    overallRating?: IntWithAggregatesFilter<"FeedbackResponse"> | number
+    strengths?: StringNullableWithAggregatesFilter<"FeedbackResponse"> | string | null
+    improvements?: StringNullableWithAggregatesFilter<"FeedbackResponse"> | string | null
+    suggestions?: StringNullableWithAggregatesFilter<"FeedbackResponse"> | string | null
+    isAnonymous?: BoolWithAggregatesFilter<"FeedbackResponse"> | boolean
+    submittedAt?: DateTimeWithAggregatesFilter<"FeedbackResponse"> | Date | string
+  }
+
   export type AccountCreateInput = {
     id?: string
     type: string
@@ -52193,6 +55125,7 @@ export namespace Prisma {
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateInput = {
@@ -52234,6 +55167,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUpdateInput = {
@@ -52275,6 +55209,7 @@ export namespace Prisma {
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateInput = {
@@ -52316,6 +55251,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateManyInput = {
@@ -52444,6 +55380,7 @@ export namespace Prisma {
     updatedAt: Date | string
     Attendance?: AttendanceCreateNestedManyWithoutCourseSessionInput
     AttendanceToken?: AttendanceTokenCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseSessionInput
     Course: CourseCreateNestedOneWithoutCourseSessionInput
   }
 
@@ -52471,6 +55408,7 @@ export namespace Prisma {
     updatedAt: Date | string
     Attendance?: AttendanceUncheckedCreateNestedManyWithoutCourseSessionInput
     AttendanceToken?: AttendanceTokenUncheckedCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseSessionInput
   }
 
   export type CourseSessionUpdateInput = {
@@ -52496,6 +55434,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Attendance?: AttendanceUpdateManyWithoutCourseSessionNestedInput
     AttendanceToken?: AttendanceTokenUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseSessionNestedInput
     Course?: CourseUpdateOneRequiredWithoutCourseSessionNestedInput
   }
 
@@ -52523,6 +55462,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Attendance?: AttendanceUncheckedUpdateManyWithoutCourseSessionNestedInput
     AttendanceToken?: AttendanceTokenUncheckedUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionNestedInput
   }
 
   export type CourseSessionCreateManyInput = {
@@ -53790,6 +56730,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -53828,6 +56769,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -53866,6 +56808,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -53904,6 +56847,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -55281,6 +58225,202 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeedbackSurveyCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Course: CourseCreateNestedOneWithoutFeedbackSurveyInput
+    CourseSession?: CourseSessionCreateNestedOneWithoutFeedbackSurveyInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutSurveyInput
+  }
+
+  export type FeedbackSurveyUncheckedCreateInput = {
+    id?: string
+    courseId: string
+    sessionId?: string | null
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutSurveyInput
+  }
+
+  export type FeedbackSurveyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Course?: CourseUpdateOneRequiredWithoutFeedbackSurveyNestedInput
+    CourseSession?: CourseSessionUpdateOneWithoutFeedbackSurveyNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutSurveyNestedInput
+  }
+
+  export type FeedbackSurveyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutSurveyNestedInput
+  }
+
+  export type FeedbackSurveyCreateManyInput = {
+    id?: string
+    courseId: string
+    sessionId?: string | null
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeedbackSurveyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackSurveyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackResponseCreateInput = {
+    id?: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+    Survey: FeedbackSurveyCreateNestedOneWithoutFeedbackResponseInput
+    User: UserCreateNestedOneWithoutFeedbackResponseInput
+  }
+
+  export type FeedbackResponseUncheckedCreateInput = {
+    id?: string
+    surveyId: string
+    userId: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+  }
+
+  export type FeedbackResponseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Survey?: FeedbackSurveyUpdateOneRequiredWithoutFeedbackResponseNestedInput
+    User?: UserUpdateOneRequiredWithoutFeedbackResponseNestedInput
+  }
+
+  export type FeedbackResponseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackResponseCreateManyInput = {
+    id?: string
+    surveyId: string
+    userId: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+  }
+
+  export type FeedbackResponseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackResponseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -56048,6 +59188,12 @@ export namespace Prisma {
     none?: SyncCourseProgressWhereInput
   }
 
+  export type FeedbackSurveyListRelationFilter = {
+    every?: FeedbackSurveyWhereInput
+    some?: FeedbackSurveyWhereInput
+    none?: FeedbackSurveyWhereInput
+  }
+
   export type CertificateOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -56069,6 +59215,10 @@ export namespace Prisma {
   }
 
   export type SyncCourseProgressOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeedbackSurveyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -57217,6 +60367,12 @@ export namespace Prisma {
     none?: LearnerActivityWhereInput
   }
 
+  export type FeedbackResponseListRelationFilter = {
+    every?: FeedbackResponseWhereInput
+    some?: FeedbackResponseWhereInput
+    none?: FeedbackResponseWhereInput
+  }
+
   export type AccountOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -57234,6 +60390,10 @@ export namespace Prisma {
   }
 
   export type LearnerActivityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeedbackResponseOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -58059,6 +61219,119 @@ export namespace Prisma {
     _max?: NestedEnumSyncCourseStatusFilter<$PrismaModel>
   }
 
+  export type CourseSessionNullableScalarRelationFilter = {
+    is?: CourseSessionWhereInput | null
+    isNot?: CourseSessionWhereInput | null
+  }
+
+  export type FeedbackSurveyCountOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeedbackSurveyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeedbackSurveyMinOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    startsAt?: SortOrder
+    endsAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeedbackSurveyScalarRelationFilter = {
+    is?: FeedbackSurveyWhereInput
+    isNot?: FeedbackSurveyWhereInput
+  }
+
+  export type FeedbackResponseSurveyIdUserIdCompoundUniqueInput = {
+    surveyId: string
+    userId: string
+  }
+
+  export type FeedbackResponseCountOrderByAggregateInput = {
+    id?: SortOrder
+    surveyId?: SortOrder
+    userId?: SortOrder
+    instructorRating?: SortOrder
+    materialRating?: SortOrder
+    facilityRating?: SortOrder
+    overallRating?: SortOrder
+    strengths?: SortOrder
+    improvements?: SortOrder
+    suggestions?: SortOrder
+    isAnonymous?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type FeedbackResponseAvgOrderByAggregateInput = {
+    instructorRating?: SortOrder
+    materialRating?: SortOrder
+    facilityRating?: SortOrder
+    overallRating?: SortOrder
+  }
+
+  export type FeedbackResponseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    surveyId?: SortOrder
+    userId?: SortOrder
+    instructorRating?: SortOrder
+    materialRating?: SortOrder
+    facilityRating?: SortOrder
+    overallRating?: SortOrder
+    strengths?: SortOrder
+    improvements?: SortOrder
+    suggestions?: SortOrder
+    isAnonymous?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type FeedbackResponseMinOrderByAggregateInput = {
+    id?: SortOrder
+    surveyId?: SortOrder
+    userId?: SortOrder
+    instructorRating?: SortOrder
+    materialRating?: SortOrder
+    facilityRating?: SortOrder
+    overallRating?: SortOrder
+    strengths?: SortOrder
+    improvements?: SortOrder
+    suggestions?: SortOrder
+    isAnonymous?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type FeedbackResponseSumOrderByAggregateInput = {
+    instructorRating?: SortOrder
+    materialRating?: SortOrder
+    facilityRating?: SortOrder
+    overallRating?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -58341,6 +61614,13 @@ export namespace Prisma {
     connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
   }
 
+  export type FeedbackSurveyCreateNestedManyWithoutCourseInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseInput, FeedbackSurveyUncheckedCreateWithoutCourseInput> | FeedbackSurveyCreateWithoutCourseInput[] | FeedbackSurveyUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseInput | FeedbackSurveyCreateOrConnectWithoutCourseInput[]
+    createMany?: FeedbackSurveyCreateManyCourseInputEnvelope
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+  }
+
   export type CertificateUncheckedCreateNestedManyWithoutCourseInput = {
     create?: XOR<CertificateCreateWithoutCourseInput, CertificateUncheckedCreateWithoutCourseInput> | CertificateCreateWithoutCourseInput[] | CertificateUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: CertificateCreateOrConnectWithoutCourseInput | CertificateCreateOrConnectWithoutCourseInput[]
@@ -58381,6 +61661,13 @@ export namespace Prisma {
     connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutCourseInput | SyncCourseProgressCreateOrConnectWithoutCourseInput[]
     createMany?: SyncCourseProgressCreateManyCourseInputEnvelope
     connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+  }
+
+  export type FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseInput, FeedbackSurveyUncheckedCreateWithoutCourseInput> | FeedbackSurveyCreateWithoutCourseInput[] | FeedbackSurveyUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseInput | FeedbackSurveyCreateOrConnectWithoutCourseInput[]
+    createMany?: FeedbackSurveyCreateManyCourseInputEnvelope
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
   }
 
   export type EnumDeliveryModeFieldUpdateOperationsInput = {
@@ -58506,6 +61793,20 @@ export namespace Prisma {
     deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
   }
 
+  export type FeedbackSurveyUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseInput, FeedbackSurveyUncheckedCreateWithoutCourseInput> | FeedbackSurveyCreateWithoutCourseInput[] | FeedbackSurveyUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseInput | FeedbackSurveyCreateOrConnectWithoutCourseInput[]
+    upsert?: FeedbackSurveyUpsertWithWhereUniqueWithoutCourseInput | FeedbackSurveyUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: FeedbackSurveyCreateManyCourseInputEnvelope
+    set?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    disconnect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    delete?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    update?: FeedbackSurveyUpdateWithWhereUniqueWithoutCourseInput | FeedbackSurveyUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: FeedbackSurveyUpdateManyWithWhereWithoutCourseInput | FeedbackSurveyUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: FeedbackSurveyScalarWhereInput | FeedbackSurveyScalarWhereInput[]
+  }
+
   export type CertificateUncheckedUpdateManyWithoutCourseNestedInput = {
     create?: XOR<CertificateCreateWithoutCourseInput, CertificateUncheckedCreateWithoutCourseInput> | CertificateCreateWithoutCourseInput[] | CertificateUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: CertificateCreateOrConnectWithoutCourseInput | CertificateCreateOrConnectWithoutCourseInput[]
@@ -58590,6 +61891,20 @@ export namespace Prisma {
     deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
   }
 
+  export type FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseInput, FeedbackSurveyUncheckedCreateWithoutCourseInput> | FeedbackSurveyCreateWithoutCourseInput[] | FeedbackSurveyUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseInput | FeedbackSurveyCreateOrConnectWithoutCourseInput[]
+    upsert?: FeedbackSurveyUpsertWithWhereUniqueWithoutCourseInput | FeedbackSurveyUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: FeedbackSurveyCreateManyCourseInputEnvelope
+    set?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    disconnect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    delete?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    update?: FeedbackSurveyUpdateWithWhereUniqueWithoutCourseInput | FeedbackSurveyUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: FeedbackSurveyUpdateManyWithWhereWithoutCourseInput | FeedbackSurveyUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: FeedbackSurveyScalarWhereInput | FeedbackSurveyScalarWhereInput[]
+  }
+
   export type AttendanceCreateNestedManyWithoutCourseSessionInput = {
     create?: XOR<AttendanceCreateWithoutCourseSessionInput, AttendanceUncheckedCreateWithoutCourseSessionInput> | AttendanceCreateWithoutCourseSessionInput[] | AttendanceUncheckedCreateWithoutCourseSessionInput[]
     connectOrCreate?: AttendanceCreateOrConnectWithoutCourseSessionInput | AttendanceCreateOrConnectWithoutCourseSessionInput[]
@@ -58602,6 +61917,13 @@ export namespace Prisma {
     connectOrCreate?: AttendanceTokenCreateOrConnectWithoutCourseSessionInput | AttendanceTokenCreateOrConnectWithoutCourseSessionInput[]
     createMany?: AttendanceTokenCreateManyCourseSessionInputEnvelope
     connect?: AttendanceTokenWhereUniqueInput | AttendanceTokenWhereUniqueInput[]
+  }
+
+  export type FeedbackSurveyCreateNestedManyWithoutCourseSessionInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseSessionInput, FeedbackSurveyUncheckedCreateWithoutCourseSessionInput> | FeedbackSurveyCreateWithoutCourseSessionInput[] | FeedbackSurveyUncheckedCreateWithoutCourseSessionInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseSessionInput | FeedbackSurveyCreateOrConnectWithoutCourseSessionInput[]
+    createMany?: FeedbackSurveyCreateManyCourseSessionInputEnvelope
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
   }
 
   export type CourseCreateNestedOneWithoutCourseSessionInput = {
@@ -58622,6 +61944,13 @@ export namespace Prisma {
     connectOrCreate?: AttendanceTokenCreateOrConnectWithoutCourseSessionInput | AttendanceTokenCreateOrConnectWithoutCourseSessionInput[]
     createMany?: AttendanceTokenCreateManyCourseSessionInputEnvelope
     connect?: AttendanceTokenWhereUniqueInput | AttendanceTokenWhereUniqueInput[]
+  }
+
+  export type FeedbackSurveyUncheckedCreateNestedManyWithoutCourseSessionInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseSessionInput, FeedbackSurveyUncheckedCreateWithoutCourseSessionInput> | FeedbackSurveyCreateWithoutCourseSessionInput[] | FeedbackSurveyUncheckedCreateWithoutCourseSessionInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseSessionInput | FeedbackSurveyCreateOrConnectWithoutCourseSessionInput[]
+    createMany?: FeedbackSurveyCreateManyCourseSessionInputEnvelope
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
   }
 
   export type EnumSessionTypeFieldUpdateOperationsInput = {
@@ -58654,6 +61983,20 @@ export namespace Prisma {
     update?: AttendanceTokenUpdateWithWhereUniqueWithoutCourseSessionInput | AttendanceTokenUpdateWithWhereUniqueWithoutCourseSessionInput[]
     updateMany?: AttendanceTokenUpdateManyWithWhereWithoutCourseSessionInput | AttendanceTokenUpdateManyWithWhereWithoutCourseSessionInput[]
     deleteMany?: AttendanceTokenScalarWhereInput | AttendanceTokenScalarWhereInput[]
+  }
+
+  export type FeedbackSurveyUpdateManyWithoutCourseSessionNestedInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseSessionInput, FeedbackSurveyUncheckedCreateWithoutCourseSessionInput> | FeedbackSurveyCreateWithoutCourseSessionInput[] | FeedbackSurveyUncheckedCreateWithoutCourseSessionInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseSessionInput | FeedbackSurveyCreateOrConnectWithoutCourseSessionInput[]
+    upsert?: FeedbackSurveyUpsertWithWhereUniqueWithoutCourseSessionInput | FeedbackSurveyUpsertWithWhereUniqueWithoutCourseSessionInput[]
+    createMany?: FeedbackSurveyCreateManyCourseSessionInputEnvelope
+    set?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    disconnect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    delete?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    update?: FeedbackSurveyUpdateWithWhereUniqueWithoutCourseSessionInput | FeedbackSurveyUpdateWithWhereUniqueWithoutCourseSessionInput[]
+    updateMany?: FeedbackSurveyUpdateManyWithWhereWithoutCourseSessionInput | FeedbackSurveyUpdateManyWithWhereWithoutCourseSessionInput[]
+    deleteMany?: FeedbackSurveyScalarWhereInput | FeedbackSurveyScalarWhereInput[]
   }
 
   export type CourseUpdateOneRequiredWithoutCourseSessionNestedInput = {
@@ -58690,6 +62033,20 @@ export namespace Prisma {
     update?: AttendanceTokenUpdateWithWhereUniqueWithoutCourseSessionInput | AttendanceTokenUpdateWithWhereUniqueWithoutCourseSessionInput[]
     updateMany?: AttendanceTokenUpdateManyWithWhereWithoutCourseSessionInput | AttendanceTokenUpdateManyWithWhereWithoutCourseSessionInput[]
     deleteMany?: AttendanceTokenScalarWhereInput | AttendanceTokenScalarWhereInput[]
+  }
+
+  export type FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionNestedInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutCourseSessionInput, FeedbackSurveyUncheckedCreateWithoutCourseSessionInput> | FeedbackSurveyCreateWithoutCourseSessionInput[] | FeedbackSurveyUncheckedCreateWithoutCourseSessionInput[]
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutCourseSessionInput | FeedbackSurveyCreateOrConnectWithoutCourseSessionInput[]
+    upsert?: FeedbackSurveyUpsertWithWhereUniqueWithoutCourseSessionInput | FeedbackSurveyUpsertWithWhereUniqueWithoutCourseSessionInput[]
+    createMany?: FeedbackSurveyCreateManyCourseSessionInputEnvelope
+    set?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    disconnect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    delete?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    connect?: FeedbackSurveyWhereUniqueInput | FeedbackSurveyWhereUniqueInput[]
+    update?: FeedbackSurveyUpdateWithWhereUniqueWithoutCourseSessionInput | FeedbackSurveyUpdateWithWhereUniqueWithoutCourseSessionInput[]
+    updateMany?: FeedbackSurveyUpdateManyWithWhereWithoutCourseSessionInput | FeedbackSurveyUpdateManyWithWhereWithoutCourseSessionInput[]
+    deleteMany?: FeedbackSurveyScalarWhereInput | FeedbackSurveyScalarWhereInput[]
   }
 
   export type CourseCreateNestedOneWithoutEnrollmentInput = {
@@ -59477,6 +62834,13 @@ export namespace Prisma {
     connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
   }
 
+  export type FeedbackResponseCreateNestedManyWithoutUserInput = {
+    create?: XOR<FeedbackResponseCreateWithoutUserInput, FeedbackResponseUncheckedCreateWithoutUserInput> | FeedbackResponseCreateWithoutUserInput[] | FeedbackResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutUserInput | FeedbackResponseCreateOrConnectWithoutUserInput[]
+    createMany?: FeedbackResponseCreateManyUserInputEnvelope
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -59580,6 +62944,13 @@ export namespace Prisma {
     connectOrCreate?: SyncCourseProgressCreateOrConnectWithoutUserInput | SyncCourseProgressCreateOrConnectWithoutUserInput[]
     createMany?: SyncCourseProgressCreateManyUserInputEnvelope
     connect?: SyncCourseProgressWhereUniqueInput | SyncCourseProgressWhereUniqueInput[]
+  }
+
+  export type FeedbackResponseUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FeedbackResponseCreateWithoutUserInput, FeedbackResponseUncheckedCreateWithoutUserInput> | FeedbackResponseCreateWithoutUserInput[] | FeedbackResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutUserInput | FeedbackResponseCreateOrConnectWithoutUserInput[]
+    createMany?: FeedbackResponseCreateManyUserInputEnvelope
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
   }
 
   export type EnumRoleFieldUpdateOperationsInput = {
@@ -59800,6 +63171,20 @@ export namespace Prisma {
     deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
   }
 
+  export type FeedbackResponseUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FeedbackResponseCreateWithoutUserInput, FeedbackResponseUncheckedCreateWithoutUserInput> | FeedbackResponseCreateWithoutUserInput[] | FeedbackResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutUserInput | FeedbackResponseCreateOrConnectWithoutUserInput[]
+    upsert?: FeedbackResponseUpsertWithWhereUniqueWithoutUserInput | FeedbackResponseUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FeedbackResponseCreateManyUserInputEnvelope
+    set?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    disconnect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    delete?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    update?: FeedbackResponseUpdateWithWhereUniqueWithoutUserInput | FeedbackResponseUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FeedbackResponseUpdateManyWithWhereWithoutUserInput | FeedbackResponseUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FeedbackResponseScalarWhereInput | FeedbackResponseScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -60010,6 +63395,20 @@ export namespace Prisma {
     deleteMany?: SyncCourseProgressScalarWhereInput | SyncCourseProgressScalarWhereInput[]
   }
 
+  export type FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FeedbackResponseCreateWithoutUserInput, FeedbackResponseUncheckedCreateWithoutUserInput> | FeedbackResponseCreateWithoutUserInput[] | FeedbackResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutUserInput | FeedbackResponseCreateOrConnectWithoutUserInput[]
+    upsert?: FeedbackResponseUpsertWithWhereUniqueWithoutUserInput | FeedbackResponseUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FeedbackResponseCreateManyUserInputEnvelope
+    set?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    disconnect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    delete?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    update?: FeedbackResponseUpdateWithWhereUniqueWithoutUserInput | FeedbackResponseUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FeedbackResponseUpdateManyWithWhereWithoutUserInput | FeedbackResponseUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FeedbackResponseScalarWhereInput | FeedbackResponseScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutUserVerificationOTPInput = {
     create?: XOR<UserCreateWithoutUserVerificationOTPInput, UserUncheckedCreateWithoutUserVerificationOTPInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserVerificationOTPInput
@@ -60152,6 +63551,106 @@ export namespace Prisma {
     upsert?: CourseUpsertWithoutSyncCourseProgressInput
     connect?: CourseWhereUniqueInput
     update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutSyncCourseProgressInput, CourseUpdateWithoutSyncCourseProgressInput>, CourseUncheckedUpdateWithoutSyncCourseProgressInput>
+  }
+
+  export type CourseCreateNestedOneWithoutFeedbackSurveyInput = {
+    create?: XOR<CourseCreateWithoutFeedbackSurveyInput, CourseUncheckedCreateWithoutFeedbackSurveyInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutFeedbackSurveyInput
+    connect?: CourseWhereUniqueInput
+  }
+
+  export type CourseSessionCreateNestedOneWithoutFeedbackSurveyInput = {
+    create?: XOR<CourseSessionCreateWithoutFeedbackSurveyInput, CourseSessionUncheckedCreateWithoutFeedbackSurveyInput>
+    connectOrCreate?: CourseSessionCreateOrConnectWithoutFeedbackSurveyInput
+    connect?: CourseSessionWhereUniqueInput
+  }
+
+  export type FeedbackResponseCreateNestedManyWithoutSurveyInput = {
+    create?: XOR<FeedbackResponseCreateWithoutSurveyInput, FeedbackResponseUncheckedCreateWithoutSurveyInput> | FeedbackResponseCreateWithoutSurveyInput[] | FeedbackResponseUncheckedCreateWithoutSurveyInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutSurveyInput | FeedbackResponseCreateOrConnectWithoutSurveyInput[]
+    createMany?: FeedbackResponseCreateManySurveyInputEnvelope
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+  }
+
+  export type FeedbackResponseUncheckedCreateNestedManyWithoutSurveyInput = {
+    create?: XOR<FeedbackResponseCreateWithoutSurveyInput, FeedbackResponseUncheckedCreateWithoutSurveyInput> | FeedbackResponseCreateWithoutSurveyInput[] | FeedbackResponseUncheckedCreateWithoutSurveyInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutSurveyInput | FeedbackResponseCreateOrConnectWithoutSurveyInput[]
+    createMany?: FeedbackResponseCreateManySurveyInputEnvelope
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+  }
+
+  export type CourseUpdateOneRequiredWithoutFeedbackSurveyNestedInput = {
+    create?: XOR<CourseCreateWithoutFeedbackSurveyInput, CourseUncheckedCreateWithoutFeedbackSurveyInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutFeedbackSurveyInput
+    upsert?: CourseUpsertWithoutFeedbackSurveyInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutFeedbackSurveyInput, CourseUpdateWithoutFeedbackSurveyInput>, CourseUncheckedUpdateWithoutFeedbackSurveyInput>
+  }
+
+  export type CourseSessionUpdateOneWithoutFeedbackSurveyNestedInput = {
+    create?: XOR<CourseSessionCreateWithoutFeedbackSurveyInput, CourseSessionUncheckedCreateWithoutFeedbackSurveyInput>
+    connectOrCreate?: CourseSessionCreateOrConnectWithoutFeedbackSurveyInput
+    upsert?: CourseSessionUpsertWithoutFeedbackSurveyInput
+    disconnect?: CourseSessionWhereInput | boolean
+    delete?: CourseSessionWhereInput | boolean
+    connect?: CourseSessionWhereUniqueInput
+    update?: XOR<XOR<CourseSessionUpdateToOneWithWhereWithoutFeedbackSurveyInput, CourseSessionUpdateWithoutFeedbackSurveyInput>, CourseSessionUncheckedUpdateWithoutFeedbackSurveyInput>
+  }
+
+  export type FeedbackResponseUpdateManyWithoutSurveyNestedInput = {
+    create?: XOR<FeedbackResponseCreateWithoutSurveyInput, FeedbackResponseUncheckedCreateWithoutSurveyInput> | FeedbackResponseCreateWithoutSurveyInput[] | FeedbackResponseUncheckedCreateWithoutSurveyInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutSurveyInput | FeedbackResponseCreateOrConnectWithoutSurveyInput[]
+    upsert?: FeedbackResponseUpsertWithWhereUniqueWithoutSurveyInput | FeedbackResponseUpsertWithWhereUniqueWithoutSurveyInput[]
+    createMany?: FeedbackResponseCreateManySurveyInputEnvelope
+    set?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    disconnect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    delete?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    update?: FeedbackResponseUpdateWithWhereUniqueWithoutSurveyInput | FeedbackResponseUpdateWithWhereUniqueWithoutSurveyInput[]
+    updateMany?: FeedbackResponseUpdateManyWithWhereWithoutSurveyInput | FeedbackResponseUpdateManyWithWhereWithoutSurveyInput[]
+    deleteMany?: FeedbackResponseScalarWhereInput | FeedbackResponseScalarWhereInput[]
+  }
+
+  export type FeedbackResponseUncheckedUpdateManyWithoutSurveyNestedInput = {
+    create?: XOR<FeedbackResponseCreateWithoutSurveyInput, FeedbackResponseUncheckedCreateWithoutSurveyInput> | FeedbackResponseCreateWithoutSurveyInput[] | FeedbackResponseUncheckedCreateWithoutSurveyInput[]
+    connectOrCreate?: FeedbackResponseCreateOrConnectWithoutSurveyInput | FeedbackResponseCreateOrConnectWithoutSurveyInput[]
+    upsert?: FeedbackResponseUpsertWithWhereUniqueWithoutSurveyInput | FeedbackResponseUpsertWithWhereUniqueWithoutSurveyInput[]
+    createMany?: FeedbackResponseCreateManySurveyInputEnvelope
+    set?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    disconnect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    delete?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    connect?: FeedbackResponseWhereUniqueInput | FeedbackResponseWhereUniqueInput[]
+    update?: FeedbackResponseUpdateWithWhereUniqueWithoutSurveyInput | FeedbackResponseUpdateWithWhereUniqueWithoutSurveyInput[]
+    updateMany?: FeedbackResponseUpdateManyWithWhereWithoutSurveyInput | FeedbackResponseUpdateManyWithWhereWithoutSurveyInput[]
+    deleteMany?: FeedbackResponseScalarWhereInput | FeedbackResponseScalarWhereInput[]
+  }
+
+  export type FeedbackSurveyCreateNestedOneWithoutFeedbackResponseInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutFeedbackResponseInput, FeedbackSurveyUncheckedCreateWithoutFeedbackResponseInput>
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutFeedbackResponseInput
+    connect?: FeedbackSurveyWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFeedbackResponseInput = {
+    create?: XOR<UserCreateWithoutFeedbackResponseInput, UserUncheckedCreateWithoutFeedbackResponseInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedbackResponseInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FeedbackSurveyUpdateOneRequiredWithoutFeedbackResponseNestedInput = {
+    create?: XOR<FeedbackSurveyCreateWithoutFeedbackResponseInput, FeedbackSurveyUncheckedCreateWithoutFeedbackResponseInput>
+    connectOrCreate?: FeedbackSurveyCreateOrConnectWithoutFeedbackResponseInput
+    upsert?: FeedbackSurveyUpsertWithoutFeedbackResponseInput
+    connect?: FeedbackSurveyWhereUniqueInput
+    update?: XOR<XOR<FeedbackSurveyUpdateToOneWithWhereWithoutFeedbackResponseInput, FeedbackSurveyUpdateWithoutFeedbackResponseInput>, FeedbackSurveyUncheckedUpdateWithoutFeedbackResponseInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutFeedbackResponseNestedInput = {
+    create?: XOR<UserCreateWithoutFeedbackResponseInput, UserUncheckedCreateWithoutFeedbackResponseInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedbackResponseInput
+    upsert?: UserUpsertWithoutFeedbackResponseInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedbackResponseInput, UserUpdateWithoutFeedbackResponseInput>, UserUncheckedUpdateWithoutFeedbackResponseInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -60788,6 +64287,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -60825,6 +64325,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -60878,6 +64379,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -60915,6 +64417,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseSessionCreateWithoutAttendanceInput = {
@@ -60939,6 +64442,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     AttendanceToken?: AttendanceTokenCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseSessionInput
     Course: CourseCreateNestedOneWithoutCourseSessionInput
   }
 
@@ -60965,6 +64469,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     AttendanceToken?: AttendanceTokenUncheckedCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseSessionInput
   }
 
   export type CourseSessionCreateOrConnectWithoutAttendanceInput = {
@@ -61007,6 +64512,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAttendanceInput = {
@@ -61044,6 +64550,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAttendanceInput = {
@@ -61084,6 +64591,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     AttendanceToken?: AttendanceTokenUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseSessionNestedInput
     Course?: CourseUpdateOneRequiredWithoutCourseSessionNestedInput
   }
 
@@ -61110,6 +64618,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     AttendanceToken?: AttendanceTokenUncheckedUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionNestedInput
   }
 
   export type UserUpsertWithoutAttendanceInput = {
@@ -61158,6 +64667,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAttendanceInput = {
@@ -61195,6 +64705,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseSessionCreateWithoutAttendanceTokenInput = {
@@ -61219,6 +64730,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     Attendance?: AttendanceCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseSessionInput
     Course: CourseCreateNestedOneWithoutCourseSessionInput
   }
 
@@ -61245,6 +64757,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     Attendance?: AttendanceUncheckedCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseSessionInput
   }
 
   export type CourseSessionCreateOrConnectWithoutAttendanceTokenInput = {
@@ -61285,6 +64798,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Attendance?: AttendanceUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseSessionNestedInput
     Course?: CourseUpdateOneRequiredWithoutCourseSessionNestedInput
   }
 
@@ -61311,6 +64825,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Attendance?: AttendanceUncheckedUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionNestedInput
   }
 
   export type UserBadgeCreateWithoutBadgeInput = {
@@ -61399,6 +64914,7 @@ export namespace Prisma {
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCertificateInput = {
@@ -61439,6 +64955,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCertificateInput = {
@@ -61481,6 +64998,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCertificateInput = {
@@ -61518,6 +65036,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCertificateInput = {
@@ -61574,6 +65093,7 @@ export namespace Prisma {
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCertificateInput = {
@@ -61614,6 +65134,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutCertificateInput = {
@@ -61662,6 +65183,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateInput = {
@@ -61699,6 +65221,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseCreateWithoutCategoryInput = {
@@ -61739,6 +65262,7 @@ export namespace Prisma {
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCategoryInput = {
@@ -61779,6 +65303,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCategoryInput = {
@@ -61937,6 +65462,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCourseInput = {
@@ -61974,6 +65500,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCourseInput = {
@@ -62004,6 +65531,7 @@ export namespace Prisma {
     updatedAt: Date | string
     Attendance?: AttendanceCreateNestedManyWithoutCourseSessionInput
     AttendanceToken?: AttendanceTokenCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseSessionInput
   }
 
   export type CourseSessionUncheckedCreateWithoutCourseInput = {
@@ -62029,6 +65557,7 @@ export namespace Prisma {
     updatedAt: Date | string
     Attendance?: AttendanceUncheckedCreateNestedManyWithoutCourseSessionInput
     AttendanceToken?: AttendanceTokenUncheckedCreateNestedManyWithoutCourseSessionInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseSessionInput
   }
 
   export type CourseSessionCreateOrConnectWithoutCourseInput = {
@@ -62171,6 +65700,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeedbackSurveyCreateWithoutCourseInput = {
+    id?: string
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    CourseSession?: CourseSessionCreateNestedOneWithoutFeedbackSurveyInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutSurveyInput
+  }
+
+  export type FeedbackSurveyUncheckedCreateWithoutCourseInput = {
+    id?: string
+    sessionId?: string | null
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutSurveyInput
+  }
+
+  export type FeedbackSurveyCreateOrConnectWithoutCourseInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    create: XOR<FeedbackSurveyCreateWithoutCourseInput, FeedbackSurveyUncheckedCreateWithoutCourseInput>
+  }
+
+  export type FeedbackSurveyCreateManyCourseInputEnvelope = {
+    data: FeedbackSurveyCreateManyCourseInput | FeedbackSurveyCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CategoryUpsertWithoutCourseInput = {
     update: XOR<CategoryUpdateWithoutCourseInput, CategoryUncheckedUpdateWithoutCourseInput>
     create: XOR<CategoryCreateWithoutCourseInput, CategoryUncheckedCreateWithoutCourseInput>
@@ -62280,6 +65845,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCourseInput = {
@@ -62317,6 +65883,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseSessionUpsertWithWhereUniqueWithoutCourseInput = {
@@ -62484,6 +66051,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"SyncCourseProgress"> | Date | string
   }
 
+  export type FeedbackSurveyUpsertWithWhereUniqueWithoutCourseInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    update: XOR<FeedbackSurveyUpdateWithoutCourseInput, FeedbackSurveyUncheckedUpdateWithoutCourseInput>
+    create: XOR<FeedbackSurveyCreateWithoutCourseInput, FeedbackSurveyUncheckedCreateWithoutCourseInput>
+  }
+
+  export type FeedbackSurveyUpdateWithWhereUniqueWithoutCourseInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    data: XOR<FeedbackSurveyUpdateWithoutCourseInput, FeedbackSurveyUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type FeedbackSurveyUpdateManyWithWhereWithoutCourseInput = {
+    where: FeedbackSurveyScalarWhereInput
+    data: XOR<FeedbackSurveyUpdateManyMutationInput, FeedbackSurveyUncheckedUpdateManyWithoutCourseInput>
+  }
+
+  export type FeedbackSurveyScalarWhereInput = {
+    AND?: FeedbackSurveyScalarWhereInput | FeedbackSurveyScalarWhereInput[]
+    OR?: FeedbackSurveyScalarWhereInput[]
+    NOT?: FeedbackSurveyScalarWhereInput | FeedbackSurveyScalarWhereInput[]
+    id?: StringFilter<"FeedbackSurvey"> | string
+    courseId?: StringFilter<"FeedbackSurvey"> | string
+    sessionId?: StringNullableFilter<"FeedbackSurvey"> | string | null
+    title?: StringFilter<"FeedbackSurvey"> | string
+    description?: StringNullableFilter<"FeedbackSurvey"> | string | null
+    isActive?: BoolFilter<"FeedbackSurvey"> | boolean
+    startsAt?: DateTimeNullableFilter<"FeedbackSurvey"> | Date | string | null
+    endsAt?: DateTimeNullableFilter<"FeedbackSurvey"> | Date | string | null
+    createdAt?: DateTimeFilter<"FeedbackSurvey"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackSurvey"> | Date | string
+  }
+
   export type AttendanceCreateWithoutCourseSessionInput = {
     id: string
     status?: $Enums.AttendanceStatus
@@ -62548,6 +66147,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeedbackSurveyCreateWithoutCourseSessionInput = {
+    id?: string
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Course: CourseCreateNestedOneWithoutFeedbackSurveyInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutSurveyInput
+  }
+
+  export type FeedbackSurveyUncheckedCreateWithoutCourseSessionInput = {
+    id?: string
+    courseId: string
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutSurveyInput
+  }
+
+  export type FeedbackSurveyCreateOrConnectWithoutCourseSessionInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    create: XOR<FeedbackSurveyCreateWithoutCourseSessionInput, FeedbackSurveyUncheckedCreateWithoutCourseSessionInput>
+  }
+
+  export type FeedbackSurveyCreateManyCourseSessionInputEnvelope = {
+    data: FeedbackSurveyCreateManyCourseSessionInput | FeedbackSurveyCreateManyCourseSessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseCreateWithoutCourseSessionInput = {
     id: string
     title: string
@@ -62586,6 +66221,7 @@ export namespace Prisma {
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCourseSessionInput = {
@@ -62626,6 +66262,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCourseSessionInput = {
@@ -62695,6 +66332,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AttendanceToken"> | Date | string
   }
 
+  export type FeedbackSurveyUpsertWithWhereUniqueWithoutCourseSessionInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    update: XOR<FeedbackSurveyUpdateWithoutCourseSessionInput, FeedbackSurveyUncheckedUpdateWithoutCourseSessionInput>
+    create: XOR<FeedbackSurveyCreateWithoutCourseSessionInput, FeedbackSurveyUncheckedCreateWithoutCourseSessionInput>
+  }
+
+  export type FeedbackSurveyUpdateWithWhereUniqueWithoutCourseSessionInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    data: XOR<FeedbackSurveyUpdateWithoutCourseSessionInput, FeedbackSurveyUncheckedUpdateWithoutCourseSessionInput>
+  }
+
+  export type FeedbackSurveyUpdateManyWithWhereWithoutCourseSessionInput = {
+    where: FeedbackSurveyScalarWhereInput
+    data: XOR<FeedbackSurveyUpdateManyMutationInput, FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionInput>
+  }
+
   export type CourseUpsertWithoutCourseSessionInput = {
     update: XOR<CourseUpdateWithoutCourseSessionInput, CourseUncheckedUpdateWithoutCourseSessionInput>
     create: XOR<CourseCreateWithoutCourseSessionInput, CourseUncheckedCreateWithoutCourseSessionInput>
@@ -62744,6 +66397,7 @@ export namespace Prisma {
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCourseSessionInput = {
@@ -62784,6 +66438,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateWithoutEnrollmentInput = {
@@ -62824,6 +66479,7 @@ export namespace Prisma {
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutEnrollmentInput = {
@@ -62864,6 +66520,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutEnrollmentInput = {
@@ -62906,6 +66563,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEnrollmentInput = {
@@ -62943,6 +66601,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEnrollmentInput = {
@@ -62999,6 +66658,7 @@ export namespace Prisma {
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutEnrollmentInput = {
@@ -63039,6 +66699,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutEnrollmentInput = {
@@ -63087,6 +66748,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEnrollmentInput = {
@@ -63124,6 +66786,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseCreateWithoutForumInput = {
@@ -63164,6 +66827,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutForumInput = {
@@ -63204,6 +66868,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutForumInput = {
@@ -63294,6 +66959,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutForumInput = {
@@ -63334,6 +67000,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type ForumPostUpsertWithWhereUniqueWithoutForumInput = {
@@ -63431,6 +67098,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForumCommentInput = {
@@ -63468,6 +67136,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForumCommentInput = {
@@ -63556,6 +67225,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForumCommentInput = {
@@ -63593,6 +67263,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ForumCommentCreateWithoutForumPostInput = {
@@ -63677,6 +67348,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForumPostInput = {
@@ -63714,6 +67386,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForumPostInput = {
@@ -63822,6 +67495,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForumPostInput = {
@@ -63859,6 +67533,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ModuleCreateWithoutLessonInput = {
@@ -64078,6 +67753,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutModuleInput = {
@@ -64118,6 +67794,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutModuleInput = {
@@ -64262,6 +67939,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutModuleInput = {
@@ -64302,6 +67980,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type QuizUpsertWithWhereUniqueWithoutModuleInput = {
@@ -64375,6 +68054,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationInput = {
@@ -64412,6 +68092,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationInput = {
@@ -64465,6 +68146,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationInput = {
@@ -64502,6 +68184,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LessonCreateWithoutProgressInput = {
@@ -64590,6 +68273,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProgressInput = {
@@ -64627,6 +68311,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProgressInput = {
@@ -64737,6 +68422,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProgressInput = {
@@ -64774,6 +68460,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuizCreateWithoutQuestionInput = {
@@ -65348,6 +69035,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutQuizAttemptInput = {
@@ -65385,6 +69073,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuizAttemptInput = {
@@ -65501,6 +69190,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuizAttemptInput = {
@@ -65538,6 +69228,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -65575,6 +69266,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -65612,6 +69304,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -65665,6 +69358,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -65702,6 +69396,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -65850,6 +69545,7 @@ export namespace Prisma {
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutUserInput = {
@@ -65890,6 +69586,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutUserInput = {
@@ -66230,6 +69927,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeedbackResponseCreateWithoutUserInput = {
+    id?: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+    Survey: FeedbackSurveyCreateNestedOneWithoutFeedbackResponseInput
+  }
+
+  export type FeedbackResponseUncheckedCreateWithoutUserInput = {
+    id?: string
+    surveyId: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+  }
+
+  export type FeedbackResponseCreateOrConnectWithoutUserInput = {
+    where: FeedbackResponseWhereUniqueInput
+    create: XOR<FeedbackResponseCreateWithoutUserInput, FeedbackResponseUncheckedCreateWithoutUserInput>
+  }
+
+  export type FeedbackResponseCreateManyUserInputEnvelope = {
+    data: FeedbackResponseCreateManyUserInput | FeedbackResponseCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -66539,6 +70274,40 @@ export namespace Prisma {
     data: XOR<SyncCourseProgressUpdateManyMutationInput, SyncCourseProgressUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type FeedbackResponseUpsertWithWhereUniqueWithoutUserInput = {
+    where: FeedbackResponseWhereUniqueInput
+    update: XOR<FeedbackResponseUpdateWithoutUserInput, FeedbackResponseUncheckedUpdateWithoutUserInput>
+    create: XOR<FeedbackResponseCreateWithoutUserInput, FeedbackResponseUncheckedCreateWithoutUserInput>
+  }
+
+  export type FeedbackResponseUpdateWithWhereUniqueWithoutUserInput = {
+    where: FeedbackResponseWhereUniqueInput
+    data: XOR<FeedbackResponseUpdateWithoutUserInput, FeedbackResponseUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FeedbackResponseUpdateManyWithWhereWithoutUserInput = {
+    where: FeedbackResponseScalarWhereInput
+    data: XOR<FeedbackResponseUpdateManyMutationInput, FeedbackResponseUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FeedbackResponseScalarWhereInput = {
+    AND?: FeedbackResponseScalarWhereInput | FeedbackResponseScalarWhereInput[]
+    OR?: FeedbackResponseScalarWhereInput[]
+    NOT?: FeedbackResponseScalarWhereInput | FeedbackResponseScalarWhereInput[]
+    id?: StringFilter<"FeedbackResponse"> | string
+    surveyId?: StringFilter<"FeedbackResponse"> | string
+    userId?: StringFilter<"FeedbackResponse"> | string
+    instructorRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    materialRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    facilityRating?: IntNullableFilter<"FeedbackResponse"> | number | null
+    overallRating?: IntFilter<"FeedbackResponse"> | number
+    strengths?: StringNullableFilter<"FeedbackResponse"> | string | null
+    improvements?: StringNullableFilter<"FeedbackResponse"> | string | null
+    suggestions?: StringNullableFilter<"FeedbackResponse"> | string | null
+    isAnonymous?: BoolFilter<"FeedbackResponse"> | boolean
+    submittedAt?: DateTimeFilter<"FeedbackResponse"> | Date | string
+  }
+
   export type UserCreateWithoutUserVerificationOTPInput = {
     id?: string
     nip?: string | null
@@ -66574,6 +70343,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserVerificationOTPInput = {
@@ -66611,6 +70381,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserVerificationOTPInput = {
@@ -66664,6 +70435,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserVerificationOTPInput = {
@@ -66701,6 +70473,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type YtCurationCandidateCreateWithoutSessionInput = {
@@ -66934,6 +70707,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBadgeInput = {
@@ -66971,6 +70745,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBadgeInput = {
@@ -67057,6 +70832,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBadgeInput = {
@@ -67094,6 +70870,7 @@ export namespace Prisma {
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutLearnerActivityInput = {
@@ -67131,6 +70908,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLearnerActivityInput = {
@@ -67168,6 +70946,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLearnerActivityInput = {
@@ -67221,6 +71000,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLearnerActivityInput = {
@@ -67258,6 +71038,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSyncCourseProgressInput = {
@@ -67295,6 +71076,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSyncCourseProgressInput = {
@@ -67332,6 +71114,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
     UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
     LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    FeedbackResponse?: FeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSyncCourseProgressInput = {
@@ -67377,6 +71160,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
     Forum?: ForumCreateNestedManyWithoutCourseInput
     Module?: ModuleCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSyncCourseProgressInput = {
@@ -67417,6 +71201,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
     Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
     Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSyncCourseProgressInput = {
@@ -67470,6 +71255,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSyncCourseProgressInput = {
@@ -67507,6 +71293,7 @@ export namespace Prisma {
     UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
     UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
     LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseUpsertWithoutSyncCourseProgressInput = {
@@ -67558,6 +71345,7 @@ export namespace Prisma {
     Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSyncCourseProgressInput = {
@@ -67598,6 +71386,597 @@ export namespace Prisma {
     Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseCreateWithoutFeedbackSurveyInput = {
+    id: string
+    title: string
+    slug: string
+    description: string
+    thumbnail?: string | null
+    deliveryMode?: $Enums.DeliveryMode
+    difficulty?: $Enums.Difficulty
+    category?: string | null
+    tags?: CourseCreatetagsInput | string[]
+    capacity?: number | null
+    duration?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isPublished?: boolean
+    isFeatured?: boolean
+    createdAt?: Date | string
+    updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Category?: CategoryCreateNestedOneWithoutCourseInput
+    Certificate?: CertificateCreateNestedManyWithoutCourseInput
+    User: UserCreateNestedOneWithoutCourseInput
+    CourseSession?: CourseSessionCreateNestedManyWithoutCourseInput
+    Enrollment?: EnrollmentCreateNestedManyWithoutCourseInput
+    Forum?: ForumCreateNestedManyWithoutCourseInput
+    Module?: ModuleCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseUncheckedCreateWithoutFeedbackSurveyInput = {
+    id: string
+    title: string
+    slug: string
+    description: string
+    thumbnail?: string | null
+    deliveryMode?: $Enums.DeliveryMode
+    difficulty?: $Enums.Difficulty
+    category?: string | null
+    categoryId?: string | null
+    tags?: CourseCreatetagsInput | string[]
+    capacity?: number | null
+    duration?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isPublished?: boolean
+    isFeatured?: boolean
+    instructorId: string
+    createdAt?: Date | string
+    updatedAt: Date | string
+    courseShortDesc?: string | null
+    courseDesc?: string | null
+    courseLevel?: string | null
+    language?: string | null
+    requirements?: string | null
+    outcomes?: string | null
+    recommendedNext?: string | null
+    jp?: Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: string | null
+    isProcessing?: boolean
+    processingStatus?: string | null
+    lastProcessedAt?: Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Certificate?: CertificateUncheckedCreateNestedManyWithoutCourseInput
+    CourseSession?: CourseSessionUncheckedCreateNestedManyWithoutCourseInput
+    Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
+    Forum?: ForumUncheckedCreateNestedManyWithoutCourseInput
+    Module?: ModuleUncheckedCreateNestedManyWithoutCourseInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseCreateOrConnectWithoutFeedbackSurveyInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutFeedbackSurveyInput, CourseUncheckedCreateWithoutFeedbackSurveyInput>
+  }
+
+  export type CourseSessionCreateWithoutFeedbackSurveyInput = {
+    id: string
+    title: string
+    description?: string | null
+    type: $Enums.SessionType
+    startTime: Date | string
+    endTime: Date | string
+    timezone?: string
+    location?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    geoRadius?: number | null
+    zoomMeetingId?: string | null
+    zoomJoinUrl?: string | null
+    zoomStartUrl?: string | null
+    zoomPassword?: string | null
+    recordingUrl?: string | null
+    maxParticipants?: number | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    Attendance?: AttendanceCreateNestedManyWithoutCourseSessionInput
+    AttendanceToken?: AttendanceTokenCreateNestedManyWithoutCourseSessionInput
+    Course: CourseCreateNestedOneWithoutCourseSessionInput
+  }
+
+  export type CourseSessionUncheckedCreateWithoutFeedbackSurveyInput = {
+    id: string
+    courseId: string
+    title: string
+    description?: string | null
+    type: $Enums.SessionType
+    startTime: Date | string
+    endTime: Date | string
+    timezone?: string
+    location?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    geoRadius?: number | null
+    zoomMeetingId?: string | null
+    zoomJoinUrl?: string | null
+    zoomStartUrl?: string | null
+    zoomPassword?: string | null
+    recordingUrl?: string | null
+    maxParticipants?: number | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    Attendance?: AttendanceUncheckedCreateNestedManyWithoutCourseSessionInput
+    AttendanceToken?: AttendanceTokenUncheckedCreateNestedManyWithoutCourseSessionInput
+  }
+
+  export type CourseSessionCreateOrConnectWithoutFeedbackSurveyInput = {
+    where: CourseSessionWhereUniqueInput
+    create: XOR<CourseSessionCreateWithoutFeedbackSurveyInput, CourseSessionUncheckedCreateWithoutFeedbackSurveyInput>
+  }
+
+  export type FeedbackResponseCreateWithoutSurveyInput = {
+    id?: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+    User: UserCreateNestedOneWithoutFeedbackResponseInput
+  }
+
+  export type FeedbackResponseUncheckedCreateWithoutSurveyInput = {
+    id?: string
+    userId: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+  }
+
+  export type FeedbackResponseCreateOrConnectWithoutSurveyInput = {
+    where: FeedbackResponseWhereUniqueInput
+    create: XOR<FeedbackResponseCreateWithoutSurveyInput, FeedbackResponseUncheckedCreateWithoutSurveyInput>
+  }
+
+  export type FeedbackResponseCreateManySurveyInputEnvelope = {
+    data: FeedbackResponseCreateManySurveyInput | FeedbackResponseCreateManySurveyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CourseUpsertWithoutFeedbackSurveyInput = {
+    update: XOR<CourseUpdateWithoutFeedbackSurveyInput, CourseUncheckedUpdateWithoutFeedbackSurveyInput>
+    create: XOR<CourseCreateWithoutFeedbackSurveyInput, CourseUncheckedCreateWithoutFeedbackSurveyInput>
+    where?: CourseWhereInput
+  }
+
+  export type CourseUpdateToOneWithWhereWithoutFeedbackSurveyInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutFeedbackSurveyInput, CourseUncheckedUpdateWithoutFeedbackSurveyInput>
+  }
+
+  export type CourseUpdateWithoutFeedbackSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMode?: EnumDeliveryModeFieldUpdateOperationsInput | $Enums.DeliveryMode
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: CourseUpdatetagsInput | string[]
+    capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    isFeatured?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Category?: CategoryUpdateOneWithoutCourseNestedInput
+    Certificate?: CertificateUpdateManyWithoutCourseNestedInput
+    User?: UserUpdateOneRequiredWithoutCourseNestedInput
+    CourseSession?: CourseSessionUpdateManyWithoutCourseNestedInput
+    Enrollment?: EnrollmentUpdateManyWithoutCourseNestedInput
+    Forum?: ForumUpdateManyWithoutCourseNestedInput
+    Module?: ModuleUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseUncheckedUpdateWithoutFeedbackSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryMode?: EnumDeliveryModeFieldUpdateOperationsInput | $Enums.DeliveryMode
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: CourseUpdatetagsInput | string[]
+    capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    isFeatured?: BoolFieldUpdateOperationsInput | boolean
+    instructorId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseShortDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseDesc?: NullableStringFieldUpdateOperationsInput | string | null
+    courseLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    outcomes?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendedNext?: NullableStringFieldUpdateOperationsInput | string | null
+    jp?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    ytPlaylistId?: NullableStringFieldUpdateOperationsInput | string | null
+    isProcessing?: BoolFieldUpdateOperationsInput | boolean
+    processingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    lastProcessedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncConfig?: NullableJsonNullValueInput | InputJsonValue
+    Certificate?: CertificateUncheckedUpdateManyWithoutCourseNestedInput
+    CourseSession?: CourseSessionUncheckedUpdateManyWithoutCourseNestedInput
+    Enrollment?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
+    Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
+    Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseSessionUpsertWithoutFeedbackSurveyInput = {
+    update: XOR<CourseSessionUpdateWithoutFeedbackSurveyInput, CourseSessionUncheckedUpdateWithoutFeedbackSurveyInput>
+    create: XOR<CourseSessionCreateWithoutFeedbackSurveyInput, CourseSessionUncheckedCreateWithoutFeedbackSurveyInput>
+    where?: CourseSessionWhereInput
+  }
+
+  export type CourseSessionUpdateToOneWithWhereWithoutFeedbackSurveyInput = {
+    where?: CourseSessionWhereInput
+    data: XOR<CourseSessionUpdateWithoutFeedbackSurveyInput, CourseSessionUncheckedUpdateWithoutFeedbackSurveyInput>
+  }
+
+  export type CourseSessionUpdateWithoutFeedbackSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    timezone?: StringFieldUpdateOperationsInput | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    geoRadius?: NullableIntFieldUpdateOperationsInput | number | null
+    zoomMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
+    zoomJoinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    zoomStartUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    zoomPassword?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    maxParticipants?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Attendance?: AttendanceUpdateManyWithoutCourseSessionNestedInput
+    AttendanceToken?: AttendanceTokenUpdateManyWithoutCourseSessionNestedInput
+    Course?: CourseUpdateOneRequiredWithoutCourseSessionNestedInput
+  }
+
+  export type CourseSessionUncheckedUpdateWithoutFeedbackSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    timezone?: StringFieldUpdateOperationsInput | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    geoRadius?: NullableIntFieldUpdateOperationsInput | number | null
+    zoomMeetingId?: NullableStringFieldUpdateOperationsInput | string | null
+    zoomJoinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    zoomStartUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    zoomPassword?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    maxParticipants?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Attendance?: AttendanceUncheckedUpdateManyWithoutCourseSessionNestedInput
+    AttendanceToken?: AttendanceTokenUncheckedUpdateManyWithoutCourseSessionNestedInput
+  }
+
+  export type FeedbackResponseUpsertWithWhereUniqueWithoutSurveyInput = {
+    where: FeedbackResponseWhereUniqueInput
+    update: XOR<FeedbackResponseUpdateWithoutSurveyInput, FeedbackResponseUncheckedUpdateWithoutSurveyInput>
+    create: XOR<FeedbackResponseCreateWithoutSurveyInput, FeedbackResponseUncheckedCreateWithoutSurveyInput>
+  }
+
+  export type FeedbackResponseUpdateWithWhereUniqueWithoutSurveyInput = {
+    where: FeedbackResponseWhereUniqueInput
+    data: XOR<FeedbackResponseUpdateWithoutSurveyInput, FeedbackResponseUncheckedUpdateWithoutSurveyInput>
+  }
+
+  export type FeedbackResponseUpdateManyWithWhereWithoutSurveyInput = {
+    where: FeedbackResponseScalarWhereInput
+    data: XOR<FeedbackResponseUpdateManyMutationInput, FeedbackResponseUncheckedUpdateManyWithoutSurveyInput>
+  }
+
+  export type FeedbackSurveyCreateWithoutFeedbackResponseInput = {
+    id?: string
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Course: CourseCreateNestedOneWithoutFeedbackSurveyInput
+    CourseSession?: CourseSessionCreateNestedOneWithoutFeedbackSurveyInput
+  }
+
+  export type FeedbackSurveyUncheckedCreateWithoutFeedbackResponseInput = {
+    id?: string
+    courseId: string
+    sessionId?: string | null
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeedbackSurveyCreateOrConnectWithoutFeedbackResponseInput = {
+    where: FeedbackSurveyWhereUniqueInput
+    create: XOR<FeedbackSurveyCreateWithoutFeedbackResponseInput, FeedbackSurveyUncheckedCreateWithoutFeedbackResponseInput>
+  }
+
+  export type UserCreateWithoutFeedbackResponseInput = {
+    id?: string
+    nip?: string | null
+    email: string
+    name?: string | null
+    password?: string | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    phoneVerified?: Date | string | null
+    unitKerja?: string | null
+    phone?: string | null
+    jabatan?: string | null
+    pangkat?: string | null
+    points?: number
+    level?: number
+    streak?: number
+    lastActiveAt?: Date | string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    Attendance?: AttendanceCreateNestedManyWithoutUserInput
+    Certificate?: CertificateCreateNestedManyWithoutUserInput
+    Course?: CourseCreateNestedManyWithoutUserInput
+    Enrollment?: EnrollmentCreateNestedManyWithoutUserInput
+    ForumComment?: ForumCommentCreateNestedManyWithoutUserInput
+    ForumPost?: ForumPostCreateNestedManyWithoutUserInput
+    Notification?: NotificationCreateNestedManyWithoutUserInput
+    Progress?: ProgressCreateNestedManyWithoutUserInput
+    QuizAttempt?: QuizAttemptCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    UserBadge?: UserBadgeCreateNestedManyWithoutUserInput
+    UserVerificationOTP?: UserVerificationOTPCreateNestedManyWithoutUserInput
+    LearnerActivity?: LearnerActivityCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFeedbackResponseInput = {
+    id?: string
+    nip?: string | null
+    email: string
+    name?: string | null
+    password?: string | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    phoneVerified?: Date | string | null
+    unitKerja?: string | null
+    phone?: string | null
+    jabatan?: string | null
+    pangkat?: string | null
+    points?: number
+    level?: number
+    streak?: number
+    lastActiveAt?: Date | string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    Attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    Certificate?: CertificateUncheckedCreateNestedManyWithoutUserInput
+    Course?: CourseUncheckedCreateNestedManyWithoutUserInput
+    Enrollment?: EnrollmentUncheckedCreateNestedManyWithoutUserInput
+    ForumComment?: ForumCommentUncheckedCreateNestedManyWithoutUserInput
+    ForumPost?: ForumPostUncheckedCreateNestedManyWithoutUserInput
+    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    Progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
+    QuizAttempt?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    UserBadge?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
+    UserVerificationOTP?: UserVerificationOTPUncheckedCreateNestedManyWithoutUserInput
+    LearnerActivity?: LearnerActivityUncheckedCreateNestedManyWithoutUserInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFeedbackResponseInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFeedbackResponseInput, UserUncheckedCreateWithoutFeedbackResponseInput>
+  }
+
+  export type FeedbackSurveyUpsertWithoutFeedbackResponseInput = {
+    update: XOR<FeedbackSurveyUpdateWithoutFeedbackResponseInput, FeedbackSurveyUncheckedUpdateWithoutFeedbackResponseInput>
+    create: XOR<FeedbackSurveyCreateWithoutFeedbackResponseInput, FeedbackSurveyUncheckedCreateWithoutFeedbackResponseInput>
+    where?: FeedbackSurveyWhereInput
+  }
+
+  export type FeedbackSurveyUpdateToOneWithWhereWithoutFeedbackResponseInput = {
+    where?: FeedbackSurveyWhereInput
+    data: XOR<FeedbackSurveyUpdateWithoutFeedbackResponseInput, FeedbackSurveyUncheckedUpdateWithoutFeedbackResponseInput>
+  }
+
+  export type FeedbackSurveyUpdateWithoutFeedbackResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Course?: CourseUpdateOneRequiredWithoutFeedbackSurveyNestedInput
+    CourseSession?: CourseSessionUpdateOneWithoutFeedbackSurveyNestedInput
+  }
+
+  export type FeedbackSurveyUncheckedUpdateWithoutFeedbackResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutFeedbackResponseInput = {
+    update: XOR<UserUpdateWithoutFeedbackResponseInput, UserUncheckedUpdateWithoutFeedbackResponseInput>
+    create: XOR<UserCreateWithoutFeedbackResponseInput, UserUncheckedCreateWithoutFeedbackResponseInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFeedbackResponseInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFeedbackResponseInput, UserUncheckedUpdateWithoutFeedbackResponseInput>
+  }
+
+  export type UserUpdateWithoutFeedbackResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nip?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phoneVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unitKerja?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jabatan?: NullableStringFieldUpdateOperationsInput | string | null
+    pangkat?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    streak?: IntFieldUpdateOperationsInput | number
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    Attendance?: AttendanceUpdateManyWithoutUserNestedInput
+    Certificate?: CertificateUpdateManyWithoutUserNestedInput
+    Course?: CourseUpdateManyWithoutUserNestedInput
+    Enrollment?: EnrollmentUpdateManyWithoutUserNestedInput
+    ForumComment?: ForumCommentUpdateManyWithoutUserNestedInput
+    ForumPost?: ForumPostUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUpdateManyWithoutUserNestedInput
+    Progress?: ProgressUpdateManyWithoutUserNestedInput
+    QuizAttempt?: QuizAttemptUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    UserBadge?: UserBadgeUpdateManyWithoutUserNestedInput
+    UserVerificationOTP?: UserVerificationOTPUpdateManyWithoutUserNestedInput
+    LearnerActivity?: LearnerActivityUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFeedbackResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nip?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phoneVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unitKerja?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jabatan?: NullableStringFieldUpdateOperationsInput | string | null
+    pangkat?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    streak?: IntFieldUpdateOperationsInput | number
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    Attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    Certificate?: CertificateUncheckedUpdateManyWithoutUserNestedInput
+    Course?: CourseUncheckedUpdateManyWithoutUserNestedInput
+    Enrollment?: EnrollmentUncheckedUpdateManyWithoutUserNestedInput
+    ForumComment?: ForumCommentUncheckedUpdateManyWithoutUserNestedInput
+    ForumPost?: ForumPostUncheckedUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    Progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
+    QuizAttempt?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    UserBadge?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
+    UserVerificationOTP?: UserVerificationOTPUncheckedUpdateManyWithoutUserNestedInput
+    LearnerActivity?: LearnerActivityUncheckedUpdateManyWithoutUserNestedInput
+    SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserBadgeCreateManyBadgeInput = {
@@ -67696,6 +72075,7 @@ export namespace Prisma {
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCategoryInput = {
@@ -67736,6 +72116,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutCategoryInput = {
@@ -67847,6 +72228,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FeedbackSurveyCreateManyCourseInput = {
+    id?: string
+    sessionId?: string | null
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CertificateUpdateWithoutCourseInput = {
     id?: StringFieldUpdateOperationsInput | string
     certificateNo?: StringFieldUpdateOperationsInput | string
@@ -67900,6 +72293,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Attendance?: AttendanceUpdateManyWithoutCourseSessionNestedInput
     AttendanceToken?: AttendanceTokenUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseSessionNestedInput
   }
 
   export type CourseSessionUncheckedUpdateWithoutCourseInput = {
@@ -67925,6 +72319,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Attendance?: AttendanceUncheckedUpdateManyWithoutCourseSessionNestedInput
     AttendanceToken?: AttendanceTokenUncheckedUpdateManyWithoutCourseSessionNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionNestedInput
   }
 
   export type CourseSessionUncheckedUpdateManyWithoutCourseInput = {
@@ -68082,6 +72477,44 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeedbackSurveyUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    CourseSession?: CourseSessionUpdateOneWithoutFeedbackSurveyNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutSurveyNestedInput
+  }
+
+  export type FeedbackSurveyUncheckedUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutSurveyNestedInput
+  }
+
+  export type FeedbackSurveyUncheckedUpdateManyWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AttendanceCreateManyCourseSessionInput = {
     id: string
     userId: string
@@ -68102,6 +72535,18 @@ export namespace Prisma {
     token: string
     expiresAt: Date | string
     createdAt?: Date | string
+  }
+
+  export type FeedbackSurveyCreateManyCourseSessionInput = {
+    id?: string
+    courseId: string
+    title: string
+    description?: string | null
+    isActive?: boolean
+    startsAt?: Date | string | null
+    endsAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AttendanceUpdateWithoutCourseSessionInput = {
@@ -68168,6 +72613,44 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackSurveyUpdateWithoutCourseSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Course?: CourseUpdateOneRequiredWithoutFeedbackSurveyNestedInput
+    FeedbackResponse?: FeedbackResponseUpdateManyWithoutSurveyNestedInput
+  }
+
+  export type FeedbackSurveyUncheckedUpdateWithoutCourseSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    FeedbackResponse?: FeedbackResponseUncheckedUpdateManyWithoutSurveyNestedInput
+  }
+
+  export type FeedbackSurveyUncheckedUpdateManyWithoutCourseSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ForumPostCreateManyForumInput = {
@@ -68802,6 +73285,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FeedbackResponseCreateManyUserInput = {
+    id?: string
+    surveyId: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+  }
+
   export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -68957,6 +73454,7 @@ export namespace Prisma {
     Forum?: ForumUpdateManyWithoutCourseNestedInput
     Module?: ModuleUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutUserInput = {
@@ -68997,6 +73495,7 @@ export namespace Prisma {
     Forum?: ForumUncheckedUpdateManyWithoutCourseNestedInput
     Module?: ModuleUncheckedUpdateManyWithoutCourseNestedInput
     SyncCourseProgress?: SyncCourseProgressUncheckedUpdateManyWithoutCourseNestedInput
+    FeedbackSurvey?: FeedbackSurveyUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutUserInput = {
@@ -69358,6 +73857,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeedbackResponseUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Survey?: FeedbackSurveyUpdateOneRequiredWithoutFeedbackResponseNestedInput
+  }
+
+  export type FeedbackResponseUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyId?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackResponseUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyId?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type YtCurationCandidateCreateManySessionInput = {
     id?: string
     videoId: string
@@ -69440,6 +73981,62 @@ export namespace Prisma {
     orderInPlaylist?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type FeedbackResponseCreateManySurveyInput = {
+    id?: string
+    userId: string
+    instructorRating?: number | null
+    materialRating?: number | null
+    facilityRating?: number | null
+    overallRating: number
+    strengths?: string | null
+    improvements?: string | null
+    suggestions?: string | null
+    isAnonymous?: boolean
+    submittedAt?: Date | string
+  }
+
+  export type FeedbackResponseUpdateWithoutSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutFeedbackResponseNestedInput
+  }
+
+  export type FeedbackResponseUncheckedUpdateWithoutSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackResponseUncheckedUpdateManyWithoutSurveyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    instructorRating?: NullableIntFieldUpdateOperationsInput | number | null
+    materialRating?: NullableIntFieldUpdateOperationsInput | number | null
+    facilityRating?: NullableIntFieldUpdateOperationsInput | number | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestions?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

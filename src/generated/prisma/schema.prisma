@@ -154,6 +154,7 @@ model Course {
   Forum              Forum[]
   Module             Module[]
   SyncCourseProgress SyncCourseProgress[]
+  FeedbackSurvey     FeedbackSurvey[]
 
   // YouTube Integration Fields
   ytPlaylistId     String?   @unique
@@ -194,6 +195,7 @@ model CourseSession {
   updatedAt       DateTime
   Attendance      Attendance[]
   AttendanceToken AttendanceToken[]
+  FeedbackSurvey  FeedbackSurvey[]
   Course          Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@index([courseId])
@@ -458,6 +460,7 @@ model User {
   UserVerificationOTP UserVerificationOTP[]
   LearnerActivity     LearnerActivity[]
   SyncCourseProgress  SyncCourseProgress[]
+  FeedbackResponse    FeedbackResponse[]
 
   @@index([email])
   @@index([nip])
@@ -823,4 +826,57 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+}
+
+// ============================================
+// FEEDBACK SURVEY MODELS
+// ============================================
+
+/// Feedback Survey for ON_CLASSROOM courses
+model FeedbackSurvey {
+  id          String    @id @default(uuid())
+  courseId    String    @map("course_id")
+  sessionId   String?   @map("session_id")
+  title       String
+  description String?
+  isActive    Boolean   @default(true)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  Course           Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  CourseSession    CourseSession?     @relation(fields: [sessionId], references: [id])
+  FeedbackResponse FeedbackResponse[]
+
+  @@index([courseId])
+  @@map("feedback_surveys")
+}
+
+/// Feedback Response from learners
+model FeedbackResponse {
+  id       String @id @default(uuid())
+  surveyId String @map("survey_id")
+  userId   String @map("user_id")
+
+  // Rating fields (1-5 scale)
+  instructorRating Int? @map("instructor_rating")
+  materialRating   Int? @map("material_rating")
+  facilityRating   Int? @map("facility_rating")
+  overallRating    Int  @map("overall_rating")
+
+  // Text feedback
+  strengths    String? // Apa yang baik?
+  improvements String? // Apa yang perlu diperbaiki?
+  suggestions  String? // Saran untuk penyelenggaraan berikutnya
+
+  isAnonymous Boolean  @default(false)
+  submittedAt DateTime @default(now())
+
+  Survey FeedbackSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  User   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([surveyId, userId])
+  @@index([surveyId])
+  @@map("feedback_responses")
 }

@@ -264,21 +264,40 @@ NEXT_PUBLIC_APP_URL="http://localhost:3001"
 
 ---
 
-## 🎙️ Audio Processing (Whisper STT)
+## 🎙️ Audio & Voice Services (ElevenLabs)
 
 | Variable | Deskripsi |
 |----------|-----------|
-| `STT_ENDPOINT` | Endpoint Whisper ASR |
-| `STT_LANGUAGE` | Bahasa untuk transcription |
-| `AUDIO_CONCURRENCY` | Jumlah concurrent processing |
-| `AUDIO_PATH` | Path untuk file audio |
+| `ELEVENLABS_API_KEY` | API Key dari ElevenLabs |
+| `ELEVENLABS_VOICE_ID` | Voice ID default untuk TTS |
 
 ```env
-STT_ENDPOINT="http://whisper-asr:9000/asr?task=transcribe&output=json"
-STT_LANGUAGE="id"
-AUDIO_CONCURRENCY=2
-AUDIO_PATH="/app/shared"
+ELEVENLABS_API_KEY="your-elevenlabs-api-key"
+ELEVENLABS_VOICE_ID="21m00Tcm4TlvDq8ikWAM"
 ```
+
+**Cara Mendapatkan:**
+1. Daftar di [ElevenLabs](https://elevenlabs.io/)
+2. Buka Settings → API Keys
+3. Generate new API key
+
+---
+
+## 🌐 AI Proxy (proxy.kelazz.my.id)
+
+| Variable | Deskripsi |
+|----------|-----------|
+| `AI_PROXY_URL` | URL AI Proxy gateway |
+
+```env
+AI_PROXY_URL="https://proxy.kelazz.my.id"
+```
+
+Proxy ini digunakan untuk:
+- Generate course info
+- Refine lesson titles
+- Generate thumbnails
+- Generate quiz questions
 
 ---
 
