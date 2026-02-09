@@ -168,7 +168,8 @@ services:
       POSTGRES_DB: lxp_asn
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lxp_password_change_me}
-      SCHEDULE: "0 12 * * *"
+      SCHEDULE: "@daily"
+      BACKUP_ON_START: "true"
       BACKUP_KEEP_DAYS: 7
       BACKUP_KEEP_WEEKS: 4
       BACKUP_KEEP_MONTHS: 6
