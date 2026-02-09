@@ -25,15 +25,146 @@ interface QuizTakerProps {
 
 export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [answers, setAnswers] = useState<Record<string, any>>({})
-    const [timeLeft, setTimeLeft] = useState<number | null>(
-        quiz.timeLimit ? quiz.timeLimit * 60 : null
-    )
+
+    // Storage key for persisting answers
+    const storageKey = `quiz_answers_${quiz.id}`
+    const timeStorageKey = `quiz_time_${quiz.id}`
+    const shuffleStorageKey = `quiz_shuffle_${quiz.id}`
+
+    // Fisher-Yates shuffle algorithm (deterministic with seed)
+    const shuffleArray = <T,>(array: T[], seed: number): T[] => {
+        const result = [...array]
+        let m = result.length
+        let t, i
+        let s = seed
+        while (m) {
+            // Simple pseudo-random based on seed
+            s = (s * 1103515245 + 12345) & 0x7fffffff
+            i = Math.floor((s / 0x7fffffff) * m--)
+            t = result[m]
+            result[m] = result[i]
+            result[i] = t
+        }
+        return result
+    }
+
+    // Get or create shuffle seed for this quiz session
+    const getShuffleSeed = (): number => {
+        if (typeof window === 'undefined') return Date.now()
+        try {
+            const saved = localStorage.getItem(shuffleStorageKey)
+            if (saved) return parseInt(saved, 10)
+            const seed = Date.now()
+            localStorage.setItem(shuffleStorageKey, seed.toString())
+            return seed
+        } catch {
+            return Date.now()
+        }
+    }
+
+    const shuffleSeed = getShuffleSeed()
+
+    // Shuffle questions if enabled
+    const originalQuestions = quiz.Question || []
+    const questions = quiz.shuffleQuestions
+        ? shuffleArray(originalQuestions, shuffleSeed)
+        : originalQuestions
+
+    // Function to get shuffled options for a question
+    const getShuffledOptions = (question: any): { options: any[], indexMap: number[] | null } => {
+        const rawOptions = Array.isArray(question.options)
+            ? question.options
+            : question.options?.choices || []
+
+        if (!quiz.shuffleOptions) return { options: rawOptions, indexMap: null }
+
+        // Create index map to track original positions
+        type IndexedOption = { opt: any; originalIdx: number }
+        const indexed: IndexedOption[] = rawOptions.map((opt: any, idx: number) => ({ opt, originalIdx: idx }))
+        const shuffled = shuffleArray(indexed, shuffleSeed + question.id.charCodeAt(0)) as IndexedOption[]
+
+        return {
+            options: shuffled.map((item) => item.opt),
+            indexMap: shuffled.map((item) => item.originalIdx)
+        }
+    }
+
+    // Load saved answers from localStorage
+    const loadSavedAnswers = (): Record<string, any> => {
+        if (typeof window === 'undefined') return {}
+        try {
+            const saved = localStorage.getItem(storageKey)
+            return saved ? JSON.parse(saved) : {}
+        } catch {
+            return {}
+        }
+    }
+
+    // Load saved time from localStorage
+    const loadSavedTime = (): number | null => {
+        if (typeof window === 'undefined') return null
+        try {
+            const saved = localStorage.getItem(timeStorageKey)
+            if (saved) {
+                const savedTime = parseInt(saved, 10)
+                // Only use saved time if it's valid and not expired
+                return savedTime > 0 ? savedTime : null
+            }
+        } catch {
+            // Ignore errors
+        }
+        return null
+    }
+
+    const [answers, setAnswers] = useState<Record<string, any>>(loadSavedAnswers)
+
+    // Calculate time limit: for PRETEST, use 1 min per question if no explicit timeLimit
+    const calculateTimeLimit = () => {
+        // First check if there's saved time
+        const savedTime = loadSavedTime()
+        if (savedTime !== null) {
+            return savedTime
+        }
+
+        if (quiz.timeLimit) {
+            return quiz.timeLimit * 60 // Convert minutes to seconds
+        }
+        // For PRETEST: 1 minute per question
+        if (quiz.type === 'PRETEST') {
+            const questionCount = quiz.Question?.length || 0
+            return questionCount > 0 ? questionCount * 60 : null // 1 min per question
+        }
+        return null // No time limit for other quiz types without explicit timeLimit
+    }
+
+    const [timeLeft, setTimeLeft] = useState<number | null>(calculateTimeLimit())
     const [isSubmitting, setIsSubmitting] = useState(false)
     const router = useRouter()
 
-    const questions = quiz.Question || []
     const currentQuestion = questions[currentQuestionIndex]
+
+    // Save answers to localStorage whenever they change
+    useEffect(() => {
+        if (typeof window !== 'undefined' && Object.keys(answers).length > 0) {
+            localStorage.setItem(storageKey, JSON.stringify(answers))
+        }
+    }, [answers, storageKey])
+
+    // Save remaining time periodically
+    useEffect(() => {
+        if (typeof window !== 'undefined' && timeLeft !== null && timeLeft > 0) {
+            localStorage.setItem(timeStorageKey, timeLeft.toString())
+        }
+    }, [timeLeft, timeStorageKey])
+
+    // Clear storage after successful submission
+    const clearStorage = () => {
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem(storageKey)
+            localStorage.removeItem(timeStorageKey)
+            localStorage.removeItem(shuffleStorageKey)
+        }
+    }
 
     // Timer logic
     useEffect(() => {
@@ -80,6 +211,7 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
             toast.error(result.error)
             setIsSubmitting(false)
         } else {
+            clearStorage() // Clear saved answers after successful submission
             toast.success("Kuis berhasil dikirim!")
             router.push(`/courses/${courseSlug}/learn?quiz=${quiz.id}&attempt=${result.attemptId}`)
         }
@@ -99,9 +231,9 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
     const progress = ((currentQuestionIndex + 1) / questions.length) * 100
 
     return (
-        <div className="max-w-3xl mx-auto space-y-6 pb-20">
+        <div className="max-w-3xl mx-auto space-y-4 pb-20">
             {/* Header Info */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-16 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md z-10 py-4 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 bg-slate-50 dark:bg-slate-950 py-2 border-b border-slate-200 dark:border-slate-800">
                 <div className="space-y-1">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white truncate max-w-md">
                         {quiz.title}
@@ -117,7 +249,11 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                 </div>
 
                 {timeLeft !== null && (
-                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${timeLeft < 60 ? "bg-red-50 dark:bg-red-500/10 border-red-500 text-red-600 dark:text-red-500 animate-pulse" : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${timeLeft <= 10
+                        ? "bg-red-600 dark:bg-red-600 border-red-700 text-white animate-[pulse_0.5s_ease-in-out_infinite] scale-110 shadow-lg shadow-red-500/50"
+                        : timeLeft < 60
+                            ? "bg-red-50 dark:bg-red-500/10 border-red-500 text-red-600 dark:text-red-500 animate-pulse"
+                            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
                         }`}>
                         <Timer className="w-4 h-4" />
                         <span className="font-mono font-bold text-lg">{formatTime(timeLeft)}</span>
@@ -136,33 +272,43 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                         </h3>
 
                         {/* Multiple Choice / True False */}
-                        {(currentQuestion.type === "MULTIPLE_CHOICE" || currentQuestion.type === "TRUE_FALSE") && (
-                            <div className="space-y-3">
-                                {(Array.isArray(currentQuestion.options)
-                                    ? currentQuestion.options
-                                    : currentQuestion.options?.choices || []
-                                ).map((choice: string, idx: number) => {
-                                    const isSelected = answers[currentQuestion.id] === idx
-                                    return (
-                                        <button
-                                            key={idx}
-                                            onClick={() => handleAnswerChange(currentQuestion.id, idx)}
-                                            className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${isSelected
-                                                ? "bg-purple-50 dark:bg-purple-600/10 border-purple-500 text-slate-900 dark:text-white"
-                                                : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
-                                                }`}
-                                        >
-                                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm transition-colors ${isSelected ? "bg-purple-600 text-white" : "bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
-                                                }`}>
-                                                {String.fromCharCode(65 + idx)}
-                                            </div>
-                                            <span className="flex-1 font-medium">{choice}</span>
-                                            {isSelected && <CheckCircle2 className="w-5 h-5 text-purple-500" />}
-                                        </button>
-                                    )
-                                })}
-                            </div>
-                        )}
+                        {(currentQuestion.type === "MULTIPLE_CHOICE" || currentQuestion.type === "TRUE_FALSE") && (() => {
+                            const { options: shuffledOptions, indexMap } = getShuffledOptions(currentQuestion)
+
+                            // Helper to get choice text - handles both string and object formats
+                            const getChoiceText = (choice: any): string => {
+                                if (typeof choice === 'string') return choice
+                                if (choice && typeof choice === 'object' && 'text' in choice) return choice.text
+                                return String(choice)
+                            }
+
+                            return (
+                                <div className="space-y-3">
+                                    {shuffledOptions.map((choice: any, idx: number) => {
+                                        // Get the original index for this shuffled position
+                                        const originalIdx = indexMap ? indexMap[idx] : idx
+                                        const isSelected = answers[currentQuestion.id] === originalIdx
+                                        return (
+                                            <button
+                                                key={idx}
+                                                onClick={() => handleAnswerChange(currentQuestion.id, originalIdx)}
+                                                className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${isSelected
+                                                    ? "bg-purple-50 dark:bg-purple-600/10 border-purple-500 text-slate-900 dark:text-white"
+                                                    : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                                    }`}
+                                            >
+                                                <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm transition-colors ${isSelected ? "bg-purple-600 text-white" : "bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
+                                                    }`}>
+                                                    {String.fromCharCode(65 + idx)}
+                                                </div>
+                                                <span className="flex-1 font-medium">{getChoiceText(choice)}</span>
+                                                {isSelected && <CheckCircle2 className="w-5 h-5 text-purple-500" />}
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            )
+                        })()}
 
                         {/* Essay */}
                         {currentQuestion.type === "ESSAY" && (
@@ -196,8 +342,8 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                     {currentQuestionIndex === questions.length - 1 ? (
                         <Button
                             onClick={handleSubmit}
-                            disabled={isSubmitting}
-                            className="bg-green-600 hover:bg-green-700 text-white px-8"
+                            disabled={isSubmitting || answers[currentQuestion.id] === undefined || answers[currentQuestion.id] === ""}
+                            className="bg-green-600 hover:bg-green-700 text-white px-8 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Flag className="w-4 h-4 mr-2" />}
                             Selesai & Kirim
@@ -205,7 +351,8 @@ export function QuizTaker({ quiz, courseSlug }: QuizTakerProps) {
                     ) : (
                         <Button
                             onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
-                            className="bg-blue-600 hover:bg-blue-700"
+                            disabled={answers[currentQuestion.id] === undefined || answers[currentQuestion.id] === ""}
+                            className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Selanjutnya
                             <ChevronRight className="w-4 h-4 ml-2" />

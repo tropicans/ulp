@@ -52,6 +52,7 @@ export async function queueStatement(
 export type ActivityType =
     | "ENROLLMENT"
     | "LESSON_COMPLETE"
+    | "COURSE_COMPLETE"
     | "QUIZ_ATTEMPT"
     | "QUIZ_PASS"
     | "QUIZ_FAIL"

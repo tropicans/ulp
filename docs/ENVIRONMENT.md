@@ -301,14 +301,38 @@ Proxy ini digunakan untuk:
 
 ---
 
-## 🔗 Webhook URLs
+## 🔗 Webhook URLs (n8n Integration)
 
 | Variable | Deskripsi |
 |----------|-----------|
-| `WEBHOOK_URL` | URL webhook utama |
-| `CURATION_WEBHOOK_URL` | Webhook untuk curation |
-| `WORKFLOW2_WEBHOOK_URL` | Webhook untuk metadata generation |
+| `WEBHOOK_URL` | Webhook n8n untuk YouTube import workflow |
+| `CURATION_WEBHOOK_URL` | Webhook untuk YouTube curation workflow |
+| `WORKFLOW2_WEBHOOK_URL` | Webhook untuk AI metadata generation |
 | `WEBHOOK_HMAC_SECRET` | Secret untuk validasi HMAC |
+
+```env
+# n8n running in Docker
+WEBHOOK_URL="http://n8n:5678/webhook/YouTubeToCourse"
+CURATION_WEBHOOK_URL="http://n8n:5678/webhook/youtube-curation-search-score"
+WORKFLOW2_WEBHOOK_URL="http://n8n:5678/webhook/youtube-metadata-generation"
+WEBHOOK_HMAC_SECRET="your-hmac-secret-for-webhook-validation"
+```
+
+> ⚠️ **Penting**: Gunakan `n8n:5678` (Docker network) saat app jalan di container, atau `localhost:5678` saat development lokal.
+
+---
+
+## 🔄 n8n Workflow Automation
+
+| Variable | Deskripsi |
+|----------|-----------|
+| `N8N_HOST` | Hostname n8n untuk Docker |
+| `N8N_PORT` | Port n8n (default 5678) |
+
+**n8n Credentials yang Perlu Dikonfigurasi:**
+1. **Postgres account** - Database connection
+2. **Google Gemini API** - AI scoring
+3. **Header Auth (YouTube)** - API key untuk YouTube Data API
 
 ---
 
@@ -318,7 +342,7 @@ Proxy ini digunakan untuk:
 # ===========================================
 # DATABASE
 # ===========================================
-DATABASE_URL="postgresql://postgres:password@localhost:5433/ULP_asn?schema=public"
+DATABASE_URL="postgresql://postgres:password@localhost:5433/lxp_asn?schema=public"
 
 # ===========================================
 # AUTHENTICATION
@@ -343,7 +367,7 @@ LDAP_SEARCH_FILTER=""
 S3_ENDPOINT="http://localhost:9000"
 S3_ACCESS_KEY="minioadmin"
 S3_SECRET_KEY="minioadmin"
-S3_BUCKET="ULP-files"
+S3_BUCKET="lxp-files"
 
 # ===========================================
 # CACHE
@@ -356,11 +380,22 @@ REDIS_URL="redis://localhost:6380"
 OPENAI_API_KEY=""
 OLLAMA_BASE_URL="http://localhost:11434"
 OLLAMA_MODEL="qwen2.5:14b-instruct"
+AI_PROXY_URL="https://proxy.kelazz.my.id"
+AI_PROXY_KEY=""
+AI_MODEL="gpt-5.1"
 
 # ===========================================
 # EXTERNAL APIS
 # ===========================================
 YOUTUBE_API_KEY=""
+
+# ===========================================
+# n8n WEBHOOKS
+# ===========================================
+WEBHOOK_URL="http://n8n:5678/webhook/YouTubeToCourse"
+CURATION_WEBHOOK_URL="http://n8n:5678/webhook/youtube-curation-search-score"
+WORKFLOW2_WEBHOOK_URL="http://n8n:5678/webhook/youtube-metadata-generation"
+WEBHOOK_HMAC_SECRET=""
 
 # ===========================================
 # xAPI LRS
@@ -375,6 +410,7 @@ LRS_SECRET_KEY=""
 RESEND_API_KEY=""
 EMAIL_FROM="noreply@example.com"
 FONNTE_API_KEY=""
+ELEVENLABS_API_KEY=""
 
 # ===========================================
 # APPLICATION
@@ -385,4 +421,4 @@ NEXT_PUBLIC_APP_URL="http://localhost:3001"
 
 ---
 
-*Dokumen ini terakhir diperbarui: 27 Januari 2026*
+*Dokumen ini terakhir diperbarui: 9 Februari 2026*

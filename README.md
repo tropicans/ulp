@@ -1,6 +1,6 @@
-# LXP ASN - Learning Experience Platform
+# TITAN - Unified Learning Platform
 
-Platform pembelajaran modern untuk pelatihan ASN dengan dukungan multi-modal learning.
+Ruang pembelajaran terpadu bagi Aparatur Negara—dirancang untuk memperkuat kompetensi, talenta, dan kapasitas ASN secara berkelanjutan.
 
 ## 🚀 Quick Start
 
@@ -38,7 +38,7 @@ Navigate to [http://localhost:3000/seed](http://localhost:3000/seed)
 
 ## 🎓 Multi-Modal Learning Support
 
-LXP ASN mendukung 4 mode pembelajaran untuk pelatihan ASN yang komprehensif:
+TITAN mendukung 4 mode pembelajaran untuk pelatihan ASN yang komprehensif:
 
 ### 1. ON_CLASSROOM (Tatap Muka)
 **100% pelatihan offline di kelas fisik**

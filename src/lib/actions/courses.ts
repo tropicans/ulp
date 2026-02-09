@@ -13,6 +13,8 @@ import {
 } from "@/lib/xapi"
 import { genIdempotencyKey } from "@/lib/xapi/utils"
 import { VERBS, ACTIVITY_TYPES, PLATFORM_IRI } from "@/lib/xapi/verbs"
+import { success, error, unauthorized, notFound, forbidden, validationError, serverError, type ActionResponse } from "@/lib/response"
+import { canEditCourse } from "@/lib/auth/policies"
 
 const courseSchema = z.object({
     title: z.string().min(3, "Judul minimal 3 karakter"),
@@ -121,7 +123,7 @@ export async function getCourses(filters?: {
 
 export async function getCourseBySlug(slug: string) {
     try {
-        return await prisma.course.findUnique({
+        const course = await prisma.course.findUnique({
             where: { slug },
             include: {
                 User: {
@@ -136,7 +138,13 @@ export async function getCourseBySlug(slug: string) {
                     orderBy: { order: "asc" },
                     include: {
                         Lesson: { orderBy: { order: "asc" } },
-                        Quiz: true,
+                        Quiz: {
+                            include: {
+                                _count: {
+                                    select: { Question: true }
+                                }
+                            }
+                        },
                     }
                 },
                 Enrollment: {
@@ -152,6 +160,61 @@ export async function getCourseBySlug(slug: string) {
                 }
             }
         })
+
+        if (!course) return null;
+
+        // Calculate JP logic: (total durasi lesson + tiap soal hargai 1 menit) / 45
+        let totalLessonMinutes = 0;
+        let totalQuestions = 0;
+
+        // 1. Get lesson durations - try to get from yt_playlist_items if it's a YouTube course
+        if (course.ytPlaylistId) {
+            const ytItems = await prisma.ytPlaylistItem.findMany({
+                where: { playlistId: course.ytPlaylistId },
+                select: { durationStr: true }
+            });
+
+            ytItems.forEach(item => {
+                const durationStr = item.durationStr;
+                if (durationStr) {
+                    const parts = durationStr.split(':').map(Number);
+                    if (parts.length === 3) {
+                        // H:M:S
+                        totalLessonMinutes += parts[0] * 60 + parts[1] + (parts[2] / 60);
+                    } else if (parts.length === 2) {
+                        // M:S
+                        totalLessonMinutes += parts[0] + (parts[1] / 60);
+                    }
+                }
+            });
+        }
+
+        // Add duration from Lesson table if not all are from YouTube or as fallback
+        if (totalLessonMinutes === 0) {
+            course.Module.forEach(m => {
+                m.Lesson.forEach(l => {
+                    totalLessonMinutes += l.duration || 0;
+                });
+            });
+        }
+
+        // 2. Count quiz questions
+        course.Module.forEach(m => {
+            m.Quiz.forEach(q => {
+                totalQuestions += (q as any)._count?.Question || 0;
+            });
+        });
+
+        const totalMinutes = Math.ceil(totalLessonMinutes + totalQuestions);
+        const jp = Math.ceil(totalMinutes / 45);
+
+        console.log(`[JP Calculation] Total Lesson Min: ${totalLessonMinutes}, Questions: ${totalQuestions}, Total: ${totalMinutes}, JP: ${jp}`);
+
+        return {
+            ...course,
+            calculatedDuration: totalMinutes,
+            calculatedJP: jp
+        };
     } catch (error) {
         console.error("Error fetching course detail:", error)
         return null
@@ -215,117 +278,119 @@ const updateCourseSchema = z.object({
     title: z.string().min(3, "Judul minimal 3 karakter"),
     description: z.string().min(10, "Deskripsi minimal 10 karakter"),
     courseShortDesc: z.string().max(500, "Deskripsi singkat maksimal 500 karakter").optional().nullable(),
+    requirements: z.string().optional().nullable(),
+    outcomes: z.string().optional().nullable(),
+    recommendedNext: z.string().optional().nullable(),
     deliveryMode: z.nativeEnum(DeliveryMode),
     difficulty: z.nativeEnum(Difficulty),
     category: z.string().optional().nullable(),
     duration: z.number().optional().nullable(),
 })
 
-export async function updateCourse(courseId: string, data: z.infer<typeof updateCourseSchema>) {
+export async function updateCourse(
+    courseId: string,
+    data: z.infer<typeof updateCourseSchema>
+): Promise<ActionResponse<{ course: { id: string; title: string } }>> {
+    // 1. AUTH CHECK
+    const session = await auth()
+    if (!session?.user?.id) {
+        return unauthorized()
+    }
+
+    // 2. AUTHZ VIA POLICY
+    const authz = await canEditCourse(session.user.id, session.user.role, courseId)
+    if (!authz.allowed) {
+        return forbidden(authz.reason)
+    }
+
+    // 3. VALIDATE INPUT
+    const parsed = updateCourseSchema.safeParse(data)
+    if (!parsed.success) {
+        return validationError(parsed.error)
+    }
+
     try {
-        const session = await auth()
-        if (!session?.user?.id) {
-            return { error: "Unauthorized" }
-        }
-
-        // Check ownership
-        const course = await prisma.course.findUnique({
-            where: { id: courseId },
-            select: { instructorId: true }
-        })
-
-        if (!course) {
-            return { error: "Kursus tidak ditemukan" }
-        }
-
-        if (course.instructorId !== session.user.id &&
-            !["SUPER_ADMIN", "ADMIN_UNIT"].includes(session.user.role)) {
-            return { error: "Anda tidak memiliki akses untuk mengedit kursus ini" }
-        }
-
-        const validatedData = updateCourseSchema.parse(data)
-
         const updatedCourse = await prisma.course.update({
             where: { id: courseId },
             data: {
-                ...validatedData,
+                ...parsed.data,
                 updatedAt: new Date(),
-            }
+            },
+            select: { id: true, title: true }
         })
 
         revalidatePath(`/dashboard/courses/${courseId}/edit`)
         revalidatePath("/dashboard/courses")
         revalidatePath("/courses")
-        return { success: true, course: updatedCourse }
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            return { error: error.issues[0].message }
-        }
-        console.error("Error updating course:", error)
-        return { error: "Gagal mengupdate kursus" }
+
+        return success({ course: updatedCourse }, "Kursus berhasil diupdate")
+    } catch (err) {
+        console.error("[LEARNING] updateCourse error:", err)
+        return serverError("Gagal mengupdate kursus")
     }
 }
 
-export async function updateCourseThumbnail(courseId: string, thumbnailUrl: string) {
+export async function updateCourseThumbnail(
+    courseId: string,
+    thumbnailUrl: string
+): Promise<ActionResponse<{ thumbnail: string | null }>> {
+    // 1. AUTH CHECK
+    const session = await auth()
+    if (!session?.user?.id) {
+        return unauthorized()
+    }
+
+    // 2. AUTHZ VIA POLICY
+    const authz = await canEditCourse(session.user.id, session.user.role, courseId)
+    if (!authz.allowed) {
+        return forbidden(authz.reason)
+    }
+
     try {
-        const session = await auth()
-        if (!session?.user?.id) {
-            return { error: "Unauthorized" }
-        }
-
-        // Check ownership
-        const course = await prisma.course.findUnique({
-            where: { id: courseId },
-            select: { instructorId: true }
-        })
-
-        if (!course) {
-            return { error: "Kursus tidak ditemukan" }
-        }
-
-        if (course.instructorId !== session.user.id &&
-            !["SUPER_ADMIN", "ADMIN_UNIT"].includes(session.user.role)) {
-            return { error: "Anda tidak memiliki akses untuk mengedit kursus ini" }
-        }
-
         const updatedCourse = await prisma.course.update({
             where: { id: courseId },
             data: {
                 thumbnail: thumbnailUrl,
                 updatedAt: new Date(),
-            }
+            },
+            select: { thumbnail: true }
         })
 
         revalidatePath(`/dashboard/courses/${courseId}/edit`)
         revalidatePath("/dashboard/courses")
         revalidatePath("/courses")
-        return { success: true, thumbnail: updatedCourse.thumbnail }
-    } catch (error) {
-        console.error("Error updating thumbnail:", error)
-        return { error: "Gagal mengupdate thumbnail" }
+
+        return success({ thumbnail: updatedCourse.thumbnail })
+    } catch (err) {
+        console.error("[LEARNING] updateCourseThumbnail error:", err)
+        return serverError("Gagal mengupdate thumbnail")
     }
 }
 
-export async function toggleCoursePublish(courseId: string) {
-    try {
-        const session = await auth()
-        if (!session?.user?.id) {
-            return { error: "Unauthorized" }
-        }
+export async function toggleCoursePublish(
+    courseId: string
+): Promise<ActionResponse<{ isPublished: boolean }>> {
+    // 1. AUTH CHECK
+    const session = await auth()
+    if (!session?.user?.id) {
+        return unauthorized()
+    }
 
-        // Check ownership
+    // 2. AUTHZ VIA POLICY
+    const authz = await canEditCourse(session.user.id, session.user.role, courseId)
+    if (!authz.allowed) {
+        return forbidden(authz.reason)
+    }
+
+    try {
+        // Get current state
         const course = await prisma.course.findUnique({
             where: { id: courseId },
-            select: { instructorId: true, isPublished: true }
+            select: { isPublished: true }
         })
 
         if (!course) {
-            return { error: "Kursus tidak ditemukan" }
-        }
-
-        if (course.instructorId !== session.user.id &&
-            !["SUPER_ADMIN", "ADMIN_UNIT"].includes(session.user.role)) {
-            return { error: "Anda tidak memiliki akses untuk mengedit kursus ini" }
+            return notFound("Kursus")
         }
 
         const updatedCourse = await prisma.course.update({
@@ -333,30 +398,44 @@ export async function toggleCoursePublish(courseId: string) {
             data: {
                 isPublished: !course.isPublished,
                 updatedAt: new Date(),
-            }
+            },
+            select: { isPublished: true }
         })
 
         revalidatePath(`/dashboard/courses/${courseId}/edit`)
         revalidatePath("/dashboard/courses")
         revalidatePath("/courses")
-        return {
-            success: true,
-            isPublished: updatedCourse.isPublished,
-            message: updatedCourse.isPublished ? "Kursus berhasil dipublish!" : "Kursus berhasil dijadikan draft."
-        }
-    } catch (error) {
-        console.error("Error toggling publish:", error)
-        return { error: "Gagal mengubah status publish" }
+
+        const message = updatedCourse.isPublished
+            ? "Kursus berhasil dipublish!"
+            : "Kursus berhasil dijadikan draft."
+
+        return success({ isPublished: updatedCourse.isPublished }, message)
+    } catch (err) {
+        console.error("[LEARNING] toggleCoursePublish error:", err)
+        return serverError("Gagal mengubah status publish")
     }
 }
 
-export async function enrollInCourse(courseId: string) {
+export async function enrollInCourse(courseId: string): Promise<ActionResponse<{ enrollmentId: string }>> {
+    // 1. AUTH CHECK
+    const session = await auth()
+    if (!session?.user?.id) {
+        return unauthorized()
+    }
+
     try {
-        const session = await auth()
-        if (!session?.user?.id) {
-            return { error: "Silakan login terlebih dahulu" }
+        // 2. CHECK COURSE EXISTS
+        const course = await prisma.course.findUnique({
+            where: { id: courseId },
+            select: { id: true, title: true, slug: true, description: true, isPublished: true }
+        })
+
+        if (!course) {
+            return notFound("Kursus")
         }
 
+        // 3. CHECK EXISTING ENROLLMENT
         const existingEnrollment = await prisma.enrollment.findUnique({
             where: {
                 userId_courseId: {
@@ -367,53 +446,64 @@ export async function enrollInCourse(courseId: string) {
         })
 
         if (existingEnrollment) {
-            return { error: "Anda sudah terdaftar di kursus ini" }
+            return error("CONFLICT", "Anda sudah terdaftar di kursus ini")
         }
 
-        const course = await prisma.course.findUnique({
-            where: { id: courseId },
-            select: { title: true, slug: true, description: true }
+        // 4. CREATE ENROLLMENT (atomic with xAPI outbox)
+        const enrollmentId = crypto.randomUUID()
+        const idempotencyKey = genIdempotencyKey("enrollment", session.user.id, courseId)
+
+        await prisma.$transaction(async (tx) => {
+            // Create enrollment
+            await tx.enrollment.create({
+                data: {
+                    id: enrollmentId,
+                    userId: session.user.id,
+                    courseId,
+                }
+            })
+
+            // Queue xAPI statement (inside transaction for atomicity)
+            await tx.$executeRaw`
+                INSERT INTO xapi_outbox (id, idempotency_key, statement, status, attempts, created_at)
+                VALUES (
+                    gen_random_uuid(), 
+                    ${idempotencyKey}, 
+                    ${JSON.stringify({
+                actor: buildActor(session.user.email || '', session.user.name),
+                verb: VERBS.enrolled,
+                object: buildActivity(
+                    `${PLATFORM_IRI}/courses/${course.slug}`,
+                    ACTIVITY_TYPES.course,
+                    course.title,
+                    course.description || undefined
+                ),
+                timestamp: new Date().toISOString()
+            })}::jsonb, 
+                    'PENDING', 
+                    0, 
+                    NOW()
+                )
+                ON CONFLICT (idempotency_key) DO NOTHING
+            `
+
+            // Record learner activity (inside transaction)
+            await tx.$executeRaw`
+                INSERT INTO learner_activity (id, user_id, course_id, activity_type, entity_id, entity_title, occurred_at)
+                VALUES (gen_random_uuid(), ${session.user.id}, ${courseId}, 'ENROLLMENT', ${courseId}, ${course.title}, NOW())
+            `
         })
 
-        await prisma.enrollment.create({
-            data: {
-                id: crypto.randomUUID(),
-                userId: session.user.id,
-                courseId,
-            }
-        })
-
-        // Send xAPI statement for enrollment (transactional outbox)
-        if (course) {
-            queueStatement(
-                {
-                    actor: buildActor(session.user.email || '', session.user.name),
-                    verb: VERBS.enrolled,
-                    object: buildActivity(
-                        `${PLATFORM_IRI}/courses/${course.slug}`,
-                        ACTIVITY_TYPES.course,
-                        course.title,
-                        course.description || undefined
-                    )
-                },
-                genIdempotencyKey("enrollment", session.user.id, courseId)
-            )
-
-            // Record to unified journey
-            recordActivity(
-                session.user.id,
-                "ENROLLMENT",
-                courseId,
-                course.title
-            )
-        }
-
+        // 5. CACHE INVALIDATION (after successful transaction)
         revalidatePath(`/courses/[slug]`, "page")
         revalidatePath("/dashboard")
-        return { success: true }
-    } catch (error) {
-        console.error("Enrollment error:", error)
-        return { error: "Gagal mendaftar kursus" }
+
+        // 6. RETURN SUCCESS
+        return success({ enrollmentId }, "Berhasil mendaftar kursus")
+
+    } catch (err) {
+        console.error("[LEARNING] enrollInCourse error:", err)
+        return serverError("Gagal mendaftar kursus")
     }
 }
 

@@ -1,14 +1,25 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Activity, Users, BookOpen, FileQuestion, Play, ChevronLeft, ChevronRight, Loader2, Video, Sparkles, AlertTriangle, TrendingDown, SkipForward, Pause } from "lucide-react"
+import { ArrowLeft, Activity, Users, BookOpen, FileQuestion, Play, ChevronLeft, ChevronRight, Loader2, Video, Sparkles, AlertTriangle, TrendingDown, Pause, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { getXAPIStatements, getXAPIStats } from "@/lib/actions/xapi-analytics"
 import { getVideoList, getVideoAnalytics, getAIVideoInsights } from "@/lib/actions/video-analytics"
+import { getFilteredStatements } from "@/lib/actions/xapi-extended-analytics"
+import {
+    XAPIFilters,
+    FilterState,
+    LeaderboardCard,
+    CourseAnalyticsCard,
+    QuizAnalyticsCard,
+    ExportButtons,
+    LRSStatusIndicator,
+    HistoricalChart
+} from "@/components/xapi"
 
 const ITEMS_PER_PAGE = 10
 
@@ -18,6 +29,8 @@ export default function XAPIAnalyticsPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
+    const [filters, setFilters] = useState<FilterState>({})
+    const [refreshKey, setRefreshKey] = useState(0)
 
     // Video analytics state
     const [videoList, setVideoList] = useState<any[]>([])
@@ -26,29 +39,53 @@ export default function XAPIAnalyticsPage() {
     const [aiInsights, setAIInsights] = useState<any>(null)
     const [loadingVideo, setLoadingVideo] = useState(false)
 
-    useEffect(() => {
-        async function loadData() {
-            setLoading(true)
-            try {
-                const [statsResult, statementsResult, videos] = await Promise.all([
-                    getXAPIStats(),
-                    getXAPIStatements({ limit: 100 }),
-                    getVideoList()
-                ])
-                setStats(statsResult)
-                setVideoList(videos)
-                if (statementsResult.error) {
-                    setError(statementsResult.error)
-                } else {
-                    setStatements(statementsResult.statements)
-                }
-            } catch (err) {
-                setError("Gagal memuat data")
+    // Load data function
+    const loadData = useCallback(async () => {
+        setLoading(true)
+        try {
+            const [statsResult, videos] = await Promise.all([
+                getXAPIStats(),
+                getVideoList()
+            ])
+            setStats(statsResult)
+            setVideoList(videos)
+
+            // Load statements with filters
+            const statementsResult = await getFilteredStatements({
+                dateFrom: filters.dateFrom?.toISOString(),
+                dateTo: filters.dateTo?.toISOString(),
+                verb: filters.verb,
+                courseId: filters.courseId,
+                actorEmail: filters.actorEmail,
+                limit: 100
+            })
+
+            if (statementsResult.error) {
+                setError(statementsResult.error)
+            } else {
+                setStatements(statementsResult.statements)
+                setError(null)
             }
-            setLoading(false)
+        } catch (err) {
+            setError("Gagal memuat data")
         }
+        setLoading(false)
+    }, [filters])
+
+    useEffect(() => {
         loadData()
-    }, [])
+    }, [loadData, refreshKey])
+
+    // Handle filter changes
+    const handleFilterChange = (newFilters: FilterState) => {
+        setFilters(newFilters)
+        setCurrentPage(1)
+    }
+
+    // Refresh data
+    const handleRefresh = () => {
+        setRefreshKey(k => k + 1)
+    }
 
     // Load video analytics when video is selected
     async function handleVideoSelect(videoId: string) {
@@ -92,11 +129,14 @@ export default function XAPIAnalyticsPage() {
 
     // Helper to get verb badge color
     function getVerbColor(verbId: string): string {
-        if (verbId.includes("registered")) return "bg-blue-500/20 text-blue-600"
+        if (verbId.includes("registered")) return "bg-indigo-500/20 text-indigo-600"
+        if (verbId.includes("enrolled")) return "bg-indigo-500/20 text-indigo-600"
         if (verbId.includes("completed")) return "bg-green-500/20 text-green-600"
         if (verbId.includes("passed")) return "bg-emerald-500/20 text-emerald-600"
         if (verbId.includes("failed")) return "bg-red-500/20 text-red-600"
-        if (verbId.includes("played") || verbId.includes("paused") || verbId.includes("seeked")) return "bg-purple-500/20 text-purple-600"
+        if (verbId.includes("played")) return "bg-blue-500/20 text-blue-600"
+        if (verbId.includes("paused")) return "bg-amber-500/20 text-amber-600"
+        if (verbId.includes("seeked")) return "bg-purple-500/20 text-purple-600"
         return "bg-gray-500/20 text-gray-600"
     }
 
@@ -114,14 +154,28 @@ export default function XAPIAnalyticsPage() {
     return (
         <div className="min-h-screen bg-white dark:bg-slate-900 py-8">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <Link href="/dashboard/admin" className="flex items-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-sm mb-4 w-fit group">
-                    <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                    Kembali ke Dashboard Admin
-                </Link>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
+                    <Link href="/dashboard/admin" className="flex items-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-sm group">
+                        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                        Kembali ke Dashboard Admin
+                    </Link>
+                    <LRSStatusIndicator onRefreshData={handleRefresh} />
+                </div>
 
+                <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">xAPI Analytics</h1>
+                        <p className="text-slate-500 dark:text-slate-400">Monitoring aktivitas pembelajaran dari Yet Analytics LRS</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <ExportButtons filters={filters} />
+                    </div>
+                </div>
+
+                {/* Filters */}
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">xAPI Analytics</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Monitoring aktivitas pembelajaran dari Yet Analytics LRS</p>
+                    <XAPIFilters onFilterChange={handleFilterChange} initialFilters={filters} />
                 </div>
 
                 {/* Stats Grid */}
@@ -197,7 +251,19 @@ export default function XAPIAnalyticsPage() {
                     </Card>
                 </div>
 
-                {/* Analytics Charts */}
+                {/* Analytics Cards Row - Leaderboard, Course, Quiz */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <LeaderboardCard />
+                    <CourseAnalyticsCard />
+                    <QuizAnalyticsCard />
+                </div>
+
+                {/* Historical Trend Chart */}
+                <div className="mb-6">
+                    <HistoricalChart />
+                </div>
+
+                {/* Charts Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     {/* Verb Distribution Chart */}
                     <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
@@ -282,18 +348,20 @@ export default function XAPIAnalyticsPage() {
                                 return (
                                     <div className="flex flex-col">
                                         <div className="w-full h-40 flex items-end justify-around gap-2 mb-4">
-                                            {dayCounts.map((count, i) => (
-                                                <div key={i} className="flex-1 flex flex-col items-center">
-                                                    <div
-                                                        className="w-full max-w-[40px] bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t-lg transition-all duration-500 hover:opacity-80 relative group"
-                                                        style={{ height: `${Math.max((count / maxCount) * 100, 5)}%` }}
-                                                    >
-                                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                            {dayCounts.map((count, i) => {
+                                                const barHeight = Math.max((count / maxCount) * 150, 4)
+                                                return (
+                                                    <div key={i} className="flex-1 flex flex-col items-center justify-end relative group">
+                                                        <div className="absolute bottom-full mb-1 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                                                             {count} aktivitas
                                                         </div>
+                                                        <div
+                                                            className="w-full max-w-[40px] bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t-lg transition-all duration-500 hover:opacity-80"
+                                                            style={{ height: `${barHeight}px` }}
+                                                        />
                                                     </div>
-                                                </div>
-                                            ))}
+                                                )
+                                            })}
                                         </div>
                                         <div className="w-full flex justify-around px-2">
                                             {dayNames.map((name, i) => (

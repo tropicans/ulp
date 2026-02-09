@@ -78,7 +78,7 @@ export default function RegisterPage() {
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-xl shadow-blue-500/20 mb-4 animate-bounce-slow">
                         <GraduationCap className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Daftar Akun LXP</h1>
+                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Daftar Akun TITAN</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Mulai perjalanan belajar mandiri Anda hari ini</p>
                 </div>
 

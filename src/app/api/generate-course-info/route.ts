@@ -77,6 +77,9 @@ export async function POST(request: NextRequest) {
 1. **Judul Kursus**: Judul yang menarik, profesional, dan mencerminkan isi kursus (maksimal 80 karakter)
 2. **Deskripsi Singkat**: Ringkasan dalam 1-2 kalimat tentang kursus (maksimal 200 karakter)
 3. **Deskripsi Lengkap**: Deskripsi komprehensif yang menjelaskan apa yang akan dipelajari peserta, manfaat mengikuti kursus, dan untuk siapa kursus ini cocok (200-400 kata)
+4. **Persyaratan**: Array berisi 3-5 persyaratan atau prasyarat untuk mengikuti kursus ini
+5. **Hasil Pembelajaran**: Array berisi 5-7 hasil pembelajaran (learning outcomes) yang akan dicapai
+6. **Rekomendasi Kursus Selanjutnya**: Array berisi 3-5 topik kursus yang bisa dipelajari setelah menyelesaikan kursus ini
 
 Transkrip Video:
 ${combinedTranscript}
@@ -85,7 +88,10 @@ Berikan response dalam format JSON seperti berikut:
 {
   "title": "Judul Kursus",
   "shortDesc": "Deskripsi singkat kursus dalam 1-2 kalimat",
-  "description": "Deskripsi kursus yang lengkap..."
+  "description": "Deskripsi kursus yang lengkap...",
+  "requirements": ["Persyaratan 1", "Persyaratan 2", "Persyaratan 3"],
+  "outcomes": ["Hasil pembelajaran 1", "Hasil pembelajaran 2", "Hasil pembelajaran 3"],
+  "recommendedNext": ["Topik kursus 1", "Topik kursus 2", "Topik kursus 3"]
 }
 
 Pastikan:
@@ -93,6 +99,9 @@ Pastikan:
 - Judul harus catchy dan informatif
 - Deskripsi singkat padat dan menarik
 - Deskripsi lengkap harus meyakinkan dan detail
+- Persyaratan harus realistis dan relevan
+- Hasil pembelajaran harus specific dan measurable
+- Rekomendasi kursus selanjutnya harus relevan dengan topik
 - Jawab HANYA dengan JSON, tanpa teks tambahan`
 
         console.log("Calling AI proxy for course info generation...")
@@ -147,7 +156,10 @@ Pastikan:
                 success: true,
                 title: result.title || course.title,
                 shortDesc: result.shortDesc || "",
-                description: result.description || ""
+                description: result.description || "",
+                requirements: result.requirements || [],
+                outcomes: result.outcomes || [],
+                recommendedNext: result.recommendedNext || []
             })
         } catch (parseError) {
             console.error("Failed to parse AI response:", content)

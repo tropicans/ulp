@@ -18,7 +18,7 @@ import {
 } from "lucide-react"
 import { QuestionForm } from "./question-form"
 import { BulkUploadDialog } from "./bulk-upload-dialog"
-import { deleteQuestion, reorderQuestions } from "@/lib/actions/questions"
+import { deleteQuestion, reorderQuestions, normalizeQuizPoints } from "@/lib/actions/questions"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
@@ -99,28 +99,60 @@ function SortableQuestionCard({
                             </div>
                             <p className="text-white font-medium mb-3">{question.text}</p>
 
-                            {question.type === "MULTIPLE_CHOICE" && question.options?.choices && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 ml-2">
-                                    {question.options.choices.map((choice: string, i: number) => (
-                                        <div
-                                            key={i}
-                                            className={`text-xs p-2 rounded border ${question.options.correctIndex === i
-                                                ? "bg-green-600 border-green-600 text-white font-medium"
-                                                : "bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300"
-                                                }`}
-                                        >
-                                            {String.fromCharCode(65 + i)}. {choice}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                            {question.type === "MULTIPLE_CHOICE" && (() => {
+                                // Handle both formats: array directly or { choices: [...], correctIndex: number }
+                                const choices = Array.isArray(question.options)
+                                    ? question.options
+                                    : question.options?.choices || []
 
-                            {question.type === "TRUE_FALSE" && (
-                                <div className="flex gap-2 ml-2">
-                                    <Badge className={question.options?.correctIndex === 0 ? "bg-green-600" : "bg-slate-800"}>Benar</Badge>
-                                    <Badge className={question.options?.correctIndex === 1 ? "bg-red-600" : "bg-slate-800"}>Salah</Badge>
-                                </div>
-                            )}
+                                // Calculate correctIndex - check multiple sources
+                                let correctIndex = Array.isArray(question.options)
+                                    ? question.correctIndex
+                                    : question.options?.correctIndex
+
+                                // If correctIndex is still undefined/null, try to find from isCorrect property
+                                if (correctIndex === undefined || correctIndex === null) {
+                                    const correctIdx = choices.findIndex((c: any) =>
+                                        typeof c === 'object' && c !== null && c.isCorrect === true
+                                    )
+                                    if (correctIdx >= 0) correctIndex = correctIdx
+                                }
+
+                                // Helper to get choice text - handles both string and object formats
+                                const getChoiceText = (choice: any): string => {
+                                    if (typeof choice === 'string') return choice
+                                    if (choice && typeof choice === 'object' && 'text' in choice) return choice.text
+                                    return String(choice)
+                                }
+
+                                return choices.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 ml-2">
+                                        {choices.map((choice: any, i: number) => (
+                                            <div
+                                                key={i}
+                                                className={`text-xs p-2 rounded border ${correctIndex === i
+                                                    ? "bg-green-600 border-green-600 text-white font-medium"
+                                                    : "bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300"
+                                                    }`}
+                                            >
+                                                {String.fromCharCode(65 + i)}. {getChoiceText(choice)}
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : null
+                            })()}
+
+                            {question.type === "TRUE_FALSE" && (() => {
+                                const correctIndex = Array.isArray(question.options)
+                                    ? question.correctIndex
+                                    : question.options?.correctIndex
+                                return (
+                                    <div className="flex gap-2 ml-2">
+                                        <Badge className={correctIndex === 0 ? "bg-green-600" : "bg-slate-800"}>Benar</Badge>
+                                        <Badge className={correctIndex === 1 ? "bg-red-600" : "bg-slate-800"}>Salah</Badge>
+                                    </div>
+                                )
+                            })()}
                         </div>
                         <div className="flex gap-1">
                             <Button variant="ghost" size="icon" onClick={onEdit} className="text-slate-400 hover:text-white">
@@ -154,6 +186,7 @@ export function QuizBuilder({ quiz }: QuizBuilderProps) {
     const [generating, setGenerating] = useState(false)
     const [deleting, setDeleting] = useState<string | null>(null)
     const [deletingAll, setDeletingAll] = useState(false)
+    const [normalizing, setNormalizing] = useState(false)
     const router = useRouter()
 
     const sensors = useSensors(
@@ -186,15 +219,19 @@ export function QuizBuilder({ quiz }: QuizBuilderProps) {
     }
 
     const handleGenerateAI = async () => {
+        console.log('[GenerateAI] Button clicked, quizId:', quiz.id)
         setGenerating(true)
         try {
+            console.log('[GenerateAI] Sending request to /api/generate-quiz-questions')
             const response = await fetch("/api/generate-quiz-questions", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ quizId: quiz.id })
             })
 
+            console.log('[GenerateAI] Response status:', response.status)
             const data = await response.json()
+            console.log('[GenerateAI] Response data:', data)
 
             if (!response.ok) {
                 throw new Error(data.error || "Gagal generate soal")
@@ -250,6 +287,23 @@ export function QuizBuilder({ quiz }: QuizBuilderProps) {
         }
     }
 
+    const handleNormalizePoints = async () => {
+        setNormalizing(true)
+        try {
+            const result = await normalizeQuizPoints(quiz.id)
+            if (result.success) {
+                toast.success(result.message || "Poin berhasil didistribusi!")
+                window.location.reload()
+            } else {
+                toast.error(result.error || "Gagal mendistribusi poin")
+            }
+        } catch (err) {
+            toast.error("Gagal mendistribusi poin")
+        } finally {
+            setNormalizing(false)
+        }
+    }
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -259,24 +313,41 @@ export function QuizBuilder({ quiz }: QuizBuilderProps) {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                     {questions.length > 0 && (
-                        <Button
-                            onClick={handleDeleteAll}
-                            disabled={deletingAll || generating || isAdding}
-                            variant="outline"
-                            className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
-                        >
-                            {deletingAll ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Menghapus...
-                                </>
-                            ) : (
-                                <>
-                                    <Trash2 className="w-4 h-4 mr-2" />
-                                    Hapus Semua
-                                </>
-                            )}
-                        </Button>
+                        <>
+                            <Button
+                                onClick={handleDeleteAll}
+                                disabled={deletingAll || generating || isAdding || normalizing}
+                                variant="outline"
+                                className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            >
+                                {deletingAll ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Menghapus...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Hapus Semua
+                                    </>
+                                )}
+                            </Button>
+                            <Button
+                                onClick={handleNormalizePoints}
+                                disabled={normalizing || generating || isAdding || deletingAll}
+                                variant="outline"
+                                className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
+                            >
+                                {normalizing ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Distribusi...
+                                    </>
+                                ) : (
+                                    "= 100 Poin"
+                                )}
+                            </Button>
+                        </>
                     )}
                     <BulkUploadDialog
                         quizId={quiz.id}

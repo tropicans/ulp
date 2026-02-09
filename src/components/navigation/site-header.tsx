@@ -28,6 +28,7 @@ export function SiteHeader() {
                 { label: "Sertifikat", href: "/dashboard/learner/certificates" },
                 { label: "Jejak Belajar", href: "/dashboard/learner/journey" },
                 { label: "Ala Carte", href: "/dashboard/learner/library" },
+                { label: "PBGM", href: "/dashboard/pbgm" },
             ]
         }
 
@@ -37,6 +38,7 @@ export function SiteHeader() {
                 { label: "Kelola Kursus", href: "/dashboard/courses" },
                 { label: "Peserta", href: "/dashboard/instructor/students" },
                 { label: "Laporan", href: "/dashboard/instructor/reports" },
+                { label: "PBGM", href: "/dashboard/pbgm" },
             ]
         }
 
@@ -47,6 +49,7 @@ export function SiteHeader() {
                 { label: "Kelola User", href: "/dashboard/admin/users" },
                 { label: "Laporan", href: "/dashboard/admin/reports" },
                 { label: "Settings", href: "/dashboard/admin/settings" },
+                { label: "PBGM", href: "/dashboard/pbgm" },
             ]
         }
 
@@ -57,6 +60,7 @@ export function SiteHeader() {
                 { label: "Semua User", href: "/dashboard/admin/users" },
                 { label: "Analytics", href: "/dashboard/admin/analytics" },
                 { label: "Settings", href: "/dashboard/admin/settings" },
+                { label: "PBGM", href: "/dashboard/pbgm" },
             ]
         }
 

@@ -246,6 +246,89 @@ if (result.certificate) {
 |----------|-----------|------|
 | `getActivityStats(userId?)` | Mendapatkan statistik aktivitas | Admin+ |
 | `exportXAPIStatements(filters)` | Export xAPI statements | Admin+ |
+| `getLearnerJourney(userId)` | Mendapatkan timeline aktivitas learner | Learner+ |
+| `getActivitySummary(courseId?)` | Summary aktivitas per course | Admin+ |
+
+**LearnerActivity Types:**
+- `ENROLLMENT` - User enrolled in course
+- `LESSON_COMPLETE` - Lesson completed
+- `QUIZ_PASS` - Quiz passed
+- `ATTENDANCE` - Attended session
+- `CERTIFICATE` - Certificate issued
+
+---
+
+### curation.ts - YouTube Curation 🆕
+
+| Function | Deskripsi | Auth |
+|----------|-----------|------|
+| `startCurationSession(params)` | Memulai session curation baru | Instructor+ |
+| `getCurationSession(sessionId)` | Mendapatkan detail session | Instructor+ |
+| `getCurationSessions()` | Mendapatkan daftar sessions | Instructor+ |
+| `updateCandidateSelection(candidateId, selected)` | Toggle video selection | Instructor+ |
+| `reorderCandidate(candidateId, newOrder)` | Reorder video dalam playlist | Instructor+ |
+| `finalizeCuration(sessionId, title, description)` | Finalize dan buat course | Instructor+ |
+
+**Contoh Penggunaan:**
+
+```typescript
+import { startCurationSession, finalizeCuration } from "@/lib/actions/curation"
+
+// Start curation session
+const { session } = await startCurationSession({
+  topic: "Agentic AI",
+  language: "Bahasa Indonesia",
+  level: "Intermediate",
+  targetDurationMin: 60
+})
+
+// After reviewing candidates...
+const result = await finalizeCuration(
+  session.id, 
+  "Introduction to Agentic AI",
+  "Comprehensive course on AI agents"
+)
+```
+
+---
+
+### wblm-*.ts - PBGM (Project-Based Growth Module) 🆕
+
+> File prefix: `wblm-` (10 files)
+
+#### wblm-programs.ts - Program Management
+
+| Function | Deskripsi | Auth |
+|----------|-----------|------|
+| `createWblmProgram(data)` | Membuat program PBGM baru | Instructor+ |
+| `getWblmPrograms(filters?)` | Mendapatkan daftar programs | Instructor+ |
+| `getWblmProgramById(id)` | Mendapatkan detail program | Instructor+ |
+| `updateWblmProgram(id, data)` | Update program | Instructor+ |
+| `publishWblmProgram(id)` | Publikasi program | Instructor+ |
+
+#### wblm-milestones.ts - Milestone Management
+
+| Function | Deskripsi | Auth |
+|----------|-----------|------|
+| `createWblmMilestone(programId, data)` | Membuat milestone baru | Instructor+ |
+| `updateWblmMilestone(id, data)` | Update milestone | Instructor+ |
+| `deleteWblmMilestone(id)` | Hapus milestone | Instructor+ |
+
+#### wblm-submissions.ts - Participant Submissions
+
+| Function | Deskripsi | Auth |
+|----------|-----------|------|
+| `createWblmSubmission(milestoneId, data)` | Submit artifact | Learner+ |
+| `getWblmSubmission(id)` | Mendapatkan detail submission | Learner+ |
+| `getWblmSubmissions(milestoneId)` | Mendapatkan submissions by milestone | Instructor+ |
+
+#### wblm-reviews.ts - Review Process
+
+| Function | Deskripsi | Auth |
+|----------|-----------|------|
+| `createWblmReview(submissionId, data)` | Membuat review | Instructor+ |
+| `getWblmReviews(submissionId)` | Mendapatkan reviews | Learner+ |
+| `assignReviewer(programId, participantId, reviewerId)` | Assign reviewer | Instructor+ |
 
 ---
 
@@ -269,10 +352,20 @@ POST /api/generate-thumbnail - Generate thumbnail dengan AI
 GET  /api/user/enrollments  - Get user enrollments
 ```
 
-### Webhooks
+### Webhooks (n8n Integration)
 
 ```
-POST /api/webhooks/youtube  - YouTube webhook notifications
+POST /api/webhooks/youtube              - YouTube import webhook
+POST /api/webhooks/youtube-curation     - Curation workflow webhook
+POST /api/webhooks/youtube-metadata     - Metadata generation webhook
+```
+
+### Health Checks
+
+```
+GET  /api/health            - Application health check
+GET  /api/health/db         - Database connectivity check
+GET  /api/health/redis      - Redis connectivity check
 ```
 
 ---
@@ -357,6 +450,21 @@ enum EnrollmentStatus {
 }
 ```
 
+### WblmMilestoneStatus
+
+```typescript
+enum WblmMilestoneStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  UNDER_REVIEW
+  REVISION_REQUESTED
+  RESUBMITTED
+  APPROVED_FINAL
+  LOCKED
+}
+```
+
 ---
 
-*Dokumen ini terakhir diperbarui: 27 Januari 2026*
+*Dokumen ini terakhir diperbarui: 9 Februari 2026*

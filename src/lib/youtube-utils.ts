@@ -132,8 +132,8 @@ export async function extractAudio(videoUrl: string, videoId: string): Promise<s
             fs.mkdirSync(audioPath, { recursive: true });
         }
 
-        // Use yt-dlp
-        const command = `yt-dlp -x --audio-format mp3 --audio-quality 128K --no-playlist -o "${outputPath}" "${videoUrl}"`;
+        // Use yt-dlp with node runtime for YouTube extraction
+        const command = `yt-dlp --js-runtimes node -x --audio-format mp3 --audio-quality 128K --no-playlist -o "${outputPath}" "${videoUrl}"`;
 
         const { stdout, stderr } = await execPromise(command, {
             maxBuffer: 50 * 1024 * 1024, // 50MB buffer

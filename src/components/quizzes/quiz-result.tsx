@@ -23,51 +23,84 @@ interface QuizResultProps {
 
 export function QuizResult({ attempt, quiz, courseSlug }: QuizResultProps) {
     const isPassed = attempt.score >= quiz.passingScore
+    const isPretest = quiz.type === 'PRETEST'
+
+    // For pretest, we show a neutral completion message
+    const getHeroContent = () => {
+        if (isPretest) {
+            return {
+                bgClass: "bg-gradient-to-br from-blue-600/20 to-indigo-600/10",
+                iconBgClass: "bg-blue-600 shadow-blue-900/20",
+                icon: <CheckCircle2 className="w-10 h-10 text-white" />,
+                title: "Pre-Test Selesai!",
+                subtitle: "Terima kasih telah mengerjakan pre-test. Hasil ini akan menjadi baseline untuk mengukur perkembangan belajar Anda.",
+                scoreColor: "text-blue-500"
+            }
+        }
+        if (isPassed) {
+            return {
+                bgClass: "bg-gradient-to-br from-green-600/20 to-emerald-600/10",
+                iconBgClass: "bg-green-600 shadow-green-900/20",
+                icon: <Trophy className="w-10 h-10 text-white" />,
+                title: "Selamat! Anda Lulus",
+                subtitle: "Anda telah berhasil melewati ambang batas nilai minimum untuk kuis ini.",
+                scoreColor: "text-green-500"
+            }
+        }
+        return {
+            bgClass: "bg-gradient-to-br from-red-600/20 to-orange-600/10",
+            iconBgClass: "bg-red-600 shadow-red-900/20",
+            icon: <AlertCircle className="w-10 h-10 text-white" />,
+            title: "Maaf, Anda Belum Lulus",
+            subtitle: "Jangan menyerah! Anda dapat mempelajari kembali materi dan mencoba lagi.",
+            scoreColor: "text-red-500"
+        }
+    }
+
+    const hero = getHeroContent()
 
     return (
         <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Result Hero */}
-            <Card className={`border-none shadow-2xl overflow-hidden ${isPassed
-                    ? "bg-gradient-to-br from-green-600/20 to-emerald-600/10"
-                    : "bg-gradient-to-br from-red-600/20 to-orange-600/10"
-                }`}>
+            <Card className={`border-none shadow-2xl overflow-hidden ${hero.bgClass}`}>
                 <CardContent className="p-10 text-center">
-                    <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg ${isPassed ? "bg-green-600 shadow-green-900/20" : "bg-red-600 shadow-red-900/20"
-                        }`}>
-                        {isPassed ? <Trophy className="w-10 h-10 text-white" /> : <AlertCircle className="w-10 h-10 text-white" />}
+                    <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg ${hero.iconBgClass}`}>
+                        {hero.icon}
                     </div>
 
                     <h2 className="text-3xl font-black text-white mb-2">
-                        {isPassed ? "Selamat! Anda Lulus" : "Maaf, Anda Belum Lulus"}
+                        {hero.title}
                     </h2>
                     <p className="text-slate-400 mb-8 max-w-sm mx-auto">
-                        {isPassed
-                            ? "Anda telah berhasil melewati ambang batas nilai minimum untuk kuis ini."
-                            : "Jangan menyerah! Anda dapat mempelajari kembali materi dan mencoba lagi."}
+                        {hero.subtitle}
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-10">
                         <div className="text-center">
                             <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Skor Anda</p>
-                            <p className={`text-5xl font-black ${isPassed ? "text-green-500" : "text-red-500"}`}>
-                                {attempt.score}%
+                            <p className={`text-5xl font-black ${hero.scoreColor}`}>
+                                {Math.round(attempt.score || 0)}%
                             </p>
                         </div>
-                        <div className="w-px h-12 bg-slate-700 hidden md:block" />
-                        <div className="text-center">
-                            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Target</p>
-                            <p className="text-3xl font-black text-white">{quiz.passingScore}%</p>
-                        </div>
+                        {!isPretest && (
+                            <>
+                                <div className="w-px h-12 bg-slate-700 hidden md:block" />
+                                <div className="text-center">
+                                    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Target</p>
+                                    <p className="text-3xl font-black text-white">{quiz.passingScore}%</p>
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-200 font-bold px-8 rounded-2xl" asChild>
                             <Link href={`/courses/${courseSlug}/learn`}>
                                 <LayoutDashboard className="w-4 h-4 mr-2" />
-                                Kembali Belajar
+                                {isPretest ? "Mulai Belajar" : "Kembali Belajar"}
                             </Link>
                         </Button>
-                        {!isPassed && (
+                        {!isPassed && !isPretest && (
                             <Button size="lg" variant="outline" className="border-slate-700 text-white hover:bg-slate-800 font-bold px-8 rounded-2xl" asChild>
                                 <Link href={`/courses/${courseSlug}/quizzes/${quiz.id}/take`}>
                                     <RotateCcw className="w-4 h-4 mr-2" />
@@ -80,50 +113,61 @@ export function QuizResult({ attempt, quiz, courseSlug }: QuizResultProps) {
             </Card>
 
             {/* Stats Table */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className={`grid grid-cols-1 ${isPretest ? 'md:grid-cols-1 max-w-xs mx-auto' : 'md:grid-cols-3'} gap-4`}>
                 <Card className="bg-slate-900 border-slate-800">
                     <CardContent className="p-4 flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
                             <Clock className="w-5 h-5 text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Waktu Selesai</p>
+                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
+                                {isPretest ? "Selesai Pada" : "Waktu Selesai"}
+                            </p>
                             <p className="text-sm font-bold text-white">
-                                {new Date(attempt.finishedAt).toLocaleTimeString()}
+                                {attempt.submittedAt
+                                    ? new Date(attempt.submittedAt).toLocaleString('id-ID', {
+                                        dateStyle: 'medium',
+                                        timeStyle: 'short'
+                                    })
+                                    : "-"}
                             </p>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-slate-900 border-slate-800">
-                    <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                            <CheckCircle2 className="w-5 h-5 text-purple-400" />
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Status Penilaian</p>
-                            <p className="text-sm font-bold text-white">
-                                {attempt.gradingStatus === "GRADED" ? "Sudah Dinilai" : "Menunggu Penilaian"}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                {!isPretest && (
+                    <>
+                        <Card className="bg-slate-900 border-slate-800">
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                                    <CheckCircle2 className="w-5 h-5 text-purple-400" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Status Penilaian</p>
+                                    <p className="text-sm font-bold text-white">
+                                        {attempt.gradingStatus === "COMPLETED" ? "Sudah Dinilai" : "Menunggu Penilaian"}
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
 
-                <Card className="bg-slate-900 border-slate-800">
-                    <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                            <RotateCcw className="w-5 h-5 text-orange-400" />
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Percobaan Ke</p>
-                            <p className="text-sm font-bold text-white">1 (placeholder)</p>
-                        </div>
-                    </CardContent>
-                </Card>
+                        <Card className="bg-slate-900 border-slate-800">
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                                    <RotateCcw className="w-5 h-5 text-orange-400" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Percobaan Ke</p>
+                                    <p className="text-sm font-bold text-white">1</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </>
+                )}
             </div>
 
-            {/* Question Review */}
-            {quiz.showCorrectAnswers && (
+            {/* Question Review - Never show for PRETEST/POSTTEST */}
+            {quiz.showCorrectAnswers && quiz.type !== 'PRETEST' && quiz.type !== 'POSTTEST' && (
                 <div className="space-y-4">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <ChevronRight className="w-5 h-5 text-purple-500" />
@@ -131,8 +175,8 @@ export function QuizResult({ attempt, quiz, courseSlug }: QuizResultProps) {
                     </h3>
 
                     <div className="space-y-4">
-                        {quiz.Question.map((q: any, idx: number) => {
-                            const studentAnswer = attempt.QuizAnswer.find((a: any) => a.questionId === q.id)
+                        {(quiz.Question || []).map((q: any, idx: number) => {
+                            const studentAnswer = (attempt.QuizAnswer || []).find((a: any) => a.questionId === q.id)
                             const isCorrect = studentAnswer?.isCorrect
 
                             return (
@@ -150,9 +194,12 @@ export function QuizResult({ attempt, quiz, courseSlug }: QuizResultProps) {
 
                                         {q.type === "MULTIPLE_CHOICE" && (
                                             <div className="grid gap-2 ml-7">
-                                                {q.options.choices.map((choice: string, cIdx: number) => {
-                                                    const isStudentChoice = studentAnswer?.selectedOptions === cIdx
-                                                    const isCorrectPath = q.options.correctIndex === cIdx
+                                                {(q.options?.choices || []).map((choice: string, cIdx: number) => {
+                                                    const selectedValue = typeof studentAnswer?.selectedOptions === 'number'
+                                                        ? studentAnswer.selectedOptions
+                                                        : studentAnswer?.selectedOptions?.index
+                                                    const isStudentChoice = selectedValue === cIdx
+                                                    const isCorrectPath = q.options?.correctIndex === cIdx
 
                                                     let bgColor = "bg-slate-800/30"
                                                     let borderColor = "border-slate-800"

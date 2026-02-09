@@ -25,7 +25,38 @@ export async function previewYouTubePlaylist(url: string) {
     return { success: true, metadata };
 }
 
-export async function importYouTubePlaylist(url: string, instructorId: string) {
+export async function checkExistingPlaylist(playlistId: string) {
+    try {
+        // Check if playlist exists in yt_playlists table
+        const existingPlaylist = await (prisma as any).ytPlaylist.findUnique({
+            where: { playlistId: playlistId }
+        });
+
+        if (!existingPlaylist) {
+            return { exists: false };
+        }
+
+        // Find related course
+        const existingCourse = await prisma.course.findFirst({
+            where: { ytPlaylistId: playlistId },
+            select: { id: true, title: true, slug: true }
+        });
+
+        return {
+            exists: true,
+            course: existingCourse ? {
+                id: existingCourse.id,
+                title: existingCourse.title,
+                slug: existingCourse.slug
+            } : null
+        };
+    } catch (error) {
+        console.error("Error checking existing playlist:", error);
+        return { exists: false };
+    }
+}
+
+export async function importYouTubePlaylist(url: string, instructorId: string, forceUpdate: boolean = false) {
     try {
         const session = await auth();
         if (!session?.user?.id) {
@@ -35,6 +66,51 @@ export async function importYouTubePlaylist(url: string, instructorId: string) {
         const metadata = await fetchYouTubePlaylistMetadata(url);
         if (!metadata) {
             return { error: "Gagal mengambil metadata playlist" };
+        }
+
+        // Handle forceUpdate - delete existing records first
+        if (forceUpdate) {
+            const existingCourse = await prisma.course.findFirst({
+                where: { ytPlaylistId: metadata.id },
+                include: { Module: { include: { Lesson: true } } }
+            });
+
+            if (existingCourse) {
+                // Delete in correct order due to foreign key constraints
+                // 1. Delete ProcessingJobs for lessons
+                for (const module of existingCourse.Module) {
+                    for (const lesson of module.Lesson) {
+                        await prisma.processingJob.deleteMany({
+                            where: { targetId: lesson.id }
+                        });
+                    }
+                }
+
+                // 2. Delete Lessons
+                for (const module of existingCourse.Module) {
+                    await prisma.lesson.deleteMany({
+                        where: { moduleId: module.id }
+                    });
+                }
+
+                // 3. Delete Modules
+                await prisma.module.deleteMany({
+                    where: { courseId: existingCourse.id }
+                });
+
+                // 4. Delete Course
+                await prisma.course.delete({
+                    where: { id: existingCourse.id }
+                });
+            }
+
+            // Delete yt_playlist_items and yt_playlists
+            await (prisma as any).ytPlaylistItem.deleteMany({
+                where: { playlistId: metadata.id }
+            });
+            await (prisma as any).ytPlaylist.deleteMany({
+                where: { playlistId: metadata.id }
+            });
         }
 
         const baseSlug = metadata.title
@@ -163,93 +239,168 @@ export async function triggerBackgroundProcessing() {
     processPendingJobs().catch(err => console.error("Worker error:", err));
 }
 
-async function processPendingJobs() {
-    const jobs = await prisma.processingJob.findMany({
-        where: { status: "PENDING", type: "YOUTUBE_IMPORT" },
-        take: 5 // Process in small batches
-    });
+export async function processPendingJobs() {
+    // Track which playlists were processed across all batches
+    const processedPlaylists = new Set<string>();
 
-    for (const job of jobs) {
-        try {
-            await prisma.processingJob.update({
-                where: { id: job.id },
-                data: { status: "PROCESSING" }
-            });
+    // Keep processing until no more pending jobs
+    while (true) {
+        const jobs = await prisma.processingJob.findMany({
+            where: { status: "PENDING", type: "YOUTUBE_IMPORT" },
+            take: 5 // Process in small batches
+        });
 
-            const payload = job.payload as any;
-            const videoId = payload.videoId;
-            const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        // Exit loop when no more pending jobs
+        if (jobs.length === 0) {
+            break;
+        }
 
-            // 1. Extract Audio
-            const audioPath = await extractAudio(videoUrl, videoId);
-
-            // 2. Update Lesson with audio path
-            await prisma.lesson.update({
-                where: { id: job.targetId },
-                data: { audioFilePath: audioPath }
-            });
-
-            // 2b. Update yt_playlist_item with audio path
-            await (prisma as any).ytPlaylistItem.updateMany({
-                where: {
-                    videoId: videoId,
-                    playlistId: payload.playlistId
-                },
-                data: {
-                    audioFilePath: audioPath,
-                    status: 'processing'
-                }
-            });
-
-            // 3. Trigger n8n Webhook
-            const webhookUrl = process.env.WEBHOOK_URL;
-            if (webhookUrl) {
-                // Fetch full payload as expected by n8n
-                const lesson = await prisma.lesson.findUnique({
-                    where: { id: job.targetId },
-                    include: { Module: { include: { Course: true } } }
+        for (const job of jobs) {
+            try {
+                await prisma.processingJob.update({
+                    where: { id: job.id },
+                    data: { status: "PROCESSING" }
                 });
 
-                if (lesson) {
-                    const webhookPayload = {
-                        source: 'TITAN-lms',
-                        playlist: {
-                            id: lesson.Module.Course.ytPlaylistId,
-                            title: lesson.Module.Course.title,
-                            url: `https://www.youtube.com/playlist?list=${lesson.Module.Course.ytPlaylistId}`,
-                            author: 'YouTube Import',
-                            total: 1
-                        },
-                        items: [{
-                            No: lesson.order,
-                            'Judul Video': lesson.title,
-                            videoId: lesson.ytVideoId,
-                            audioFilePath: audioPath,
-                            Status: 'processing'
-                        }]
-                    };
+                const payload = job.payload as any;
+                const videoId = payload.videoId;
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-                    const signedRequest = createSignedWebhookRequest(webhookPayload);
-                    await axios.post(webhookUrl, signedRequest.body, {
-                        headers: signedRequest.headers
-                    });
+                // 1. Extract Audio
+                const audioPath = await extractAudio(videoUrl, videoId);
+
+                // 2. Update Lesson with audio path
+                await prisma.lesson.update({
+                    where: { id: job.targetId },
+                    data: { audioFilePath: audioPath }
+                });
+
+                // 2b. Update yt_playlist_item with audio path
+                await (prisma as any).ytPlaylistItem.updateMany({
+                    where: {
+                        videoId: videoId,
+                        playlistId: payload.playlistId
+                    },
+                    data: {
+                        audioFilePath: audioPath,
+                        status: 'audio_extracted'
+                    }
+                });
+
+                // Track this playlist for webhook trigger check
+                if (payload.playlistId) {
+                    processedPlaylists.add(payload.playlistId);
                 }
+
+                await prisma.processingJob.update({
+                    where: { id: job.id },
+                    data: { status: "COMPLETED" }
+                });
+
+            } catch (error: any) {
+                console.error(`Job ${job.id} failed:`, error);
+                await prisma.processingJob.update({
+                    where: { id: job.id },
+                    data: {
+                        status: "FAILED",
+                        error: error.message
+                    }
+                });
             }
+        }
+    }
 
-            await prisma.processingJob.update({
-                where: { id: job.id },
-                data: { status: "COMPLETED" }
+    // After processing ALL jobs, check if any playlist is fully complete
+    for (const playlistId of processedPlaylists) {
+        await checkAndTriggerWebhook(playlistId);
+    }
+}
+
+// Check if all videos in a playlist have audio extracted, then trigger webhook
+async function checkAndTriggerWebhook(playlistId: string) {
+    // Check if there are any pending jobs for this playlist
+    const pendingJobs = await prisma.processingJob.count({
+        where: {
+            type: "YOUTUBE_IMPORT",
+            status: { in: ["PENDING", "PROCESSING"] },
+            payload: {
+                path: ['playlistId'],
+                equals: playlistId
+            }
+        }
+    });
+
+    if (pendingJobs > 0) {
+        console.log(`Playlist ${playlistId} still has ${pendingJobs} pending jobs, skipping webhook`);
+        return;
+    }
+
+    // All jobs complete, check how many items have audio
+    const items = await (prisma as any).ytPlaylistItem.findMany({
+        where: {
+            playlistId: playlistId,
+            audioFilePath: { not: null }
+        }
+    });
+
+    if (items.length === 0) {
+        console.log(`No items with audio for playlist ${playlistId}, skipping webhook`);
+        return;
+    }
+
+    // Check if webhook was already triggered for this playlist
+    const playlist = await (prisma as any).ytPlaylist.findUnique({
+        where: { playlistId: playlistId }
+    });
+
+    if (playlist?.status === 'webhook_triggered') {
+        console.log(`Webhook already triggered for playlist ${playlistId}, skipping`);
+        return;
+    }
+
+    // Trigger n8n Webhook with all items
+    const webhookUrl = process.env.WEBHOOK_URL;
+
+    if (webhookUrl) {
+        const webhookPayload = {
+            source: 'TITAN-lms',
+            playlist: {
+                id: playlistId,
+                title: playlist?.playlistTitle || 'YouTube Playlist',
+                url: `https://www.youtube.com/playlist?list=${playlistId}`,
+                author: 'YouTube Import',
+                total: items.length
+            },
+            items: items.map((item: any, idx: number) => ({
+                No: item.videoNo || idx + 1,
+                'Judul Video': item.videoTitle,
+                videoId: item.videoId,
+                'Durasi': item.durationStr || null,
+                'Alamat Embed': item.embedUrl || `https://www.youtube.com/embed/${item.videoId}`,
+                audioPath: item.audioFilePath,
+                audioFilePath: item.audioFilePath,
+                Status: 'ready_for_transcription',
+                transcript: item.transcript || null,
+                summary: item.summary || null,
+                quiz_knowledge_check: item.quizKnowledgeCheck || null
+            }))
+        };
+
+        try {
+            const signedRequest = createSignedWebhookRequest(webhookPayload);
+            await axios.post(webhookUrl, signedRequest.body, {
+                headers: signedRequest.headers
             });
 
-        } catch (error: any) {
-            console.error(`Job ${job.id} failed:`, error);
-            await prisma.processingJob.update({
-                where: { id: job.id },
-                data: {
-                    status: "FAILED",
-                    error: error.message
-                }
+            // Mark playlist as webhook triggered
+            await (prisma as any).ytPlaylist.update({
+                where: { playlistId: playlistId },
+                data: { status: 'webhook_triggered' }
             });
+
+            console.log(`Webhook triggered for playlist ${playlistId} with ${items.length} items`);
+        } catch (error) {
+            console.error(`Failed to trigger webhook for playlist ${playlistId}:`, error);
         }
     }
 }

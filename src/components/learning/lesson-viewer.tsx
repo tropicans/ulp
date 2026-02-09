@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle2, FileText, PlayCircle, FileDown, Clock, Video, ArrowRight } from "lucide-react"
 import { markLessonComplete } from "@/lib/actions/progress"
-import { trackVideoPlay, trackVideoPause, trackVideoCompleted } from "@/lib/actions/video-tracking"
+import { trackVideoPlay, trackVideoPause, trackVideoCompleted, trackVideoSeek } from "@/lib/actions/video-tracking"
 import { toast } from "sonner"
 import { KnowledgeCheckModal } from "./knowledge-check-modal"
 
@@ -171,6 +171,9 @@ export function LessonViewer({
     const videoEndedRef = useRef(videoEnded)
     const onCompleteRef = useRef(onComplete)
     const lessonIdRef = useRef(lesson.id)
+    const lastKnownTimeRef = useRef<number>(0) // For seek detection
+    const isPlayingRef = useRef<boolean>(false)
+    const seekCheckIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
     // Keep refs in sync with props/state
     useEffect(() => {
@@ -206,14 +209,28 @@ export function LessonViewer({
 
             // YT.PlayerState.PLAYING = 1
             if (event.data === 1) {
+                isPlayingRef.current = true
+                // Detect seek: if time jumped more than 3 seconds from last known position
+                const timeDiff = Math.abs(currentTime - lastKnownTimeRef.current)
+                console.log(`[Video] PLAYING - currentTime: ${currentTime.toFixed(2)}, lastKnown: ${lastKnownTimeRef.current.toFixed(2)}, diff: ${timeDiff.toFixed(2)}`)
+                if (lastKnownTimeRef.current > 0 && timeDiff > 3) {
+                    console.log(`[Seek Detected] from ${lastKnownTimeRef.current.toFixed(2)} to ${currentTime.toFixed(2)}`)
+                    trackVideoSeek(lessonIdRef.current, videoId, lastKnownTimeRef.current, currentTime)
+                }
+                lastKnownTimeRef.current = currentTime
                 trackVideoPlay(lessonIdRef.current, videoId, currentTime)
             }
             // YT.PlayerState.PAUSED = 2
             else if (event.data === 2) {
+                isPlayingRef.current = false
+                console.log(`[Video] PAUSED - currentTime: ${currentTime.toFixed(2)}, saving to lastKnown`)
+                lastKnownTimeRef.current = currentTime
                 trackVideoPause(lessonIdRef.current, videoId, currentTime, duration)
             }
             // YT.PlayerState.ENDED = 0
             else if (event.data === 0) {
+                isPlayingRef.current = false
+                lastKnownTimeRef.current = 0
                 trackVideoCompleted(lessonIdRef.current, videoId, duration)
                 handleVideoEnded()
             }
@@ -285,8 +302,46 @@ export function LessonViewer({
                 }
                 playerRef.current = null
             }
+            // Clear seek check interval
+            if (seekCheckIntervalRef.current) {
+                clearInterval(seekCheckIntervalRef.current)
+                seekCheckIntervalRef.current = null
+            }
         }
     }, [lesson.videoUrl, initializePlayer])
+
+    // Seek detection interval - runs every 500ms while playing
+    useEffect(() => {
+        const checkSeek = () => {
+            if (!isPlayingRef.current || !playerRef.current) return
+
+            try {
+                const currentTime = playerRef.current.getCurrentTime()
+                const videoId = getYouTubeVideoId(lesson.videoUrl) || lesson.id
+
+                // If time jumped more than 3 seconds (accounting for 500ms interval + buffer)
+                const timeDiff = Math.abs(currentTime - lastKnownTimeRef.current)
+                if (lastKnownTimeRef.current > 0 && timeDiff > 3) {
+                    // This is a seek!
+                    console.log(`[Seek Detected] from ${lastKnownTimeRef.current} to ${currentTime}`)
+                    trackVideoSeek(lessonIdRef.current, videoId, lastKnownTimeRef.current, currentTime)
+                }
+                lastKnownTimeRef.current = currentTime
+            } catch (e) {
+                // Player might be destroyed
+            }
+        }
+
+        // Start interval
+        seekCheckIntervalRef.current = setInterval(checkSeek, 500)
+
+        return () => {
+            if (seekCheckIntervalRef.current) {
+                clearInterval(seekCheckIntervalRef.current)
+                seekCheckIntervalRef.current = null
+            }
+        }
+    }, [lesson.videoUrl, lesson.id])
 
     async function handleVideoEnded() {
         console.log('[LessonViewer] handleVideoEnded called')
@@ -294,35 +349,38 @@ export function LessonViewer({
         console.log('[LessonViewer] videoEndedRef:', videoEndedRef.current)
         console.log('[LessonViewer] knowledgeCheckRef:', knowledgeCheckRef.current)
 
-        if (isCompletedRef.current || videoEndedRef.current) {
-            console.log('[LessonViewer] Skipping - already completed or ended')
+        // Prevent double execution in same session
+        if (videoEndedRef.current) {
+            console.log('[LessonViewer] Skipping - already ended in this session')
             return
         }
 
         setVideoEnded(true)
 
-        // Auto-complete the lesson
-        const result = await markLessonComplete(lessonIdRef.current)
+        // Only mark lesson complete if not already completed
+        if (!isCompletedRef.current) {
+            const result = await markLessonComplete(lessonIdRef.current)
 
-        if (result.error) {
-            toast.error("Gagal menandai selesai", {
-                description: result.error,
-            })
-        } else {
-            toast.success("🎉 Video selesai! Lesson ditandai complete.")
-            onCompleteRef.current?.()
-
-            // Show knowledge check if available
-            const currentKnowledgeCheck = knowledgeCheckRef.current
-            console.log('[LessonViewer] Checking knowledgeCheck:', currentKnowledgeCheck)
-            if (currentKnowledgeCheck) {
-                console.log('[LessonViewer] Showing knowledge check modal in 500ms')
-                setTimeout(() => {
-                    setShowKnowledgeCheck(true)
-                }, 500)
+            if (result.error) {
+                toast.error("Gagal menandai selesai", {
+                    description: result.error,
+                })
             } else {
-                console.log('[LessonViewer] No knowledge check available')
+                toast.success("🎉 Video selesai! Lesson ditandai complete.")
+                onCompleteRef.current?.()
             }
+        }
+
+        // Always show knowledge check if available (even for already completed lessons)
+        const currentKnowledgeCheck = knowledgeCheckRef.current
+        console.log('[LessonViewer] Checking knowledgeCheck:', currentKnowledgeCheck)
+        if (currentKnowledgeCheck) {
+            console.log('[LessonViewer] Showing knowledge check modal in 500ms')
+            setTimeout(() => {
+                setShowKnowledgeCheck(true)
+            }, 500)
+        } else {
+            console.log('[LessonViewer] No knowledge check available')
         }
     }
 

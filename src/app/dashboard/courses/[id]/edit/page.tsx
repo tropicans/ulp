@@ -57,18 +57,60 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
         redirect("/dashboard/courses")
     }
 
-    // Get YouTube thumbnail if no thumbnail is stored but course has ytPlaylistId
+    // Get YouTube thumbnail and metadata if course has ytPlaylistId
     let effectiveThumbnail = course.thumbnail
-    if (!effectiveThumbnail && course.ytPlaylistId) {
+    let effectiveDescription = course.description
+    let effectiveCourseShortDesc = course.courseShortDesc
+    let effectiveRequirements = course.requirements
+    let effectiveOutcomes = course.outcomes
+    let effectiveRecommendedNext = course.recommendedNext
+
+    if (course.ytPlaylistId) {
         // Get first video from playlist for thumbnail
-        const firstVideo = await prisma.ytPlaylistItem.findFirst({
-            where: { playlistId: course.ytPlaylistId },
-            orderBy: { videoNo: 'asc' },
-            select: { videoId: true }
-        })
-        if (firstVideo) {
-            effectiveThumbnail = `https://i.ytimg.com/vi/${firstVideo.videoId}/maxresdefault.jpg`
+        if (!effectiveThumbnail) {
+            const firstVideo = await prisma.ytPlaylistItem.findFirst({
+                where: { playlistId: course.ytPlaylistId },
+                orderBy: { videoNo: 'asc' },
+                select: { videoId: true }
+            })
+            if (firstVideo) {
+                effectiveThumbnail = `https://i.ytimg.com/vi/${firstVideo.videoId}/maxresdefault.jpg`
+            }
         }
+
+        // Fallback to YtPlaylist metadata if Course fields are empty or have default placeholder
+        const isDefaultDescription = !effectiveDescription || effectiveDescription.startsWith("Kursus otomatis dari YouTube")
+        if (isDefaultDescription || !effectiveCourseShortDesc || !effectiveRequirements || !effectiveOutcomes || !effectiveRecommendedNext) {
+            const ytPlaylist = await prisma.ytPlaylist.findUnique({
+                where: { playlistId: course.ytPlaylistId },
+                select: {
+                    courseDesc: true,
+                    courseShortDesc: true,
+                    requirements: true,
+                    outcomes: true,
+                    recommendedNext: true
+                }
+            })
+            if (ytPlaylist) {
+                if (isDefaultDescription && ytPlaylist.courseDesc) {
+                    effectiveDescription = ytPlaylist.courseDesc
+                }
+                effectiveCourseShortDesc = effectiveCourseShortDesc || ytPlaylist.courseShortDesc
+                effectiveRequirements = effectiveRequirements || ytPlaylist.requirements
+                effectiveOutcomes = effectiveOutcomes || ytPlaylist.outcomes
+                effectiveRecommendedNext = effectiveRecommendedNext || ytPlaylist.recommendedNext
+            }
+        }
+    }
+
+    // Create effective course object with fallback values
+    const effectiveCourse = {
+        ...course,
+        description: effectiveDescription,
+        courseShortDesc: effectiveCourseShortDesc,
+        requirements: effectiveRequirements,
+        outcomes: effectiveOutcomes,
+        recommendedNext: effectiveRecommendedNext,
     }
 
     return (
@@ -92,13 +134,13 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
                     <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="text-slate-900 dark:text-white">Informasi Kursus</CardTitle>
-                            <EditCourseInfoDialog course={course} />
+                            <EditCourseInfoDialog course={effectiveCourse} />
                         </CardHeader>
                         <CardContent className="space-y-4 text-slate-700 dark:text-slate-300">
-                            {course.courseShortDesc && (
+                            {effectiveCourse.courseShortDesc && (
                                 <div>
                                     <p className="text-sm text-slate-500 mb-1">Deskripsi Singkat</p>
-                                    <p className="text-sm bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-200 dark:border-slate-700">{course.courseShortDesc}</p>
+                                    <p className="text-sm bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-200 dark:border-slate-700">{effectiveCourse.courseShortDesc}</p>
                                 </div>
                             )}
                             <div>

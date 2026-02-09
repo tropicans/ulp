@@ -1,0 +1,60 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Development
+.env*.local
+.env.development
+*.log
+npm-debug.log*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Backups (may contain symlinks that break Docker build)
+backups
+
+# Data files not needed in build
+*.sql
+*.sql.gz
+*.csv
+*.jsonl
+*.txt
+!README.txt
+
+# Test files
+*.test.*
+*.spec.*
+__tests__
+coverage
+
+# Documentation (optional, can keep if needed)
+docs
+
+# Migration/seed scripts (not needed in prod image)
+*.js
+!next.config.js
+!postcss.config.js
+
+# Prisma migrations are handled separately
+prisma/migrations
+
+# N8N workflows
+n8n_workflows

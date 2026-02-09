@@ -52,7 +52,7 @@ export async function processOutbox(): Promise<{ processed: number; failed: numb
                     await prisma.$executeRaw`
                         UPDATE xapi_outbox 
                         SET status = 'SENT', processed_at = NOW()
-                        WHERE id = ${item.id}::uuid
+                        WHERE id::text = ${item.id}
                     `
                     processed++
                     console.log(`[xAPI Worker] ✅ Sent: ${item.idempotency_key}`)
@@ -90,7 +90,7 @@ async function markFailed(id: string, currentAttempts: number, error: string) {
         SET attempts = ${newAttempts}, 
             last_error = ${error},
             status = ${newStatus}
-        WHERE id = ${id}::uuid
+        WHERE id::text = ${id}
     `
 
     if (newStatus === "DLQ") {

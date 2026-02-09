@@ -1,6 +1,6 @@
-# ULP ASN - Documentation
+# TITAN - Documentation
 
-Learning Experience Platform untuk Aparatur Sipil Negara (ASN)
+> Platform Pembelajaran Terpadu untuk Aparatur Negara
 
 ## 📚 Documentation Index
 
@@ -8,7 +8,8 @@ Learning Experience Platform untuk Aparatur Sipil Negara (ASN)
 - [Installation Guide](./INSTALLATION.md) - Setup and installation instructions
 - [Test Users](./TEST_USERS.md) - **Default test accounts and credentials** ⭐
 
-### Development
+### Architecture & Development
+- [Architecture](./ARCHITECTURE.md) - System design and ADRs
 - [Database Schema](./DATABASE.md) - Prisma schema documentation
 - [API Documentation](./API.md) - Server actions and API endpoints
 - [Component Library](./COMPONENTS.md) - Reusable UI components
@@ -20,87 +21,119 @@ Learning Experience Platform untuk Aparatur Sipil Negara (ASN)
 - [Assessment](./ASSESSMENT.md) - Quizzes and grading
 - [Attendance](./ATTENDANCE.md) - QR code and GPS attendance
 - [Gamification](./GAMIFICATION.md) - Badges and certificates
+- [YouTube Curation](./YOUTUBE_CURATION.md) - AI-powered video curation ⭐ NEW
+- [Work-Based Learning](./WBLM.md) - Project-based growth module ⭐ NEW
 
 ### Deployment
 - [Deployment Guide](./DEPLOYMENT.md) - Production deployment
 - [Environment Variables](./ENVIRONMENT.md) - Configuration settings
 - [Troubleshooting](./TROUBLESHOOTING.md) - Common issues and solutions
 
+---
+
 ## 🚀 Quick Start
 
-1. **Clone and install dependencies**
 ```bash
+# 1. Install dependencies
 npm install
-```
 
-2. **Setup database**
-```bash
+# 2. Setup database
 npx prisma db push
+
+# 3. Seed data
+npm run seed  # or visit http://localhost:3001/seed
+
+# 4. Start development server
+npm run dev
 ```
 
-3. **Run seed script**
-- Navigate to: `http://localhost:3000/seed`
-- Click "Run Seed" button
+**Login**: Use credentials from [TEST_USERS.md](./TEST_USERS.md)
 
-4. **Login with test account**
-- Go to: `http://localhost:3000/login`
-- Use credentials from [TEST_USERS.md](./TEST_USERS.md)
-
-## 🔑 Quick Access - Test Credentials
+## 🔑 Test Credentials
 
 | Role | Email | Password |
 |------|-------|----------|
-| Learner | `learner@ULP.go.id` | `learner123` |
-| Instructor | `instructor@ULP.go.id` | `instructor123` |
-| Admin | `admin@ULP.go.id` | `admin123` |
+| Learner | `learner@titan.go.id` | `learner123` |
+| Instructor | `instructor@titan.go.id` | `instructor123` |
+| Admin | `admin@titan.go.id` | `admin123` |
 
-📖 **Full details**: See [TEST_USERS.md](./TEST_USERS.md)
+---
 
 ## 🏗️ Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Database**: PostgreSQL + Prisma ORM
-- **Authentication**: NextAuth.js (LDAP/SSO + Google OAuth)
-- **UI**: Tailwind CSS + Shadcn/UI
-- **Icons**: Lucide React
+| Layer | Technology |
+|-------|------------|
+| **Framework** | Next.js 15 (App Router) |
+| **Language** | TypeScript |
+| **Database** | PostgreSQL + Prisma ORM |
+| **Cache** | Redis |
+| **Storage** | MinIO (S3-compatible) |
+| **Auth** | NextAuth.js v5 (LDAP, Google OAuth) |
+| **UI** | Tailwind CSS + Shadcn/UI |
+| **Analytics** | xAPI (Learning Record Store) |
+| **Workflow** | n8n (automation) |
+| **AI** | Google Gemini, Ollama, AI Proxy |
+
+---
 
 ## 📁 Project Structure
 
 ```
-ULP-asn/
+titan/
 ├── src/
-│   ├── app/              # Next.js app router pages
-│   │   ├── (auth)/       # Authentication pages
-│   │   ├── courses/      # Course catalog and detail
-│   │   ├── dashboard/    # User dashboards
-│   │   └── api/          # API routes
-│   ├── components/       # Reusable components
-│   │   ├── ui/           # Shadcn/UI components
-│   │   ├── courses/      # Course-specific components
-│   │   ├── auth/         # Auth-related components
-│   │   └── dashboard/    # Dashboard components
-│   ├── lib/              # Utilities and helpers
-│   │   ├── actions/      # Server actions
-│   │   ├── auth.ts       # NextAuth config
-│   │   ├── db.ts         # Prisma client
-│   │   └── ldap.ts       # LDAP utilities
-│   └── generated/        # Prisma generated types
+│   ├── app/                 # Next.js App Router
+│   │   ├── api/            # API routes & webhooks
+│   │   ├── dashboard/      # Protected pages
+│   │   └── courses/        # Course catalog
+│   ├── components/         # React components (102 files)
+│   ├── lib/
+│   │   ├── actions/        # Server Actions (43 files)
+│   │   ├── auth/           # NextAuth + policies
+│   │   ├── xapi/           # xAPI subsystem
+│   │   └── db.ts           # Prisma client
+│   └── generated/prisma/   # Generated types
 ├── prisma/
-│   └── schema.prisma     # Database schema
-├── docs/                 # Documentation
-└── public/               # Static assets
+│   └── schema.prisma       # 45 models
+├── n8n_workflows/          # n8n workflow JSONs
+└── docs/                   # This documentation
 ```
 
-## 🎯 Development Phases
+---
 
-- [x] **Phase 1**: Project Setup
-- [x] **Phase 2**: UI Foundation
-- [x] **Phase 3**: Authentication
-- [🔄] **Phase 4**: Course Management (In Progress)
-- [ ] **Phase 5**: Sessions & Attendance
-- [ ] **Phase 6**: Assessment & Quizzes
-- [ ] **Phase 7**: Gamification & Certificates
+## 🎯 Features Status
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Authentication | ✅ Complete | LDAP, Google OAuth, Credentials |
+| Course Management | ✅ Complete | CRUD, modules, lessons |
+| YouTube Integration | ✅ Complete | Import courses from YouTube |
+| **YouTube Curation** | ✅ Complete | AI-powered video curation |
+| Quizzes & Assessment | ✅ Complete | Pre/Post tests, AI grading |
+| Attendance | ✅ Complete | QR code, GPS, Zoom |
+| Gamification | ✅ Complete | Badges, certificates, points |
+| **WBLM/PBGM** | ✅ Complete | Work-based learning module |
+| xAPI Analytics | ✅ Complete | Learning record tracking |
+| n8n Workflows | ✅ Complete | Automation pipelines |
+
+---
+
+## 🐳 Docker Services
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| titan-app | 3001 | Main application |
+| titan-postgres | 5433 | Primary database |
+| titan-redis | 6380 | Cache & queues |
+| titan-minio | 9000 | Object storage |
+| n8n | 5678 | Workflow automation |
+| lrsql | 8080 | xAPI Learning Record Store |
+
+Start all services:
+```bash
+docker compose up -d
+```
+
+---
 
 ## 🤝 Contributing
 
@@ -109,13 +142,7 @@ ULP-asn/
 3. Test thoroughly with test users
 4. Submit a pull request
 
-## 📞 Support
-
-For issues and questions, please refer to:
-- [Troubleshooting Guide](./TROUBLESHOOTING.md)
-- [GitHub Issues](https://github.com/your-org/ULP-asn/issues)
-
 ---
 
-**Version**: 1.0.0-alpha  
-**Last Updated**: 2026-01-16
+**Version**: 2.0.0  
+**Last Updated**: 2026-02-09

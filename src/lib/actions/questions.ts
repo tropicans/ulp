@@ -121,3 +121,51 @@ export async function reorderQuestions(quizId: string, questionIds: string[]) {
         return { error: "Gagal mengubah urutan pertanyaan" }
     }
 }
+
+/**
+ * Normalize quiz points so total equals 100
+ * Points are distributed evenly across all questions
+ */
+export async function normalizeQuizPoints(quizId: string) {
+    const session = await auth()
+    if (!session?.user?.id) return { error: "Unauthorized" }
+
+    try {
+        // Get all questions for this quiz
+        const questions = await prisma.question.findMany({
+            where: { quizId },
+            orderBy: { order: 'asc' }
+        })
+
+        if (questions.length === 0) {
+            return { error: "Quiz tidak memiliki pertanyaan" }
+        }
+
+        const totalTarget = 100
+        const questionCount = questions.length
+
+        // Calculate base points per question and remainder
+        const basePoints = Math.floor(totalTarget / questionCount)
+        const remainder = totalTarget % questionCount
+
+        // Distribute points: first 'remainder' questions get basePoints + 1
+        const updates = questions.map((q, index) => {
+            const points = index < remainder ? basePoints + 1 : basePoints
+            return prisma.question.update({
+                where: { id: q.id },
+                data: { points }
+            })
+        })
+
+        await prisma.$transaction(updates)
+
+        revalidatePath(`/dashboard/quizzes/${quizId}/edit`)
+        return {
+            success: true,
+            message: `Poin berhasil didistribusi ke ${questionCount} soal (Total: 100)`
+        }
+    } catch (error) {
+        console.error("Error normalizing quiz points:", error)
+        return { error: "Gagal mendistribusi poin" }
+    }
+}

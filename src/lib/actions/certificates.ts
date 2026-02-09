@@ -51,9 +51,17 @@ export async function generateCourseCertificate(courseId: string) {
         const allLessons = course.Module.flatMap(m => m.Lesson)
         const completedLessons = allLessons.filter(l => l.Progress.length > 0 && l.Progress[0].isCompleted)
 
-        // Check if everything is done
+        // Check if all lessons are completed
         if (completedLessons.length < allLessons.length) {
-            return { error: "Course not yet fully completed" }
+            return { error: "Semua materi harus diselesaikan terlebih dahulu" }
+        }
+
+        // Check if all quizzes (including posttest) are passed
+        const allQuizzes = course.Module.flatMap(m => m.Quiz)
+        const passedQuizzes = allQuizzes.filter(q => q.QuizAttempt.length > 0)
+
+        if (allQuizzes.length > 0 && passedQuizzes.length < allQuizzes.length) {
+            return { error: "Semua kuis/posttest harus lulus terlebih dahulu" }
         }
 
         // 2. Create Certificate record if not exists

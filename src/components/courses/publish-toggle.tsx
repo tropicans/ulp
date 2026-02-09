@@ -23,13 +23,13 @@ export function PublishToggle({ courseId, isPublished }: PublishToggleProps) {
 
         const result = await toggleCoursePublish(courseId)
 
-        if (result.error) {
+        if (!result.success) {
             toast.error("Gagal mengubah status", {
-                description: result.error,
+                description: result.error.message,
             })
         } else {
-            setPublished(result.isPublished ?? !published)
-            toast.success(result.message)
+            setPublished(result.data?.isPublished ?? !published)
+            toast.success(result.message || "Status berhasil diubah")
             router.refresh()
         }
 

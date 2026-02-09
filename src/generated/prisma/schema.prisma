@@ -121,6 +121,7 @@ model Course {
   slug         String       @unique
   description  String
   thumbnail    String?
+  previewUrl   String?      @map("preview_url")
   deliveryMode DeliveryMode @default(ASYNC_ONLINE)
   difficulty   Difficulty   @default(BEGINNER)
   category     String? // Legacy field for backward compatibility
@@ -462,6 +463,18 @@ model User {
   SyncCourseProgress  SyncCourseProgress[]
   FeedbackResponse    FeedbackResponse[]
 
+  // WBLM Relations
+  WblmProgramsOwned                  WblmProgram[]              @relation("WblmProgramOwner")
+  WblmEnrollmentsAsParticipant       WblmEnrollment[]           @relation("WblmEnrollmentParticipant")
+  WblmEnrollmentsAsSupervisor        WblmEnrollment[]           @relation("WblmEnrollmentSupervisor")
+  WblmSubmissions                    WblmSubmission[]           @relation("WblmSubmissionParticipant")
+  WblmReviewAssignmentsAsParticipant WblmReviewAssignment[]     @relation("WblmReviewAssignmentParticipant")
+  WblmReviewAssignmentsAsReviewer    WblmReviewAssignment[]     @relation("WblmReviewAssignmentReviewer")
+  WblmReviews                        WblmReview[]               @relation("WblmReviewReviewer")
+  WblmReflections                    WblmReflection[]           @relation("WblmReflectionParticipant")
+  WblmEvidencePackages               WblmEvidencePackage[]      @relation("WblmEvidenceParticipant")
+  WblmParticipantMilestones          WblmParticipantMilestone[] @relation("WblmMilestoneParticipant")
+
   @@index([email])
   @@index([nip])
   @@index([unitKerja])
@@ -575,6 +588,9 @@ model YtCurationSession {
   includeChannels   String?               @map("include_channels")
   excludeChannels   String?               @map("exclude_channels")
   status            String                @default("searching")
+  enrichmentStatus  String?               @default("pending") @map("enrichment_status") // pending, processing, completed, failed
+  enrichedCourseId  String?               @map("enriched_course_id")
+  totalCandidates   Int?                  @default(0) @map("total_candidates")
   createdAt         DateTime?             @default(now()) @map("created_at") @db.Timestamptz
   updatedAt         DateTime?             @default(now()) @map("updated_at") @db.Timestamptz
   processedAt       DateTime?             @map("processed_at") @db.Timestamptz
@@ -588,17 +604,23 @@ model YtCurationCandidate {
   sessionId       String    @map("session_id") @db.Uuid
   videoId         String    @map("video_id")
   videoTitle      String    @map("video_title")
+  videoUrl        String?   @map("video_url")
   videoThumbnail  String?   @map("video_thumbnail")
   channelTitle    String?   @map("channel_title")
   publishedAt     DateTime? @map("published_at") @db.Timestamptz
   durationSeconds Int?      @map("duration_seconds")
-  overallScore    Int?      @default(0) @map("overall_score")
   relevanceScore  Int?      @default(0) @map("relevance_score")
-  qualityScore    Int?      @default(0) @map("quality_score")
+  levelFitScore   Int?      @default(0) @map("level_fit_score")
+  pedagogyScore   Int?      @default(0) @map("pedagogy_score")
+  technicalScore  Int?      @default(0) @map("technical_score")
   engagementScore Int?      @default(0) @map("engagement_score")
+  overallScore    Int?      @default(0) @map("overall_score")
   recommendation  String?   @default("maybe")
   roleSuggestion  String?   @map("role_suggestion")
+  keyTopics       Json?     @map("key_topics")
+  prerequisites   Json?
   aiSummary       String?   @map("ai_summary")
+  aiNotes         String?   @map("ai_notes")
   selected        Boolean?  @default(false)
   orderInPlaylist Int?      @map("order_in_playlist")
   createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamptz
@@ -606,6 +628,7 @@ model YtCurationCandidate {
 
   session YtCurationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
+  @@unique([sessionId, videoId])
   @@map("yt_curation_candidates")
 }
 
@@ -879,4 +902,313 @@ model FeedbackResponse {
   @@unique([surveyId, userId])
   @@index([surveyId])
   @@map("feedback_responses")
+}
+
+// ============================================
+// WORK-BASED LEARNING MODULE (WBLM)
+// ============================================
+
+enum WblmProgramStatus {
+  DRAFT
+  PUBLISHED
+  RUNNING
+  CLOSED
+  ARCHIVED
+}
+
+enum WblmEnrollmentStatus {
+  INVITED
+  ENROLLED
+  ACTIVE
+  COMPLETED
+  WITHDRAWN
+}
+
+enum WblmMilestoneStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  UNDER_REVIEW
+  REVISION_REQUESTED
+  RESUBMITTED
+  APPROVED_FINAL
+  LOCKED
+}
+
+enum WblmReviewDecision {
+  ACCEPT
+  REQUEST_REVISION
+  COMMENT_ONLY
+  ESCALATE
+}
+
+enum WblmReflectionStatus {
+  NOT_STARTED
+  SUBMITTED
+  LOCKED
+}
+
+enum WblmEvidenceStatus {
+  NOT_READY
+  READY
+  PUBLISHED
+  EXPORTED
+}
+
+enum WblmReviewerRole {
+  COACH
+  REVIEWER
+  PANELIST
+}
+
+enum WblmLearningLinkType {
+  ASYNC
+  SYNC
+  WEBINAR
+  CLASSROOM
+  HYBRID
+}
+
+/// WBLM Program - A configured work-based learning run
+model WblmProgram {
+  id              String            @id @default(uuid())
+  title           String
+  description     String?
+  targetRoles     String[]          @map("target_roles")
+  durationWeeks   Int               @map("duration_weeks")
+  startDate       DateTime?         @map("start_date")
+  endDate         DateTime?         @map("end_date")
+  status          WblmProgramStatus @default(DRAFT)
+  ownerUserId     String            @map("owner_user_id")
+  reviewerPoolIds String[]          @map("reviewer_pool_ids")
+  settings        Json? // { allowSupervisorReview, reviewerScoringEnabled, maxRevisionCycles, evidenceVisibility, safeToLearnStatement }
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  Owner             User                   @relation("WblmProgramOwner", fields: [ownerUserId], references: [id])
+  Tasks             WblmTask[]
+  Milestones        WblmMilestone[]
+  Enrollments       WblmEnrollment[]
+  ReviewAssignments WblmReviewAssignment[]
+  Reflections       WblmReflection[]
+  EvidencePackages  WblmEvidencePackage[]
+
+  @@index([status])
+  @@index([ownerUserId])
+  @@map("wblm_programs")
+}
+
+/// WBLM Task - Assignment template per program
+model WblmTask {
+  id                 String   @id @default(uuid())
+  programId          String   @map("program_id")
+  title              String
+  contextDescription String?  @map("context_description")
+  scopeLimits        String?  @map("scope_limits")
+  expectedOutputs    Json?    @map("expected_outputs") // [{ type, description }]
+  successCriteria    Json?    @map("success_criteria") // [{ name, description, weight? }]
+  rubrics            Json? // Rubric categories + levels
+  attachments        Json? // Array of file refs
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  Program WblmProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+  @@map("wblm_tasks")
+}
+
+/// WBLM Milestone - Checkpoint within a program
+model WblmMilestone {
+  id                    String    @id @default(uuid())
+  programId             String    @map("program_id")
+  name                  String
+  description           String?
+  dueDate               DateTime? @map("due_date")
+  requiredArtifactTypes String[]  @map("required_artifact_types")
+  requiresReview        Boolean   @default(true) @map("requires_review")
+  requiresReflection    Boolean   @default(false) @map("requires_reflection")
+  orderIndex            Int       @default(0) @map("order_index")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  Program               WblmProgram                @relation(fields: [programId], references: [id], onDelete: Cascade)
+  LearningLinks         WblmLearningLink[]
+  Submissions           WblmSubmission[]
+  Reflections           WblmReflection[]
+  ParticipantMilestones WblmParticipantMilestone[]
+
+  @@index([programId])
+  @@map("wblm_milestones")
+}
+
+/// WBLM Participant Milestone - Track status per participant per milestone
+model WblmParticipantMilestone {
+  id            String              @id @default(uuid())
+  milestoneId   String              @map("milestone_id")
+  participantId String              @map("participant_id")
+  status        WblmMilestoneStatus @default(NOT_STARTED)
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+
+  Milestone   WblmMilestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  Participant User          @relation("WblmMilestoneParticipant", fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([milestoneId, participantId])
+  @@map("wblm_participant_milestones")
+}
+
+/// WBLM Enrollment - Participant enrollment in a program
+model WblmEnrollment {
+  id                String               @id @default(uuid())
+  programId         String               @map("program_id")
+  participantUserId String               @map("participant_user_id")
+  supervisorUserId  String?              @map("supervisor_user_id")
+  status            WblmEnrollmentStatus @default(ENROLLED)
+  joinedAt          DateTime             @default(now()) @map("joined_at")
+  completedAt       DateTime?            @map("completed_at")
+
+  Program     WblmProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  Participant User        @relation("WblmEnrollmentParticipant", fields: [participantUserId], references: [id], onDelete: Cascade)
+  Supervisor  User?       @relation("WblmEnrollmentSupervisor", fields: [supervisorUserId], references: [id])
+
+  @@unique([programId, participantUserId])
+  @@index([programId])
+  @@index([participantUserId])
+  @@map("wblm_enrollments")
+}
+
+/// WBLM Artifact Type - Configuration library for artifact types
+model WblmArtifactType {
+  id               String   @id @default(uuid())
+  key              String   @unique
+  label            String
+  description      String?
+  allowedFileTypes String[] @map("allowed_file_types")
+  maxFileSizeMb    Int      @default(10) @map("max_file_size_mb")
+  templateFileRef  String?  @map("template_file_ref")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("wblm_artifact_types")
+}
+
+/// WBLM Submission - Versioned artifact submission
+model WblmSubmission {
+  id                String              @id @default(uuid())
+  programId         String              @map("program_id")
+  milestoneId       String              @map("milestone_id")
+  participantUserId String              @map("participant_user_id")
+  versionNumber     Int                 @default(1) @map("version_number")
+  title             String?
+  notes             String?
+  files             Json? // Array of { id, storageUrl, filename, mime, size, checksum }
+  status            WblmMilestoneStatus @default(SUBMITTED)
+  createdAt         DateTime            @default(now()) @map("created_at")
+
+  Milestone   WblmMilestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  Participant User          @relation("WblmSubmissionParticipant", fields: [participantUserId], references: [id], onDelete: Cascade)
+  Reviews     WblmReview[]
+
+  @@index([milestoneId, participantUserId])
+  @@index([programId])
+  @@map("wblm_submissions")
+}
+
+/// WBLM Review Assignment - Reviewer-participant mapping
+model WblmReviewAssignment {
+  id                String           @id @default(uuid())
+  programId         String           @map("program_id")
+  participantUserId String           @map("participant_user_id")
+  reviewerUserId    String           @map("reviewer_user_id")
+  milestoneId       String?          @map("milestone_id")
+  role              WblmReviewerRole @default(REVIEWER)
+  assignedAt        DateTime         @default(now()) @map("assigned_at")
+
+  Program     WblmProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  Participant User        @relation("WblmReviewAssignmentParticipant", fields: [participantUserId], references: [id], onDelete: Cascade)
+  Reviewer    User        @relation("WblmReviewAssignmentReviewer", fields: [reviewerUserId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, participantUserId, reviewerUserId, milestoneId])
+  @@index([programId])
+  @@index([reviewerUserId])
+  @@map("wblm_review_assignments")
+}
+
+/// WBLM Review - Review feedback and decision
+model WblmReview {
+  id               String             @id @default(uuid())
+  submissionId     String             @map("submission_id")
+  reviewerUserId   String             @map("reviewer_user_id")
+  decision         WblmReviewDecision
+  commentsRichtext String?            @map("comments_richtext")
+  inlineComments   Json?              @map("inline_comments") // For doc annotation integration
+  score            Json? // Rubric scores
+  createdAt        DateTime           @default(now()) @map("created_at")
+
+  Submission WblmSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  Reviewer   User           @relation("WblmReviewReviewer", fields: [reviewerUserId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+  @@index([reviewerUserId])
+  @@map("wblm_reviews")
+}
+
+/// WBLM Reflection - Participant structured reflection
+model WblmReflection {
+  id                String               @id @default(uuid())
+  programId         String               @map("program_id")
+  participantUserId String               @map("participant_user_id")
+  milestoneId       String?              @map("milestone_id")
+  answers           Json? // { initialAssumptions, whatChanged, keyFeedback, whatWouldDoDifferently }
+  status            WblmReflectionStatus @default(NOT_STARTED)
+  submittedAt       DateTime?            @map("submitted_at")
+  lockedAt          DateTime?            @map("locked_at")
+
+  Program     WblmProgram    @relation(fields: [programId], references: [id], onDelete: Cascade)
+  Participant User           @relation("WblmReflectionParticipant", fields: [participantUserId], references: [id], onDelete: Cascade)
+  Milestone   WblmMilestone? @relation(fields: [milestoneId], references: [id])
+
+  @@unique([programId, participantUserId, milestoneId])
+  @@index([programId])
+  @@map("wblm_reflections")
+}
+
+/// WBLM Evidence Package - Final evidence bundle
+model WblmEvidencePackage {
+  id                 String             @id @default(uuid())
+  programId          String             @map("program_id")
+  participantUserId  String             @map("participant_user_id")
+  finalSubmissionIds String[]           @map("final_submission_ids")
+  reviewTrailIds     String[]           @map("review_trail_ids")
+  reflectionId       String?            @map("reflection_id")
+  finalScore         Json?              @map("final_score")
+  status             WblmEvidenceStatus @default(NOT_READY)
+  publishedAt        DateTime?          @map("published_at")
+  exportedAt         DateTime?          @map("exported_at")
+  exportFileRef      String?            @map("export_file_ref")
+
+  Program     WblmProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  Participant User        @relation("WblmEvidenceParticipant", fields: [participantUserId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, participantUserId])
+  @@index([programId])
+  @@map("wblm_evidence_packages")
+}
+
+/// WBLM Learning Link - Links milestones to existing learning resources
+model WblmLearningLink {
+  id           String               @id @default(uuid())
+  programId    String               @map("program_id")
+  milestoneId  String               @map("milestone_id")
+  type         WblmLearningLinkType
+  resourceId   String               @map("resource_id")
+  title        String
+  scheduleTime DateTime?            @map("schedule_time")
+  url          String?
+  notes        String?
+  createdAt    DateTime             @default(now()) @map("created_at")
+
+  Milestone WblmMilestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@index([milestoneId])
+  @@map("wblm_learning_links")
 }

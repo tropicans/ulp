@@ -211,6 +211,7 @@ exports.Prisma.CourseScalarFieldEnum = {
   slug: 'slug',
   description: 'description',
   thumbnail: 'thumbnail',
+  previewUrl: 'previewUrl',
   deliveryMode: 'deliveryMode',
   difficulty: 'difficulty',
   category: 'category',
@@ -546,6 +547,9 @@ exports.Prisma.YtCurationSessionScalarFieldEnum = {
   includeChannels: 'includeChannels',
   excludeChannels: 'excludeChannels',
   status: 'status',
+  enrichmentStatus: 'enrichmentStatus',
+  enrichedCourseId: 'enrichedCourseId',
+  totalCandidates: 'totalCandidates',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   processedAt: 'processedAt'
@@ -556,17 +560,23 @@ exports.Prisma.YtCurationCandidateScalarFieldEnum = {
   sessionId: 'sessionId',
   videoId: 'videoId',
   videoTitle: 'videoTitle',
+  videoUrl: 'videoUrl',
   videoThumbnail: 'videoThumbnail',
   channelTitle: 'channelTitle',
   publishedAt: 'publishedAt',
   durationSeconds: 'durationSeconds',
-  overallScore: 'overallScore',
   relevanceScore: 'relevanceScore',
-  qualityScore: 'qualityScore',
+  levelFitScore: 'levelFitScore',
+  pedagogyScore: 'pedagogyScore',
+  technicalScore: 'technicalScore',
   engagementScore: 'engagementScore',
+  overallScore: 'overallScore',
   recommendation: 'recommendation',
   roleSuggestion: 'roleSuggestion',
+  keyTopics: 'keyTopics',
+  prerequisites: 'prerequisites',
   aiSummary: 'aiSummary',
+  aiNotes: 'aiNotes',
   selected: 'selected',
   orderInPlaylist: 'orderInPlaylist',
   createdAt: 'createdAt',
@@ -663,6 +673,151 @@ exports.Prisma.FeedbackResponseScalarFieldEnum = {
   suggestions: 'suggestions',
   isAnonymous: 'isAnonymous',
   submittedAt: 'submittedAt'
+};
+
+exports.Prisma.WblmProgramScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  targetRoles: 'targetRoles',
+  durationWeeks: 'durationWeeks',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  ownerUserId: 'ownerUserId',
+  reviewerPoolIds: 'reviewerPoolIds',
+  settings: 'settings',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WblmTaskScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  title: 'title',
+  contextDescription: 'contextDescription',
+  scopeLimits: 'scopeLimits',
+  expectedOutputs: 'expectedOutputs',
+  successCriteria: 'successCriteria',
+  rubrics: 'rubrics',
+  attachments: 'attachments',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WblmMilestoneScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  name: 'name',
+  description: 'description',
+  dueDate: 'dueDate',
+  requiredArtifactTypes: 'requiredArtifactTypes',
+  requiresReview: 'requiresReview',
+  requiresReflection: 'requiresReflection',
+  orderIndex: 'orderIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WblmParticipantMilestoneScalarFieldEnum = {
+  id: 'id',
+  milestoneId: 'milestoneId',
+  participantId: 'participantId',
+  status: 'status',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WblmEnrollmentScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  participantUserId: 'participantUserId',
+  supervisorUserId: 'supervisorUserId',
+  status: 'status',
+  joinedAt: 'joinedAt',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.WblmArtifactTypeScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  label: 'label',
+  description: 'description',
+  allowedFileTypes: 'allowedFileTypes',
+  maxFileSizeMb: 'maxFileSizeMb',
+  templateFileRef: 'templateFileRef',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.WblmSubmissionScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  milestoneId: 'milestoneId',
+  participantUserId: 'participantUserId',
+  versionNumber: 'versionNumber',
+  title: 'title',
+  notes: 'notes',
+  files: 'files',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.WblmReviewAssignmentScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  participantUserId: 'participantUserId',
+  reviewerUserId: 'reviewerUserId',
+  milestoneId: 'milestoneId',
+  role: 'role',
+  assignedAt: 'assignedAt'
+};
+
+exports.Prisma.WblmReviewScalarFieldEnum = {
+  id: 'id',
+  submissionId: 'submissionId',
+  reviewerUserId: 'reviewerUserId',
+  decision: 'decision',
+  commentsRichtext: 'commentsRichtext',
+  inlineComments: 'inlineComments',
+  score: 'score',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.WblmReflectionScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  participantUserId: 'participantUserId',
+  milestoneId: 'milestoneId',
+  answers: 'answers',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  lockedAt: 'lockedAt'
+};
+
+exports.Prisma.WblmEvidencePackageScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  participantUserId: 'participantUserId',
+  finalSubmissionIds: 'finalSubmissionIds',
+  reviewTrailIds: 'reviewTrailIds',
+  reflectionId: 'reflectionId',
+  finalScore: 'finalScore',
+  status: 'status',
+  publishedAt: 'publishedAt',
+  exportedAt: 'exportedAt',
+  exportFileRef: 'exportFileRef'
+};
+
+exports.Prisma.WblmLearningLinkScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  milestoneId: 'milestoneId',
+  type: 'type',
+  resourceId: 'resourceId',
+  title: 'title',
+  scheduleTime: 'scheduleTime',
+  url: 'url',
+  notes: 'notes',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -806,6 +961,67 @@ exports.SyncCourseStatus = exports.$Enums.SyncCourseStatus = {
   COMPLETED: 'COMPLETED'
 };
 
+exports.WblmProgramStatus = exports.$Enums.WblmProgramStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  RUNNING: 'RUNNING',
+  CLOSED: 'CLOSED',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.WblmMilestoneStatus = exports.$Enums.WblmMilestoneStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  SUBMITTED: 'SUBMITTED',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  REVISION_REQUESTED: 'REVISION_REQUESTED',
+  RESUBMITTED: 'RESUBMITTED',
+  APPROVED_FINAL: 'APPROVED_FINAL',
+  LOCKED: 'LOCKED'
+};
+
+exports.WblmEnrollmentStatus = exports.$Enums.WblmEnrollmentStatus = {
+  INVITED: 'INVITED',
+  ENROLLED: 'ENROLLED',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  WITHDRAWN: 'WITHDRAWN'
+};
+
+exports.WblmReviewerRole = exports.$Enums.WblmReviewerRole = {
+  COACH: 'COACH',
+  REVIEWER: 'REVIEWER',
+  PANELIST: 'PANELIST'
+};
+
+exports.WblmReviewDecision = exports.$Enums.WblmReviewDecision = {
+  ACCEPT: 'ACCEPT',
+  REQUEST_REVISION: 'REQUEST_REVISION',
+  COMMENT_ONLY: 'COMMENT_ONLY',
+  ESCALATE: 'ESCALATE'
+};
+
+exports.WblmReflectionStatus = exports.$Enums.WblmReflectionStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  SUBMITTED: 'SUBMITTED',
+  LOCKED: 'LOCKED'
+};
+
+exports.WblmEvidenceStatus = exports.$Enums.WblmEvidenceStatus = {
+  NOT_READY: 'NOT_READY',
+  READY: 'READY',
+  PUBLISHED: 'PUBLISHED',
+  EXPORTED: 'EXPORTED'
+};
+
+exports.WblmLearningLinkType = exports.$Enums.WblmLearningLinkType = {
+  ASYNC: 'ASYNC',
+  SYNC: 'SYNC',
+  WEBINAR: 'WEBINAR',
+  CLASSROOM: 'CLASSROOM',
+  HYBRID: 'HYBRID'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   Attendance: 'Attendance',
@@ -844,7 +1060,19 @@ exports.Prisma.ModelName = {
   LearnerActivity: 'LearnerActivity',
   SyncCourseProgress: 'SyncCourseProgress',
   FeedbackSurvey: 'FeedbackSurvey',
-  FeedbackResponse: 'FeedbackResponse'
+  FeedbackResponse: 'FeedbackResponse',
+  WblmProgram: 'WblmProgram',
+  WblmTask: 'WblmTask',
+  WblmMilestone: 'WblmMilestone',
+  WblmParticipantMilestone: 'WblmParticipantMilestone',
+  WblmEnrollment: 'WblmEnrollment',
+  WblmArtifactType: 'WblmArtifactType',
+  WblmSubmission: 'WblmSubmission',
+  WblmReviewAssignment: 'WblmReviewAssignment',
+  WblmReview: 'WblmReview',
+  WblmReflection: 'WblmReflection',
+  WblmEvidencePackage: 'WblmEvidencePackage',
+  WblmLearningLink: 'WblmLearningLink'
 };
 
 /**

@@ -196,12 +196,37 @@ export async function submitQuizAttempt(data: z.infer<typeof quizSubmissionSchem
             let pointsEarned = 0
 
             if (question.type === "MULTIPLE_CHOICE" || question.type === "TRUE_FALSE") {
-                // options is Json, assuming it has { choices: [...], correctIndex: number }
+                // options could be:
+                // 1. Array of choices with separate correctIndex field on question
+                // 2. Object with { choices: [...], correctIndex: number }
                 const opts = question.options as any
-                if (opts && ans.selectedOptions === opts.correctIndex) {
+                const selectedIndex = typeof ans.selectedOptions === "number" ? ans.selectedOptions : null
+
+                // Debug logging
+                console.log('[GRADING] Question:', question.id)
+                console.log('[GRADING] opts:', JSON.stringify(opts))
+                console.log('[GRADING] selectedIndex:', selectedIndex)
+
+                // Determine correct index based on format
+                let correctIndex: number | null = null
+                if (Array.isArray(opts)) {
+                    // Format 1: options is an array, correctIndex might be on question itself or not exist
+                    // For bulk uploaded questions, correctIndex should be stored separately
+                    correctIndex = (question as any).correctIndex ?? null
+                } else if (opts && typeof opts.correctIndex === 'number') {
+                    // Format 2: options is object with correctIndex
+                    correctIndex = opts.correctIndex
+                }
+
+                console.log('[GRADING] correctIndex:', correctIndex)
+
+                if (selectedIndex !== null && correctIndex !== null && selectedIndex === correctIndex) {
                     isCorrect = true
                     pointsEarned = question.points
                     earnedPoints += pointsEarned
+                    console.log('[GRADING] CORRECT! Points:', pointsEarned)
+                } else {
+                    console.log('[GRADING] INCORRECT')
                 }
             } else if (question.type === "ESSAY") {
                 hasEssay = true
@@ -211,7 +236,8 @@ export async function submitQuizAttempt(data: z.infer<typeof quizSubmissionSchem
                 id: crypto.randomUUID(),
                 questionId: ans.questionId,
                 answer: ans.answerText,
-                selectedOptions: ans.selectedOptions !== undefined ? { index: ans.selectedOptions } : undefined,
+                // Store selectedOptions as object with index for querying later
+                selectedOptions: typeof ans.selectedOptions === "number" ? ans.selectedOptions : undefined,
                 isCorrect: question.type === "ESSAY" ? null : isCorrect,
                 pointsEarned: question.type === "ESSAY" ? 0 : pointsEarned,
             }
@@ -285,6 +311,68 @@ export async function submitQuizAttempt(data: z.infer<typeof quizSubmissionSchem
                     quizModule.Module.courseId,
                     { score, attemptId }
                 )
+
+                // If POSTTEST is passed, check course completion and send course completed xAPI
+                if (isPassed && quiz.type === "POSTTEST") {
+                    const courseId = quizModule.Module.courseId
+
+                    // Check if all lessons are completed
+                    const course = await prisma.course.findUnique({
+                        where: { id: courseId },
+                        include: {
+                            Module: {
+                                include: {
+                                    Lesson: {
+                                        include: {
+                                            Progress: { where: { userId: session.user.id } }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+
+                    if (course) {
+                        const allLessons = course.Module.flatMap(m => m.Lesson)
+                        const completedLessons = allLessons.filter(l =>
+                            l.Progress.length > 0 && l.Progress[0].isCompleted
+                        )
+
+                        // If all lessons completed + posttest passed = course completed
+                        if (completedLessons.length >= allLessons.length) {
+                            // Award COURSE_COMPLETE points
+                            await awardPoints(session.user.id, "COURSE_COMPLETE")
+
+                            // Send xAPI course completed statement
+                            queueStatement(
+                                {
+                                    actor: buildActor(session.user.email || '', session.user.name),
+                                    verb: VERBS.completed,
+                                    object: buildActivity(
+                                        `${PLATFORM_IRI}/courses/${course.slug}`,
+                                        ACTIVITY_TYPES.course,
+                                        course.title,
+                                        course.description || undefined
+                                    ),
+                                    result: buildResult({
+                                        completion: true,
+                                        success: true
+                                    })
+                                },
+                                genIdempotencyKey("course_complete", session.user.id, courseId)
+                            )
+
+                            // Record to unified journey
+                            recordActivity(
+                                session.user.id,
+                                "COURSE_COMPLETE",
+                                courseId,
+                                course.title,
+                                courseId
+                            )
+                        }
+                    }
+                }
             }
         }
 

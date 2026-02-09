@@ -40,8 +40,8 @@ export function ThumbnailManager({
 
         try {
             const result = await updateCourseThumbnail(courseId, thumbnailUrl)
-            if (result.error) {
-                setError(result.error)
+            if (!result.success) {
+                setError(result.error.message)
             } else {
                 setSuccess("Thumbnail berhasil disimpan!")
                 setPreviewUrl(thumbnailUrl)

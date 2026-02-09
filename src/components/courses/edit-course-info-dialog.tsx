@@ -34,6 +34,9 @@ interface EditCourseInfoDialogProps {
         title: string
         description: string | null
         courseShortDesc?: string | null
+        requirements?: string | null
+        outcomes?: string | null
+        recommendedNext?: string | null
         deliveryMode: DeliveryMode
         difficulty: Difficulty
         category: string | null
@@ -66,6 +69,9 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
         title: course.title,
         description: course.description || "",
         courseShortDesc: course.courseShortDesc || "",
+        requirements: course.requirements || "",
+        outcomes: course.outcomes || "",
+        recommendedNext: course.recommendedNext || "",
         deliveryMode: course.deliveryMode,
         difficulty: course.difficulty,
         category: course.category || "",
@@ -94,7 +100,10 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                     ...prev,
                     title: data.title || prev.title,
                     courseShortDesc: data.shortDesc || prev.courseShortDesc,
-                    description: data.description || prev.description
+                    description: data.description || prev.description,
+                    requirements: Array.isArray(data.requirements) ? JSON.stringify(data.requirements) : prev.requirements,
+                    outcomes: Array.isArray(data.outcomes) ? JSON.stringify(data.outcomes) : prev.outcomes,
+                    recommendedNext: Array.isArray(data.recommendedNext) ? JSON.stringify(data.recommendedNext) : prev.recommendedNext
                 }))
                 toast.success("Berhasil generate dengan AI!")
             }
@@ -120,8 +129,8 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
 
         setLoading(false)
 
-        if (result.error) {
-            setError(result.error)
+        if (!result.success) {
+            setError(result.error.message)
             return
         }
 
@@ -211,6 +220,48 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[100px] ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
                                 placeholder="Jelaskan tentang kursus ini..."
+                                disabled={generating}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="requirements" className="text-slate-700 dark:text-slate-300">
+                                Persyaratan <span className="text-xs text-slate-400">(JSON array)</span>
+                            </Label>
+                            <Textarea
+                                id="requirements"
+                                value={formData.requirements}
+                                onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                                className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[60px] text-sm ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
+                                placeholder='["Persyaratan 1", "Persyaratan 2"]'
+                                disabled={generating}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="outcomes" className="text-slate-700 dark:text-slate-300">
+                                Hasil Pembelajaran <span className="text-xs text-slate-400">(JSON array)</span>
+                            </Label>
+                            <Textarea
+                                id="outcomes"
+                                value={formData.outcomes}
+                                onChange={(e) => setFormData({ ...formData, outcomes: e.target.value })}
+                                className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[60px] text-sm ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
+                                placeholder='["Hasil 1", "Hasil 2"]'
+                                disabled={generating}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="recommendedNext" className="text-slate-700 dark:text-slate-300">
+                                Kursus Rekomendasi Selanjutnya <span className="text-xs text-slate-400">(JSON array)</span>
+                            </Label>
+                            <Textarea
+                                id="recommendedNext"
+                                value={formData.recommendedNext}
+                                onChange={(e) => setFormData({ ...formData, recommendedNext: e.target.value })}
+                                className={`bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[60px] text-sm ${generating ? 'animate-pulse bg-purple-50 dark:bg-purple-900/20' : ''}`}
+                                placeholder='["Kursus 1", "Kursus 2"]'
                                 disabled={generating}
                             />
                         </div>
@@ -311,6 +362,6 @@ export function EditCourseInfoDialog({ course }: EditCourseInfoDialogProps) {
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
 }

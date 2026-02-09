@@ -64,6 +64,9 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
                     },
                     Quiz: {
                         orderBy: { updatedAt: "desc" },
+                        include: {
+                            _count: { select: { Question: true } }
+                        }
                     },
                 },
             },
@@ -132,8 +135,34 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         m.Lesson.filter(l => l.Progress && l.Progress.length > 0 && !!l.Progress[0].completedAt).map(l => l.id)
     )
 
+    // Fetch quiz completions
+    const quizCompletionsData = await prisma.quizAttempt.findMany({
+        where: {
+            userId: session.user.id,
+            submittedAt: { not: null },
+        },
+        include: {
+            Quiz: {
+                select: { passingScore: true, type: true }
+            }
+        }
+    })
+
+    const completedQuizzes = Array.from(new Set(
+        quizCompletionsData
+            .filter(attempt => {
+                const quizType = attempt.Quiz?.type
+                // Pre-Tests only need submission to count as completed for progression
+                if (quizType === 'PRETEST') return true
+                // Others need to reach passing score
+                return (attempt.score ?? 0) >= (attempt.Quiz?.passingScore || 0)
+            })
+            .map(q => q.quizId)
+    ))
+
     const sidebarProgress = {
         completedLessons,
+        completedQuizzes,
         sessions: course.CourseSession,
         deliveryMode: course.deliveryMode,
         refinedTitleMap,
@@ -172,10 +201,10 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
     let allLessonsCompleted = false
 
     for (const module of course.Module) {
-        const pretest = module.Quiz.find(q => q.type === 'PRETEST')
+        const pretest = module.Quiz?.find((q: any) => q.type === 'PRETEST')
         if (pretest) pretestQuiz = pretest
 
-        const posttest = module.Quiz.find(q => q.type === 'POSTTEST')
+        const posttest = module.Quiz?.find((q: any) => q.type === 'POSTTEST')
         if (posttest) posttestQuiz = posttest
     }
 
@@ -205,9 +234,15 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         currentQuiz = posttestQuiz
         currentLesson = null
     }
-    // Default to first lesson (only if pretest is completed or doesn't exist)
-    else if (!currentLesson && !currentQuiz && course.Module[0]?.Lesson[0]) {
-        currentLesson = course.Module[0].Lesson[0]
+    // Default to first lesson from any module (only if pretest is completed or doesn't exist)
+    else if (!currentLesson && !currentQuiz) {
+        // Find first module that has lessons
+        for (const module of course.Module) {
+            if (module.Lesson.length > 0) {
+                currentLesson = module.Lesson[0]
+                break
+            }
+        }
     }
 
     if (!currentLesson && !currentQuiz) {
@@ -247,15 +282,59 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
         })
         if (ytItem?.quizKnowledgeCheck) {
             try {
+                // First try JSON parse
                 knowledgeCheck = JSON.parse(ytItem.quizKnowledgeCheck)
-            } catch (e) {
-                console.error('Failed to parse knowledge check:', e)
+            } catch {
+                // If not JSON, parse plain text format:
+                // Question text...
+                // A. Option 1
+                // B. Option 2
+                // C. Option 3
+                // D. Option 4
+                // ANSWER: D
+                try {
+                    const text = ytItem.quizKnowledgeCheck.replace(/\r/g, '')
+                    const lines = text.split('\n').map((l: string) => l.trim()).filter((l: string) => l)
+
+                    // Find options (lines starting with A., B., C., D.)
+                    const optionRegex = /^([A-D])\.\s*(.+)$/
+                    const options: string[] = []
+                    let question = ''
+                    let correctAnswer = -1
+
+                    for (const line of lines) {
+                        const optionMatch = line.match(optionRegex)
+                        if (optionMatch) {
+                            options.push(optionMatch[2])
+                        } else if (line.toUpperCase().startsWith('ANSWER:')) {
+                            const answerLetter = line.replace(/ANSWER:\s*/i, '').trim().toUpperCase()
+                            correctAnswer = 'ABCD'.indexOf(answerLetter)
+                        } else if (!question) {
+                            question = line
+                        }
+                    }
+
+                    if (question && options.length >= 2 && correctAnswer >= 0) {
+                        knowledgeCheck = {
+                            question,
+                            options,
+                            correct: correctAnswer
+                        }
+                    }
+                } catch (parseError) {
+                    console.error('Failed to parse plain text knowledge check:', parseError)
+                }
             }
         }
         if (ytItem?.summary) {
             videoSummary = ytItem.summary
         }
+        console.log('[LearnPage] ytItem found:', !!ytItem)
+        console.log('[LearnPage] quizKnowledgeCheck raw:', ytItem?.quizKnowledgeCheck?.substring(0, 100))
+        console.log('[LearnPage] knowledgeCheck parsed:', knowledgeCheck)
     }
+    console.log('[LearnPage] currentLesson?.ytVideoId:', currentLesson?.ytVideoId)
+    console.log('[LearnPage] Final knowledgeCheck:', knowledgeCheck)
 
     // Check quiz attempts if viewing a quiz
     let attemptCount = 0
@@ -355,15 +434,27 @@ export default async function LearnPage({ params, searchParams }: LearnPageProps
                                         {currentQuiz.description || "Uji pemahaman Anda terhadap materi yang telah dipelajari dengan mengerjakan kuis evaluasi ini."}
                                     </p>
 
-                                    <div className="grid grid-cols-2 gap-4 mb-10">
-                                        <div className="p-5 rounded-2xl bg-slate-100 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm group hover:border-purple-500/30 transition-colors">
-                                            <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold mb-2">Passing Score</p>
-                                            <p className="text-2xl font-black text-slate-900 dark:text-white">{currentQuiz.passingScore}%</p>
-                                        </div>
+                                    <div className={`grid ${currentQuiz.type === 'PRETEST' ? 'grid-cols-1 max-w-xs mx-auto' : 'grid-cols-2'} gap-4 mb-10`}>
+                                        {currentQuiz.type !== 'PRETEST' && (
+                                            <div className="p-5 rounded-2xl bg-slate-100 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm group hover:border-purple-500/30 transition-colors">
+                                                <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold mb-2">Passing Score</p>
+                                                <p className="text-2xl font-black text-slate-900 dark:text-white">{currentQuiz.passingScore}%</p>
+                                            </div>
+                                        )}
                                         <div className="p-5 rounded-2xl bg-slate-100 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm group hover:border-blue-500/30 transition-colors">
                                             <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold mb-2">Waktu Pengerjaan</p>
                                             <p className="text-2xl font-black text-slate-900 dark:text-white">
-                                                {currentQuiz.timeLimit ? `${currentQuiz.timeLimit} Menit` : 'Tanpa Batas'}
+                                                {(() => {
+                                                    // For PRETEST: calculate time based on question count (1 min per question)
+                                                    if (currentQuiz.type === 'PRETEST') {
+                                                        const questionCount = (currentQuiz as any)._count?.Question || 0
+                                                        if (questionCount > 0) {
+                                                            return `${questionCount} Menit`
+                                                        }
+                                                        return currentQuiz.timeLimit ? `${currentQuiz.timeLimit} Menit` : '10 Menit'
+                                                    }
+                                                    return currentQuiz.timeLimit ? `${currentQuiz.timeLimit} Menit` : 'Tanpa Batas'
+                                                })()}
                                             </p>
                                         </div>
                                     </div>

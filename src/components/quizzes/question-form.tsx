@@ -26,7 +26,52 @@ interface QuestionFormProps {
 export function QuestionForm({ quizId, question, onSave, onCancel }: QuestionFormProps) {
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState<string>(question?.type || "MULTIPLE_CHOICE")
-    const [options, setOptions] = useState<any>(question?.options || { choices: ["", ""], correctIndex: 0 })
+
+    // Normalize options to object format { choices: [...], correctIndex: number }
+    // Handles various option formats: string[], {text, isCorrect}[], {choices, correctIndex}
+    const normalizeOptions = () => {
+        if (!question?.options) {
+            return { choices: ["", ""], correctIndex: 0 }
+        }
+
+        // Helper to extract text from choice (handles both string and object formats)
+        const getChoiceText = (choice: any): string => {
+            if (typeof choice === 'string') return choice
+            if (choice && typeof choice === 'object' && 'text' in choice) return choice.text
+            return String(choice)
+        }
+
+        // If options is already in correct format with choices array
+        if (question.options.choices && Array.isArray(question.options.choices)) {
+            // Convert choices to strings if they're objects
+            const normalizedChoices = question.options.choices.map(getChoiceText)
+            return {
+                choices: normalizedChoices,
+                correctIndex: question.options.correctIndex ?? 0
+            }
+        }
+        // If options is an array directly (from bulk upload or old format)
+        if (Array.isArray(question.options)) {
+            // Convert each option to string if it's an object
+            const normalizedChoices = question.options.map(getChoiceText)
+
+            // Try to find correctIndex from isCorrect property if correctIndex not available
+            let correctIdx = question.correctIndex ?? 0
+            if (correctIdx === 0 && question.options.some((o: any) => typeof o === 'object' && 'isCorrect' in o)) {
+                const correctItem = question.options.findIndex((o: any) => o.isCorrect === true)
+                if (correctItem >= 0) correctIdx = correctItem
+            }
+
+            return {
+                choices: normalizedChoices,
+                correctIndex: correctIdx
+            }
+        }
+        // Fallback
+        return { choices: ["", ""], correctIndex: 0 }
+    }
+
+    const [options, setOptions] = useState<any>(normalizeOptions)
 
     const addOption = () => {
         setOptions({ ...options, choices: [...options.choices, ""] })
@@ -125,8 +170,8 @@ export function QuestionForm({ quizId, question, onSave, onCancel }: QuestionFor
                         <div key={index} className="flex gap-2 items-center">
                             <div
                                 className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer transition-colors ${options.correctIndex === index
-                                        ? "bg-green-500 border-green-500"
-                                        : "border-slate-600 hover:border-slate-500"
+                                    ? "bg-green-500 border-green-500"
+                                    : "border-slate-600 hover:border-slate-500"
                                     }`}
                                 onClick={() => setOptions({ ...options, correctIndex: index })}
                             >

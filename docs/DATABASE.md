@@ -612,6 +612,308 @@ model SystemSetting {
 
 ---
 
+## 📊 xAPI & Analytics
+
+### XapiOutbox
+
+Transactional outbox untuk reliable event emission ke LRS.
+
+```prisma
+model XapiOutbox {
+  id             String    @id @default(uuid())
+  idempotencyKey String    @unique @map("idempotency_key")
+  statement      Json      // Full xAPI statement
+  status         String    @default("PENDING") // PENDING, SENT, FAILED, DLQ
+  attempts       Int       @default(0)
+  lastError      String?   @map("last_error")
+  createdAt      DateTime  @default(now())
+  processedAt    DateTime?
+
+  @@index([status, createdAt])
+  @@map("xapi_outbox")
+}
+```
+
+### LearnerActivity
+
+Denormalized learner activity untuk unified journey view.
+
+```prisma
+model LearnerActivity {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  courseId     String?  @map("course_id")
+  activityType String   @map("activity_type") // ENROLLMENT, LESSON_COMPLETE, QUIZ_PASS, etc.
+  entityId     String   @map("entity_id")
+  entityTitle  String?  @map("entity_title")
+  metadata     Json?
+  occurredAt   DateTime @default(now())
+
+  User         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, courseId, occurredAt])
+  @@map("learner_activity")
+}
+```
+
+---
+
+## 🎬 YouTube Curation
+
+### YtCurationSession
+
+Session untuk AI-powered video curation.
+
+```prisma
+model YtCurationSession {
+  id                String    @id @default(uuid()) @db.Uuid
+  sessionUuid       String    @unique @map("session_uuid")
+  topic             String
+  language          String?   @default("Bahasa Indonesia")
+  level             String?   @default("All levels")
+  targetDurationMin Int       @default(60)
+  includeChannels   String?
+  excludeChannels   String?
+  status            String    @default("searching") // searching, scoring, ready, finalized
+  totalCandidates   Int?      @default(0)
+  createdAt         DateTime?
+  updatedAt         DateTime?
+  processedAt       DateTime?
+
+  candidates        YtCurationCandidate[]
+
+  @@map("yt_curation_sessions")
+}
+```
+
+### YtCurationCandidate
+
+Video candidates yang di-score oleh AI.
+
+```prisma
+model YtCurationCandidate {
+  id              String    @id @default(uuid()) @db.Uuid
+  sessionId       String    @db.Uuid
+  videoId         String
+  videoTitle      String
+  videoUrl        String?
+  videoThumbnail  String?
+  channelTitle    String?
+  publishedAt     DateTime?
+  durationSeconds Int?
+  relevanceScore  Int?      @default(0)
+  levelFitScore   Int?      @default(0)
+  pedagogyScore   Int?      @default(0)
+  technicalScore  Int?      @default(0)
+  overallScore    Int?      @default(0)
+  recommendation  String?   @default("maybe") // include, maybe, exclude
+  roleSuggestion  String?
+  keyTopics       Json?
+  prerequisites   Json?
+  aiSummary       String?
+  aiNotes         String?
+  selected        Boolean?  @default(false)
+  orderInPlaylist Int?
+
+  session         YtCurationSession @relation(fields: [sessionId], references: [id])
+
+  @@unique([sessionId, videoId])
+  @@map("yt_curation_candidates")
+}
+```
+
+---
+
+## 📝 Feedback Surveys
+
+### FeedbackSurvey
+
+Survey feedback untuk kursus tatap muka.
+
+```prisma
+model FeedbackSurvey {
+  id          String   @id @default(uuid())
+  courseId    String
+  sessionId   String?
+  title       String
+  description String?
+  isActive    Boolean  @default(true)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Course           Course           @relation(fields: [courseId], references: [id])
+  CourseSession    CourseSession?   @relation(fields: [sessionId], references: [id])
+  FeedbackResponse FeedbackResponse[]
+
+  @@map("feedback_surveys")
+}
+```
+
+### FeedbackResponse
+
+Response feedback dari learner.
+
+```prisma
+model FeedbackResponse {
+  id               String   @id @default(uuid())
+  surveyId         String
+  userId           String
+  instructorRating Int?     // 1-5 scale
+  materialRating   Int?
+  facilityRating   Int?
+  overallRating    Int
+  strengths        String?
+  improvements     String?
+  suggestions      String?
+  isAnonymous      Boolean  @default(false)
+  submittedAt      DateTime @default(now())
+
+  Survey FeedbackSurvey @relation(fields: [surveyId], references: [id])
+  User   User           @relation(fields: [userId], references: [id])
+
+  @@unique([surveyId, userId])
+  @@map("feedback_responses")
+}
+```
+
+---
+
+## 🎯 PBGM (Project-Based Growth Module)
+
+> Model prefix: `Wblm*` (Work-Based Learning Module - legacy naming)
+
+### WblmProgram
+
+Program PBGM yang dikonfigurasi.
+
+```prisma
+model WblmProgram {
+  id              String            @id @default(uuid())
+  title           String
+  description     String?
+  targetRoles     String[]
+  durationWeeks   Int
+  startDate       DateTime?
+  endDate         DateTime?
+  status          WblmProgramStatus @default(DRAFT) // DRAFT, PUBLISHED, RUNNING, CLOSED
+  ownerUserId     String
+  reviewerPoolIds String[]
+  settings        Json?             // { allowSupervisorReview, reviewerScoringEnabled, etc. }
+  createdAt       DateTime
+  updatedAt       DateTime
+
+  Tasks       WblmTask[]
+  Milestones  WblmMilestone[]
+  Enrollments WblmEnrollment[]
+
+  @@map("wblm_programs")
+}
+```
+
+### WblmMilestone
+
+Checkpoint dalam program PBGM.
+
+```prisma
+model WblmMilestone {
+  id                    String   @id @default(uuid())
+  programId             String
+  name                  String
+  description           String?
+  dueDate               DateTime?
+  requiredArtifactTypes String[]
+  requiresReview        Boolean  @default(true)
+  requiresReflection    Boolean  @default(false)
+  orderIndex            Int      @default(0)
+
+  Program     WblmProgram      @relation(fields: [programId], references: [id])
+  Submissions WblmSubmission[]
+
+  @@map("wblm_milestones")
+}
+```
+
+### WblmSubmission
+
+Versioned artifact submission dari peserta.
+
+```prisma
+model WblmSubmission {
+  id                String              @id @default(uuid())
+  programId         String
+  milestoneId       String
+  participantUserId String
+  versionNumber     Int                 @default(1)
+  title             String?
+  notes             String?
+  files             Json?               // Array of file refs
+  status            WblmMilestoneStatus @default(SUBMITTED)
+  createdAt         DateTime
+
+  Milestone   WblmMilestone @relation(fields: [milestoneId], references: [id])
+  Participant User          @relation(fields: [participantUserId], references: [id])
+  Reviews     WblmReview[]
+
+  @@map("wblm_submissions")
+}
+```
+
+### WblmReview
+
+Review feedback dan keputusan reviewer.
+
+```prisma
+model WblmReview {
+  id               String             @id @default(uuid())
+  submissionId     String
+  reviewerUserId   String
+  decision         WblmReviewDecision // ACCEPT, REQUEST_REVISION, COMMENT_ONLY
+  commentsRichtext String?
+  inlineComments   Json?
+  score            Json?
+  createdAt        DateTime
+
+  Submission WblmSubmission @relation(fields: [submissionId], references: [id])
+  Reviewer   User           @relation(fields: [reviewerUserId], references: [id])
+
+  @@map("wblm_reviews")
+}
+```
+
+### PBGM Enums
+
+```prisma
+enum WblmProgramStatus {
+  DRAFT
+  PUBLISHED
+  RUNNING
+  CLOSED
+  ARCHIVED
+}
+
+enum WblmMilestoneStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  UNDER_REVIEW
+  REVISION_REQUESTED
+  RESUBMITTED
+  APPROVED_FINAL
+  LOCKED
+}
+
+enum WblmReviewDecision {
+  ACCEPT
+  REQUEST_REVISION
+  COMMENT_ONLY
+  ESCALATE
+}
+```
+
+---
+
 ## 🔗 Entity Relationships
 
 ```mermaid
@@ -623,11 +925,14 @@ erDiagram
     User ||--o{ Progress : "tracks"
     User ||--o{ QuizAttempt : "attempts"
     User ||--o{ Attendance : "attends"
+    User ||--o{ LearnerActivity : "logs"
+    User ||--o{ WblmEnrollment : "participates"
     
     Course ||--o{ Module : "contains"
     Course ||--o{ Enrollment : "has"
     Course ||--o{ CourseSession : "schedules"
     Course ||--o{ Certificate : "grants"
+    Course ||--o{ FeedbackSurvey : "collects"
     Course }o--|| Category : "belongs"
     
     Module ||--o{ Lesson : "contains"
@@ -645,6 +950,13 @@ erDiagram
     CourseSession ||--o{ AttendanceToken : "generates"
     
     Badge ||--o{ UserBadge : "awarded"
+    
+    YtCurationSession ||--o{ YtCurationCandidate : "contains"
+    
+    WblmProgram ||--o{ WblmMilestone : "defines"
+    WblmProgram ||--o{ WblmEnrollment : "has"
+    WblmMilestone ||--o{ WblmSubmission : "receives"
+    WblmSubmission ||--o{ WblmReview : "reviewed"
 ```
 
 ---
@@ -673,4 +985,4 @@ npx prisma db push --force-reset
 
 ---
 
-*Dokumen ini terakhir diperbarui: 27 Januari 2026*
+*Dokumen ini terakhir diperbarui: 9 Februari 2026*

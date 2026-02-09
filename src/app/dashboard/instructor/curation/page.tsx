@@ -170,7 +170,11 @@ export default function CurationPage() {
 
         setIsFinalizing(false);
 
-        if (res.success) {
+        if (res.success && res.playlistId && res.courseId) {
+            toast.success("Course created! Memulai proses enrichment...");
+            // Redirect to import-youtube page with query params to show progress
+            router.push(`/dashboard/instructor/import-youtube?playlistId=${res.playlistId}&courseId=${res.courseId}`);
+        } else if (res.success) {
             toast.success("Course created successfully!");
             router.push(`/dashboard/instructor/courses/${res.courseId}`);
         } else {
@@ -382,9 +386,19 @@ export default function CurationPage() {
                                             <Brain className="w-12 h-12 text-primary/50 mb-4" />
                                         </motion.div>
                                         <h3 className="text-lg font-semibold">AI is exploring YouTube...</h3>
-                                        <p className="text-muted-foreground max-w-md">
+                                        <p className="text-muted-foreground max-w-md mb-4">
                                             We are searching for the best videos based on your topic and scoring them for educational quality. Candidates will appear here shortly.
                                         </p>
+                                        {/* Status Message from session */}
+                                        {currentSession?.message && (
+                                            <div className="mt-2 px-4 py-2 bg-primary/10 rounded-lg text-sm text-primary font-medium animate-pulse">
+                                                {currentSession.message}
+                                            </div>
+                                        )}
+                                        <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+                                            <div className={`w-2 h-2 rounded-full ${currentSession?.status === 'searching' ? 'bg-blue-500' : 'bg-yellow-500'} animate-pulse`} />
+                                            Status: <span className="font-medium capitalize">{currentSession?.status}</span>
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="space-y-12">

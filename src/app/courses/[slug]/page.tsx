@@ -149,13 +149,13 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="container mx-auto px-4 mt-14 relative z-10"
+                className="container mx-auto px-4 mt-8 relative z-10"
             >
                 <div className="grid lg:grid-cols-3 gap-12">
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-12">
                         {/* Course Hero Section */}
-                        <motion.div variants={item} className="space-y-6">
+                        <motion.div variants={item} className="space-y-8">
                             <div className="flex flex-wrap gap-3">
                                 <Badge className="bg-blue-600/10 text-blue-400 border-blue-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest">
                                     {deliveryModeConfig[course.deliveryMode as DeliveryMode].label}
@@ -168,7 +168,10 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                 {course.title}
                             </h1>
                             <p className="text-xl text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                                {course.courseShortDesc || course.description}
+                                {course.courseShortDesc ||
+                                    (course.description && course.description.length > 300
+                                        ? course.description.substring(0, 300).trim() + "..."
+                                        : course.description)}
                             </p>
                         </motion.div>
 
@@ -177,9 +180,17 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                             {[
                                 { label: "Kesulitan", value: course.difficulty, icon: BarChart, color: "text-blue-500" },
                                 { label: "Penyampaian", value: deliveryModeConfig[course.deliveryMode as DeliveryMode].label, icon: Calendar, color: "text-purple-500" },
-                                { label: "Estimasi", value: `${course.duration || "--"} Jam`, icon: Clock, color: "text-green-500" },
+                                {
+                                    label: "Estimasi",
+                                    value: course.calculatedDuration
+                                        ? (course.calculatedDuration >= 60
+                                            ? `${(course.calculatedDuration / 60).toFixed(1)} Jam`
+                                            : `${course.calculatedDuration} Menit`)
+                                        : `${course.duration || "--"} Jam`,
+                                    icon: Clock, color: "text-green-500"
+                                },
                                 { label: "Bahasa", value: course.language || "Indonesia", icon: FileText, color: "text-orange-500" },
-                                { label: "JP", value: `${course.jp || course.duration || 1} JP`, icon: BookOpen, color: "text-yellow-500" },
+                                { label: "JP", value: `${course.calculatedJP || course.jp || 0} JP`, icon: BookOpen, color: "text-yellow-500" },
                             ].map((stat) => (
                                 <div key={stat.label} className="p-6 rounded-[32px] bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 backdrop-blur-sm group hover:border-slate-300 dark:hover:border-white/10 transition-colors">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">{stat.label}</p>
@@ -203,12 +214,19 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                             </h2>
 
                             {/* Full Description */}
-                            {course.courseDesc && (
-                                <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
-                                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-3">Deskripsi Lengkap</h3>
-                                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-                                        {course.courseDesc}
-                                    </p>
+                            {course.description && (
+                                <div className="p-8 rounded-3xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-white/10 shadow-sm">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="p-2 rounded-xl bg-blue-500/10 text-blue-500">
+                                            <FileText className="w-5 h-5" />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Deskripsi Lengkap</h3>
+                                    </div>
+                                    <div className="prose prose-slate dark:prose-invert max-w-none">
+                                        <p className="text-base text-slate-700 dark:text-slate-300 leading-[1.8] whitespace-pre-line first-letter:text-2xl first-letter:font-bold first-letter:text-blue-600 dark:first-letter:text-blue-400 first-letter:mr-1">
+                                            {course.description}
+                                        </p>
+                                    </div>
                                 </div>
                             )}
 
@@ -218,11 +236,25 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                     <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
                                         <div className="flex items-center gap-2 mb-4">
                                             <CheckCircle2 className="w-5 h-5 text-amber-500" />
-                                            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Persyaratan</h3>
+                                            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Persyaratan</h3>
                                         </div>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-                                            {course.requirements}
-                                        </p>
+                                        <ul className="space-y-2">
+                                            {(() => {
+                                                try {
+                                                    const items = JSON.parse(course.requirements)
+                                                    if (Array.isArray(items)) {
+                                                        return items.map((item: string, idx: number) => (
+                                                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                                                <span className="mt-1.5 w-1.5 h-1.5 bg-amber-500 rounded-full flex-shrink-0" />
+                                                                <span>{item}</span>
+                                                            </li>
+                                                        ))
+                                                    }
+                                                } catch {
+                                                    return <li className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line">{course.requirements}</li>
+                                                }
+                                            })()}
+                                        </ul>
                                     </div>
                                 )}
 
@@ -231,11 +263,25 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                     <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5">
                                         <div className="flex items-center gap-2 mb-4">
                                             <CheckCircle className="w-5 h-5 text-green-500" />
-                                            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Hasil Pembelajaran</h3>
+                                            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Hasil Pembelajaran</h3>
                                         </div>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-                                            {course.outcomes}
-                                        </p>
+                                        <ul className="space-y-2">
+                                            {(() => {
+                                                try {
+                                                    const items = JSON.parse(course.outcomes)
+                                                    if (Array.isArray(items)) {
+                                                        return items.map((item: string, idx: number) => (
+                                                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                                                <span className="mt-1.5 w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0" />
+                                                                <span>{item}</span>
+                                                            </li>
+                                                        ))
+                                                    }
+                                                } catch {
+                                                    return <li className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line">{course.outcomes}</li>
+                                                }
+                                            })()}
+                                        </ul>
                                     </div>
                                 )}
                             </div>
@@ -245,13 +291,27 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                             {/* Recommended Next Courses */}
                             {course.recommendedNext && (
                                 <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-200 dark:border-purple-500/20">
-                                    <div className="flex items-center gap-2 mb-3">
+                                    <div className="flex items-center gap-2 mb-4">
                                         <ChevronRight className="w-5 h-5 text-purple-500" />
-                                        <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Kursus Rekomendasi Selanjutnya</h3>
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">Kursus Rekomendasi Selanjutnya</h3>
                                     </div>
-                                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                                        {course.recommendedNext}
-                                    </p>
+                                    <ul className="space-y-2">
+                                        {(() => {
+                                            try {
+                                                const items = JSON.parse(course.recommendedNext)
+                                                if (Array.isArray(items)) {
+                                                    return items.map((item: string, idx: number) => (
+                                                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                                            <span className="mt-1.5 w-1.5 h-1.5 bg-purple-500 rounded-full flex-shrink-0" />
+                                                            <span>{item}</span>
+                                                        </li>
+                                                    ))
+                                                }
+                                            } catch {
+                                                return <li className="text-sm text-slate-600 dark:text-slate-400">{course.recommendedNext}</li>
+                                            }
+                                        })()}
+                                    </ul>
                                 </div>
                             )}
                         </motion.div>
@@ -358,17 +418,38 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
                                 <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px]" />
 
                                 <div className="relative z-10 space-y-8">
-                                    <div className="rounded-3xl overflow-hidden aspect-video relative border border-slate-200 dark:border-white/10 shadow-2xl">
-                                        {course.thumbnail ? (
+                                    <div className="rounded-3xl overflow-hidden aspect-video relative border border-slate-200 dark:border-white/10 shadow-2xl bg-slate-100 dark:bg-slate-950">
+                                        {course.previewUrl ? (
+                                            <div className="w-full h-full">
+                                                {course.previewUrl.includes('youtube.com') || course.previewUrl.includes('youtu.be') ? (
+                                                    <iframe
+                                                        src={`https://www.youtube.com/embed/${course.previewUrl.includes('v=')
+                                                            ? course.previewUrl.split('v=')[1].split('&')[0]
+                                                            : course.previewUrl.split('/').pop()
+                                                            }?autoplay=0&controls=1&rel=0&modestbranding=1`}
+                                                        className="w-full h-full"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                    />
+                                                ) : (
+                                                    <video
+                                                        src={course.previewUrl}
+                                                        controls
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                )}
+                                            </div>
+                                        ) : course.thumbnail ? (
                                             <Image src={course.thumbnail} alt={course.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                                         ) : (
-                                            <div className="w-full h-full bg-slate-200 dark:bg-slate-950 flex items-center justify-center">
+                                            <div className="w-full h-full flex items-center justify-center">
                                                 <BookOpen className="w-16 h-16 text-slate-400 dark:text-slate-800" />
                                             </div>
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent flex items-end p-6">
-                                            <div className="flex items-center gap-2">
-                                                <div className="px-3 py-1 rounded-full bg-blue-600 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">Premium Access</div>
+
+                                        <div className="absolute top-4 right-4 z-20">
+                                            <div className="px-3 py-1 rounded-full bg-blue-600/90 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-white shadow-lg border border-white/20">
+                                                {course.previewUrl ? "Preview Course" : "Premium Access"}
                                             </div>
                                         </div>
                                     </div>

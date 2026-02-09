@@ -6,6 +6,18 @@ import axios from "axios";
 import { DeliveryMode, Difficulty } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 
+// Helper function to format seconds to HH:MM:SS or MM:SS
+function formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    if (hours > 0) {
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
 export async function createCurationSession(formData: {
     topic: string;
     language?: string;
@@ -165,7 +177,10 @@ export async function finalizeCuration(sessionId: string, formData: {
             slug = `${baseSlug}-${Math.random().toString(36).substring(2, 7)}`;
         }
 
-        // 1. Create Course
+        // Note: playlistId is created before Course now
+        const playlistId = `curation-${sessionId}`;
+
+        // 1. Create Course (with ytPlaylistId for callback sync)
         const course = await prisma.course.create({
             data: {
                 id: crypto.randomUUID(),
@@ -177,6 +192,7 @@ export async function finalizeCuration(sessionId: string, formData: {
                 difficulty: (session.level?.toUpperCase() as any) || Difficulty.BEGINNER,
                 category: "AI Curated",
                 isPublished: true,
+                ytPlaylistId: playlistId, // Link for callback sync
                 updatedAt: new Date(),
             }
         });
@@ -214,12 +230,82 @@ export async function finalizeCuration(sessionId: string, formData: {
             where: { id: sessionId },
             data: {
                 status: "finalized",
+                enrichmentStatus: "processing",
+                enrichedCourseId: course.id,
                 updatedAt: new Date(),
                 processedAt: new Date()
             },
         });
 
-        return { success: true, courseId: course.id };
+
+        // 5. Create yt_playlist and yt_playlist_items for progress tracking
+        // Format same as YouTubeToCourse so 1-Orchestrator upsert will UPDATE, not INSERT
+        // Note: playlistId was already created above for Course linking
+
+        await (prisma as any).ytPlaylist.create({
+            data: {
+                playlistId: playlistId,
+                playlistTitle: formData.playlistTitle,
+                playlistUrl: `https://www.youtube.com/playlist?list=${playlistId}`, // Mock YouTube URL format
+                author: "Curation AI",
+                totalItems: session.candidates.length,
+                totalVideos: session.candidates.length,
+                status: "processing",
+                courseTitle: formData.playlistTitle,
+                courseLevel: session.level || "BEGINNER",
+                language: session.language || "Bahasa Indonesia",
+                hasCourseMetadata: false,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        });
+
+        for (let i = 0; i < session.candidates.length; i++) {
+            const c = session.candidates[i];
+            await (prisma as any).ytPlaylistItem.create({
+                data: {
+                    playlistId: playlistId,
+                    videoId: c.videoId,
+                    videoNo: i + 1,
+                    videoTitle: c.videoTitle,
+                    durationStr: formatDuration(c.durationSeconds || 0),
+                    embedUrl: `https://www.youtube.com/embed/${c.videoId}`,
+                    status: "pending",
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                }
+            });
+        }
+
+        // 6. Get lesson IDs and create ProcessingJobs
+        const lessons = await prisma.lesson.findMany({
+            where: { moduleId: module.id },
+            orderBy: { order: 'asc' }
+        });
+
+        for (const lesson of lessons) {
+            await prisma.processingJob.create({
+                data: {
+                    type: "YOUTUBE_IMPORT",
+                    status: "PENDING",
+                    targetId: lesson.id,
+                    payload: {
+                        videoId: lesson.ytVideoId,
+                        courseId: course.id,
+                        playlistId: playlistId
+                    }
+                }
+            });
+        }
+
+        // 7. Trigger background processing (async)
+        // This will extract audio, then automatically trigger n8n webhook when complete
+        const { triggerBackgroundProcessing } = await import("@/lib/actions/youtube");
+        triggerBackgroundProcessing();
+
+        console.log(`Curation finalized: courseId=${course.id}, playlistId=${playlistId}, videos=${session.candidates.length}`);
+
+        return { success: true, courseId: course.id, playlistId: playlistId };
     } catch (error: any) {
         console.error("Failed to finalize curation:", error);
         return { error: error.message };

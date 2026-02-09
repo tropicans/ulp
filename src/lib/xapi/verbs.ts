@@ -69,7 +69,7 @@ export const VERBS = {
 
     seeked: {
         id: "https://w3id.org/xapi/video/verbs/seeked",
-        display: { en: "seeked", id: "mencari" }
+        display: { en: "seeked", id: "melompat" }
     } as XAPIVerb,
 
     attended: {
